@@ -53,7 +53,6 @@ kotlin {
 
         androidMain {
             dependencies {
-                implementation(libs.koin.android)
             }
         }
 

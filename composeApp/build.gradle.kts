@@ -26,10 +26,8 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
+            implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
-
-            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
@@ -42,7 +40,6 @@ kotlin {
             implementation(project(":core:data"))
         }
         iosMain.dependencies {
-            implementation(libs.koin.core)
         }
     }
 }

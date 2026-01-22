@@ -7,18 +7,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import org.koin.android.ext.koin.androidContext
 import org.koin.compose.KoinApplication
 import org.koin.compose.KoinApplicationPreview
 import org.koin.dsl.koinConfiguration
+import org.koin.dsl.module
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
         setContent {
             KoinApplication(
-                configuration = koinConfiguration(declaration = { modules(appModule) })
+                configuration = koinConfiguration(declaration = {
+                    module { single { androidContext() } }
+                    modules(appModule)
+                })
             ) {
                 App()
             }
