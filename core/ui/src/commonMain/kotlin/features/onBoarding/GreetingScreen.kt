@@ -1,3 +1,5 @@
+package features.onBoarding
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,18 +17,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import features.onBoarding.GreetingScreen
-import features.onBoarding.GreetingViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import projectfinder.core.ui.generated.resources.Res
 import projectfinder.core.ui.generated.resources.compose_multiplatform
 
 @Composable
-@Preview
-fun App() {
-    MaterialTheme {
-        GreetingScreen()
+fun GreetingScreen(vm: GreetingViewModel = koinViewModel()) {
+    var showContent by remember { mutableStateOf(false) }
+    Column(
+        modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer)
+            .safeContentPadding().fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Button(onClick = { showContent = !showContent }) {
+            Text("Click me!")
+        }
+        AnimatedVisibility(showContent) {
+            val greeting = remember { vm.greet() }
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.compose_multiplatform),
+                    contentDescription = null
+                )
+                Text("Compose: $greeting")
+            }
+        }
     }
 }
