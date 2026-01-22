@@ -26,7 +26,7 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(libs.compose.ui.tooling.preview)
+            implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
 
             implementation(libs.koin.android)
@@ -75,6 +75,6 @@ android {
 }
 
 dependencies {
-    debugImplementation(libs.compose.ui.tooling.preview)
+    debugImplementation(compose.uiTooling)
 }
 
