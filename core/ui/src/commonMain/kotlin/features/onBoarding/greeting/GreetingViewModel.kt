@@ -1,4 +1,4 @@
-package features.onBoarding
+package features.onBoarding.greeting
 
 import androidx.lifecycle.ViewModel
 import useCases.GetPlatformUseCase
@@ -8,5 +8,10 @@ class GreetingViewModel(
 ): ViewModel() {
     fun greet(): String {
         return "Hello, ${getPlatformUseCase()}!"
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        println("GreetingViewModel: cleared")
     }
 }

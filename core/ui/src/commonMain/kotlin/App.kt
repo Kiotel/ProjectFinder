@@ -1,32 +1,24 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import features.onBoarding.GreetingScreen
-import features.onBoarding.GreetingViewModel
-import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.viewmodel.koinViewModel
-import projectfinder.core.ui.generated.resources.Res
-import projectfinder.core.ui.generated.resources.compose_multiplatform
+import navigation.NavigationRoot
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        GreetingScreen()
+    val colorScheme = if (isSystemInDarkTheme()) {
+        darkColorScheme()
+    } else {
+        lightColorScheme()
+    }
+    MaterialTheme(colorScheme = colorScheme) {
+        NavigationRoot(
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }

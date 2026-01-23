@@ -1,4 +1,4 @@
-package features.onBoarding
+package features.onBoarding.greeting
 
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.androidLint)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -43,6 +44,9 @@ kotlin {
                 implementation(libs.compose.ui)
                 implementation(libs.compose.components.resources)
                 implementation(libs.compose.ui.tooling.preview)
+
+                implementation(libs.compose.navigation3.ui)
+                implementation(libs.compose.lifecycle.viewmodel.nav3)
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
