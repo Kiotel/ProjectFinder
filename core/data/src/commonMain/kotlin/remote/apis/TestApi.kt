@@ -1,11 +1,10 @@
-package apis
+package remote.apis
 
-import apis.dtos.KtorTextDto
+import remote.apis.dtos.KtorTextDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.delay
-import models.KtorText
 
 class TestApi {
     private val client = HttpClient()

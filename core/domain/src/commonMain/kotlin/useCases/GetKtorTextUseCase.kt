@@ -1,14 +1,12 @@
 package useCases
 
+import kotlinx.coroutines.flow.Flow
 import models.KtorText
 import repositories.TestRepository
+import utils.Resource
 
 class GetKtorTextUseCase(
     private val testRepository: TestRepository
 ) {
-    suspend operator fun invoke(): Result<KtorText> = try {
-        Result.success(testRepository.getKtorText())
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
+    operator fun invoke(): Flow<Resource<KtorText>> = testRepository.getKtorTextFlow()
 }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import features.onBoarding.OnboardingViewModel
 import org.jetbrains.compose.resources.painterResource
 import projectfinder.core.ui.generated.resources.Res
@@ -29,7 +30,7 @@ fun GreetingScreen(
     vm: GreetingViewModel, svm: OnboardingViewModel, goToDescription: () -> Unit
 ) {
     var showContent by remember { mutableStateOf(false) }
-    val ktorText by vm.ktorText.collectAsState()
+    val ktorText by vm.ktorText.collectAsStateWithLifecycle()
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.primaryContainer

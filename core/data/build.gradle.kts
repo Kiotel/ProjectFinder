@@ -61,7 +61,6 @@ kotlin {
                 implementation(libs.ktor.client.core)
                 implementation(libs.kotlinx.coroutines.core)
 
-                implementation(libs.store)
                 implementation(libs.androidx.room.runtime)
                 implementation(libs.androidx.sqlite.bundled)
 

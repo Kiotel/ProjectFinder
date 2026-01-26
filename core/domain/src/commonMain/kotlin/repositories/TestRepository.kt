@@ -1,8 +1,10 @@
 package repositories
 
+import kotlinx.coroutines.flow.Flow
 import models.KtorText
+import utils.Resource
 
 interface TestRepository {
     fun getPlatform(): String
-    suspend fun getKtorText(): KtorText
+    fun getKtorTextFlow(): Flow<Resource<KtorText>>
 }

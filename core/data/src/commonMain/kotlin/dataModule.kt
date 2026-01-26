@@ -1,6 +1,4 @@
-import apis.TestApi
-import database.TestDataBase
-import database.enitities.KtorTextDao
+import remote.apis.TestApi
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import repositories.TestRepository

@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
+import local.database.TestDataBase
 
 fun getTestDataBase(context: Context): RoomDatabase.Builder<TestDataBase> {
     val dbFile = context.getDatabasePath("user.db")
@@ -13,6 +14,7 @@ fun getTestDataBase(context: Context): RoomDatabase.Builder<TestDataBase> {
         name = dbFile.absolutePath
     )
         .fallbackToDestructiveMigrationOnDowngrade(true)
+        .fallbackToDestructiveMigration(true)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
 }

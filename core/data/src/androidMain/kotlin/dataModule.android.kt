@@ -1,4 +1,4 @@
-import database.TestDataBase
+import local.database.TestDataBase
 import database.getTestDataBase
 import org.koin.dsl.module
 
