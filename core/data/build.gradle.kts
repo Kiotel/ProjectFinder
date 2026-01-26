@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.add
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
@@ -63,6 +61,9 @@ kotlin {
 
                 implementation(libs.androidx.room.runtime)
                 implementation(libs.androidx.sqlite.bundled)
+
+                implementation(libs.androidx.datastore)
+                implementation(libs.androidx.datastore.preferences)
 
                 implementation(project(":core:domain"))
             }

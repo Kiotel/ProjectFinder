@@ -1,17 +1,17 @@
-package database
+package local.database
 
-import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
-import local.database.TestDataBase
+import kotlinx.coroutines.IO
+import platform.Foundation.NSHomeDirectory
 
-fun getTestDataBase(context: Context): RoomDatabase.Builder<TestDataBase> {
-    val dbFile = context.getDatabasePath("user.db")
+fun getTestDataBase(): RoomDatabase.Builder<TestDataBase> {
+    val dbFile = NSHomeDirectory() + "/user.db"
     return Room.databaseBuilder<TestDataBase>(
-        context = context.applicationContext,
-        name = dbFile.absolutePath
+        name = dbFile,
+        // factory = { TestDataBase::class.instantiateImpl() }
     )
         .fallbackToDestructiveMigrationOnDowngrade(true)
         .fallbackToDestructiveMigration(true)
