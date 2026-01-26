@@ -10,7 +10,7 @@ sealed interface Route: NavKey {
         @Serializable
         data object Greeting: Route
         @Serializable
-        data object Description: Route
+        data object DescriptionForm: Route
     }
     @Serializable
     data object Auth: Route {

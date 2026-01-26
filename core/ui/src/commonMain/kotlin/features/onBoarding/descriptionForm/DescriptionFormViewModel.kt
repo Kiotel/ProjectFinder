@@ -1,9 +1,9 @@
-package features.onBoarding.description
+package features.onBoarding.descriptionForm
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class DescriptionViewModel(
+class DescriptionFormViewModel(
 ) : ViewModel() {
     private val _text = MutableStateFlow("")
 
@@ -17,6 +17,6 @@ class DescriptionViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        println("DescriptionViewModel: cleared")
+        println("DescriptionFormViewModel: cleared")
     }
 }

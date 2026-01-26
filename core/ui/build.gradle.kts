@@ -15,6 +15,10 @@ kotlin {
         androidResources.enable = true
     }
 
+    compilerOptions {
+        optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
+    }
+
     val xcfName = "core:uiKit"
 
     iosX64 {

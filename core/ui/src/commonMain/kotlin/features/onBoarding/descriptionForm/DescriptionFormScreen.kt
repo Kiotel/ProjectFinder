@@ -1,4 +1,4 @@
-package features.onBoarding.description
+package features.onBoarding.descriptionForm
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import features.onBoarding.OnboardingViewModel
 
 @Composable
-fun DescriptionScreen(
-    modifier: Modifier = Modifier, vm: DescriptionViewModel, svm: OnboardingViewModel
+fun DescriptionFormScreen(
+    modifier: Modifier = Modifier, vm: DescriptionFormViewModel, svm: OnboardingViewModel
 ) {
     Scaffold(modifier = modifier) { innerPadding ->
         Column(
