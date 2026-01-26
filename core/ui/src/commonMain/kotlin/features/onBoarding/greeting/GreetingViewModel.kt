@@ -23,7 +23,7 @@ class GreetingViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             getKtorText().fold(
                 onSuccess = {
-                    _ktorText.value = it
+                    _ktorText.value = it.text
                 },
                 onFailure = {
                     _ktorText.value = "Error during fetching"

@@ -1,4 +1,6 @@
 import apis.TestApi
+import database.TestDataBase
+import database.enitities.KtorTextDao
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import repositories.TestRepository
@@ -9,7 +11,7 @@ val dataModule = module {
 
     single<TestApi> { TestApi() }
 
-    single<TestRepository> { TestRepositoryImpl(get(), get()) }
+    single<TestRepository> { TestRepositoryImpl(get(), get(), get()) }
 
     includes(platformModule)
 }

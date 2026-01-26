@@ -1,7 +1,11 @@
+import org.gradle.kotlin.dsl.add
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -57,6 +61,10 @@ kotlin {
                 implementation(libs.ktor.client.core)
                 implementation(libs.kotlinx.coroutines.core)
 
+                implementation(libs.store)
+                implementation(libs.androidx.room.runtime)
+                implementation(libs.androidx.sqlite.bundled)
+
                 implementation(project(":core:domain"))
             }
         }
@@ -74,5 +82,18 @@ kotlin {
                 implementation(libs.ktor.client.darwin)
             }
         }
+
+
     }
+}
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
