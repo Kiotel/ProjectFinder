@@ -1,12 +1,15 @@
+import apis.TestApi
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import repositories.PlatformRepository
-import repositories.PlatformRepositoryImpl
+import repositories.TestRepository
+import repositories.TestRepositoryImpl
 
 val dataModule = module {
     single<Platform> { getPlatform() }
 
-    single<PlatformRepository> { PlatformRepositoryImpl(get()) }
+    single<TestApi> { TestApi() }
+
+    single<TestRepository> { TestRepositoryImpl(get(), get()) }
 
     includes(platformModule)
 }

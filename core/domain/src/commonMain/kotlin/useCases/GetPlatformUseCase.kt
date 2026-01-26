@@ -1,9 +1,9 @@
 package useCases
 
-import repositories.PlatformRepository
+import repositories.TestRepository
 
 class GetPlatformUseCase(
-    private val platformRepository: PlatformRepository
+    private val testRepository: TestRepository
 ) {
-    operator fun invoke(): String = platformRepository.getPlatform()
+    operator fun invoke(): String = testRepository.getPlatform()
 }

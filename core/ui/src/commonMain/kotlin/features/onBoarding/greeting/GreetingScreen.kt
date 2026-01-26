@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,7 @@ fun GreetingScreen(
     vm: GreetingViewModel, svm: OnboardingViewModel, goToDescription: () -> Unit
 ) {
     var showContent by remember { mutableStateOf(false) }
+    val ktorText by vm.ktorText.collectAsState()
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -55,6 +57,7 @@ fun GreetingScreen(
                         onClick = goToDescription, content = {
                             Text("Go to description")
                         })
+                    Text("Ktor text: $ktorText")
                 }
             }
         }

@@ -54,6 +54,9 @@ kotlin {
 
                 implementation(libs.koin.core)
 
+                implementation(libs.ktor.client.core)
+                implementation(libs.kotlinx.coroutines.core)
+
                 implementation(project(":core:domain"))
             }
         }
@@ -61,12 +64,14 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.koin.android)
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.kotlinx.coroutines.android)
             }
         }
 
         iosMain {
             dependencies {
-
+                implementation(libs.ktor.client.darwin)
             }
         }
     }

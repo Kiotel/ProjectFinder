@@ -50,7 +50,6 @@ fun OnBoardingNavigation(
         entryProvider = entryProvider {
             entry<Route.OnBoarding.Greeting> {
                 val greetingViewModel: GreetingViewModel = koinViewModel()
-
                 GreetingScreen(
                     vm = greetingViewModel,
                     svm = onBoardingViewModel,

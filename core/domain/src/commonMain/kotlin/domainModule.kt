@@ -1,7 +1,8 @@
 import org.koin.dsl.module
 import useCases.GetPlatformUseCase
-import kotlin.coroutines.EmptyCoroutineContext.get
+import useCases.GetKtorTextUseCase
 
 val domainModule = module {
     factory<GetPlatformUseCase> { GetPlatformUseCase(get()) }
+    factory<GetKtorTextUseCase> { GetKtorTextUseCase(get()) }
 }
