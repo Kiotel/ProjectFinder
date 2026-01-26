@@ -1,17 +1,16 @@
 package repositories
 
 import Platform
-import remote.apis.TestApi
-import local.database.TestDataBase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import local.database.TestDataBase
 import mapppers.domain
 import mapppers.entity
 import models.KtorText
+import remote.apis.TestApi
 import utils.Resource
-import kotlin.time.Clock
 import kotlin.time.Clock.System.now
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration
 
 class TestRepositoryImpl(
     private val testApi: TestApi,
@@ -19,14 +18,14 @@ class TestRepositoryImpl(
     private val platform: Platform
 ) : TestRepository {
     override fun getPlatform() = platform.name
-    override fun getKtorTextFlow(): Flow<Resource<KtorText>> = flow {
+    override fun getKtorTextFlow(ttl: Duration): Flow<Resource<KtorText>> = flow {
         emit(Resource.Loading())
 
         val localEntity = testDataBase.KtorTextDao().getText()
         emit(Resource.Loading(data = localEntity?.domain))
 
         val isCacheValid =
-            localEntity != null && (now().toEpochMilliseconds() - localEntity.lastUpdated < 5.minutes.inWholeMilliseconds)
+            localEntity != null && (now().toEpochMilliseconds() - localEntity.lastUpdated < ttl.inWholeMilliseconds)
 
         if (isCacheValid) {
             emit(Resource.Success(localEntity.domain))
