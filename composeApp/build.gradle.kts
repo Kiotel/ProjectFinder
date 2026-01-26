@@ -35,7 +35,7 @@ kotlin {
 
             implementation(libs.koin.compose)
 
-            implementation(project(":core:ui"))
+            implementation(project(":feature:navigation"))
             implementation(project(":core:domain"))
             implementation(project(":core:data"))
         }
