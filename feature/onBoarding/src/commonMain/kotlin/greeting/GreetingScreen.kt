@@ -1,6 +1,7 @@
 package greeting
 
 import GreetingViewModel
+import OnBoardingIntent
 import OnboardingViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,7 @@ internal fun GreetingScreen(
     modifier: Modifier = Modifier,
     vm: GreetingViewModel, svm: OnboardingViewModel, goToDescriptionForm: () -> Unit
 ) {
-    val state by vm.uiState.collectAsStateWithLifecycle()
+    val sharedState by svm.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = modifier,
@@ -34,8 +35,8 @@ internal fun GreetingScreen(
         ) {
             Text(text = "Team service", style = MaterialTheme.typography.displayMediumEmphasized)
             TestButton(onClick = {
-                vm.handleIntent(GreetingIntent.ToggleEverLogged)
-            }, text = state.isEverLogged.toString())
+                svm.handleIntent(OnBoardingIntent.SetToken)
+            }, text = sharedState.token.toString())
             TestButton(onClick = { goToDescriptionForm() }, text = "Продолжить")
         }
     }

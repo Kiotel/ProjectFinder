@@ -21,7 +21,6 @@ internal fun DescriptionFormScreen(
                 .background(MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Text("Text in local viewModel is: ${vm.getText()}")
-            Text("Text in shared viewModel is: ${svm.getText()}")
         }
     }
 }

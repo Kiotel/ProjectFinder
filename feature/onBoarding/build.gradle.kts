@@ -15,15 +15,6 @@ kotlin {
         namespace = "com.example.onboarding"
         compileSdk = 36
         minSdk = 24
-
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
     }
 
     compilerOptions {
@@ -76,6 +67,14 @@ kotlin {
                     implementation(project(":core:domain"))
                     implementation(project(":feature:shared"))
                 }
+            }
+        }
+        androidMain {
+            dependencies{
+            }
+        }
+        iosMain {
+            dependencies {
             }
         }
     }

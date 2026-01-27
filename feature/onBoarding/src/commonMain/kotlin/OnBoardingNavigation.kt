@@ -54,7 +54,6 @@ fun OnBoardingNavigation(
             }
             entry<Route.OnBoarding.DescriptionForm> {
                 val descriptionFormViewModel: DescriptionFormViewModel = koinViewModel()
-                descriptionFormViewModel.setData("Text from navigation")
 
                 DescriptionFormScreen(
                     vm = descriptionFormViewModel,
