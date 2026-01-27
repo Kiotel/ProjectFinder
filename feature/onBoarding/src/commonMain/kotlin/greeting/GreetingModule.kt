@@ -4,6 +4,6 @@ import GreetingViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
-val greetingModule = module {
+internal val greetingModule = module {
     viewModelOf(::GreetingViewModel)
 }

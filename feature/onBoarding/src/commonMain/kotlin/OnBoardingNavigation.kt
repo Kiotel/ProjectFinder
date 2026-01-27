@@ -1,4 +1,3 @@
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -15,7 +14,6 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
 
-@ExperimentalMaterial3ExpressiveApi
 @Composable
 fun OnBoardingNavigation(
     modifier: Modifier = Modifier

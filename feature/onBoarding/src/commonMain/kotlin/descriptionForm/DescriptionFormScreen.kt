@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun DescriptionFormScreen(
+internal fun DescriptionFormScreen(
     modifier: Modifier = Modifier, vm: DescriptionFormViewModel, svm: OnboardingViewModel
 ) {
     Scaffold(modifier = modifier) { innerPadding ->

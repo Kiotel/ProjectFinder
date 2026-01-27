@@ -1,6 +1,6 @@
 import androidx.lifecycle.ViewModel
 
-class OnboardingViewModel(
+internal class OnboardingViewModel(
 ) : ViewModel() {
     fun getText(): String {
         return "OnBoardingViewModel with id: $this"

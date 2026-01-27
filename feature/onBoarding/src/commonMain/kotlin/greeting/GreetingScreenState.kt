@@ -1,6 +1,6 @@
 package greeting
 
-data class GreetingScreenState(
+internal data class GreetingScreenState(
     val isLoading: Boolean,
     val errorMsg: String?,
     val isFilledDescriptionForm: Boolean,

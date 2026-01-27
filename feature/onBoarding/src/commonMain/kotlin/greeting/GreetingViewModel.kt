@@ -15,7 +15,7 @@ import useCases.GetIsFilledDescriptionFormUseCase
 import useCases.SetIsEverLoggedUseCase
 import useCases.SetIsFilledDescriptionForm
 
-class GreetingViewModel(
+internal class GreetingViewModel(
     private val setIsFilledDescriptionFormUseCase: SetIsFilledDescriptionForm,
     private val setIsEverLoggedUseCase: SetIsEverLoggedUseCase,
     private val getIsFilledDescriptionFormUseCase: GetIsFilledDescriptionFormUseCase,
@@ -59,11 +59,14 @@ class GreetingViewModel(
             try {
                 setIsEverLoggedUseCase(!_uiState.value.isEverLogged)
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, errorMsg = e.message) }
+                _uiState.update { it.copy(errorMsg = e.message) }
+            } finally {
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
-    internal fun handleIntent(intent: GreetingIntent) {
+
+    fun handleIntent(intent: GreetingIntent) {
         when (intent) {
             GreetingIntent.ToggleEverLogged -> toggleEverLogged()
         }

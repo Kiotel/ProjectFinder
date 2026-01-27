@@ -3,7 +3,7 @@ package descriptionForm
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class DescriptionFormViewModel(
+internal class DescriptionFormViewModel(
 ) : ViewModel() {
     private val _text = MutableStateFlow("")
 

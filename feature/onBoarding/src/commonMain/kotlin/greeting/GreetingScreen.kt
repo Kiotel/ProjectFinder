@@ -17,7 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import components.TestButton
 
 @Composable
-fun GreetingScreen(
+internal fun GreetingScreen(
     modifier: Modifier = Modifier,
     vm: GreetingViewModel, svm: OnboardingViewModel, goToDescriptionForm: () -> Unit
 ) {

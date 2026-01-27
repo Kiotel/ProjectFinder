@@ -11,7 +11,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
 @Composable
-fun NavigationRoot(modifier: Modifier = Modifier){
+internal fun NavigationRoot(modifier: Modifier = Modifier){
     val rootBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration{
             serializersModule = SerializersModule {

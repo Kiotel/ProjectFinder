@@ -1,5 +1,5 @@
 package descriptionForm
 
-data class DescriptionFormScreenState(
+internal data class DescriptionFormScreenState(
     val a: String = "",
 )
