@@ -34,7 +34,7 @@ internal class OnboardingViewModel(
         viewModelScope.launch {
             _localState.update { it.copy(isLoading = true) }
             try {
-                setTokenUseCase((_localState.value.token ?: "0").toInt().plus(1).toString())
+                setTokenUseCase((uiState.value.token ?: "0").toInt().plus(1).toString())
             } catch (e: Exception) {
                 _localState.update { it.copy(errorMsg = e.message) }
             } finally {
@@ -51,6 +51,6 @@ internal class OnboardingViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        println("GreetingViewModel: cleared")
+        println("OnBoardingViewModel: cleared")
     }
 }
