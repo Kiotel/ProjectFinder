@@ -27,7 +27,7 @@ class GreetingViewModel(
             isLoading = true,
             errorMsg = null,
             isFilledDescriptionForm = false,
-            firstTime = false
+            isEverLogged = false,
         )
     )
     val uiState: StateFlow<GreetingScreenState> = _uiState.asStateFlow()
@@ -44,7 +44,7 @@ class GreetingViewModel(
             _uiState.update {
                 it.copy(
                     isFilledDescriptionForm = isFilled,
-                    firstTime = !isEverLogged,
+                    isEverLogged = isEverLogged,
                     isLoading = false
                 )
             }
@@ -53,27 +53,20 @@ class GreetingViewModel(
         }.launchIn(viewModelScope)
     }
 
-    fun onCompleteProfileClicked(formData: String) {
+    fun toggleEverLogged() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                setIsFilledDescriptionFormUseCase(true)
-                setIsEverLoggedUseCase(true)
+                setIsEverLoggedUseCase(!_uiState.value.isEverLogged)
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, errorMsg = "Failed to save") }
+                _uiState.update { it.copy(isLoading = false, errorMsg = e.message) }
             }
         }
     }
 
-    fun toggleEverLogged(){
-        viewModelScope.launch {
-            _uiState
-        }
-    }
-
-    fun handleIntent(intent: GreetingIntent) {
-        when (intent){
-            GreetingIntent.toggleEverLogged ->
+    internal fun handleIntent(intent: GreetingIntent) {
+        when (intent) {
+            GreetingIntent.toggleEverLogged -> toggleEverLogged()
         }
     }
 

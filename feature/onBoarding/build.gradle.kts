@@ -30,13 +30,6 @@ kotlin {
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
     }
 
-    // For iOS targets, this is also where you should
-    // configure native binary output. For more information, see:
-    // https://kotlinlang.org/docs/multiplatform-build-native-binaries.html#build-xcframeworks
-
-    // A step-by-step guide on how to include this library in an XCode
-    // project can be found here:
-    // https://developer.android.com/kotlin/multiplatform/migrate
     val xcfName = "feature:onBoardingKit"
 
     iosX64 {
@@ -62,8 +55,26 @@ kotlin {
         commonMain {
             dependencies {
                 dependencies {
+                    implementation(libs.compose.runtime)
+                    implementation(libs.compose.foundation)
+                    implementation(libs.compose.material3)
+                    implementation(libs.compose.ui)
+                    implementation(libs.compose.components.resources)
+                    implementation(libs.compose.ui.tooling.preview)
+
+                    implementation(libs.compose.navigation3.ui)
+                    implementation(libs.compose.lifecycle.viewmodel.nav3)
+
+                    implementation(libs.kotlin.stdlib)
+                    implementation(libs.kotlinx.coroutines.core)
+
+                    implementation(libs.koin.core)
+                    implementation(libs.koin.compose)
+                    implementation(libs.koin.compose.viewmodel)
+
                     implementation(project(":core:ui"))
-                    implementation(project(":feature:onBoarding"))
+                    implementation(project(":core:domain"))
+                    implementation(project(":feature:shared"))
                 }
             }
         }

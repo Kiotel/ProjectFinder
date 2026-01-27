@@ -51,7 +51,7 @@ fun OnBoardingNavigation(
                 GreetingScreen(
                     vm = greetingViewModel,
                     svm = onBoardingViewModel,
-                    goToDescriptionFormForm = { onBoardingBackStack.add(Route.OnBoarding.DescriptionForm) },
+                    goToDescriptionForm = { onBoardingBackStack.add(Route.OnBoarding.DescriptionForm) },
                 )
             }
             entry<Route.OnBoarding.DescriptionForm> {

@@ -3,25 +3,25 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface Route: NavKey {
-    @Serializable
+    @kotlinx.serialization.Serializable
     data object OnBoarding: Route {
-        @Serializable
+        @kotlinx.serialization.Serializable
         data object Greeting: Route
-        @Serializable
+        @kotlinx.serialization.Serializable
         data object DescriptionForm: Route
     }
-    @Serializable
+    @kotlinx.serialization.Serializable
     data object Auth: Route {
-        @Serializable
+        @kotlinx.serialization.Serializable
         data object Login: Route
-        @Serializable
+        @kotlinx.serialization.Serializable
         data object Registration: Route
-        @Serializable
+        @kotlinx.serialization.Serializable
         data object PasswordReset: Route
     }
-    @Serializable
+    @kotlinx.serialization.Serializable
     data object Error: Route{
-        @Serializable
+        @kotlinx.serialization.Serializable
         data object UnknownError: Route
     }
 }

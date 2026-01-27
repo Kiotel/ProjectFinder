@@ -72,15 +72,13 @@ kotlin {
                     implementation(libs.compose.navigation3.ui)
                     implementation(libs.compose.lifecycle.viewmodel.nav3)
 
-                    implementation(libs.kotlinx.coroutines.core)
-
                     implementation(libs.koin.core)
                     implementation(libs.koin.compose)
                     implementation(libs.koin.compose.viewmodel)
 
-                    implementation(libs.kotlin.stdlib)
-
                     implementation(project(":core:domain"))
+                    implementation(project(":feature:shared"))
+                    implementation(project(":feature:onBoarding"))
                 }
             }
         }
