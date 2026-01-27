@@ -1,5 +1,5 @@
 package greeting
 
 internal sealed interface GreetingIntent {
-    object toggleEverLogged : GreetingIntent
+    object ToggleEverLogged : GreetingIntent
 }

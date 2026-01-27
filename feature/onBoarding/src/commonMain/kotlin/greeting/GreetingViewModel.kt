@@ -63,10 +63,9 @@ class GreetingViewModel(
             }
         }
     }
-
     internal fun handleIntent(intent: GreetingIntent) {
         when (intent) {
-            GreetingIntent.toggleEverLogged -> toggleEverLogged()
+            GreetingIntent.ToggleEverLogged -> toggleEverLogged()
         }
     }
 
