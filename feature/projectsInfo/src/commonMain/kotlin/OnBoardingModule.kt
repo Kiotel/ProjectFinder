@@ -2,10 +2,9 @@ import descriptionForm.descriptionFormModule
 import greeting.greetingModule
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import registrationForm.registrationFormModule
 
 val onBoardingModule = module {
     viewModelOf(::OnboardingViewModel)
 
-    includes(descriptionFormModule, registrationFormModule, greetingModule)
+    includes(descriptionFormModule, greetingModule)
 }

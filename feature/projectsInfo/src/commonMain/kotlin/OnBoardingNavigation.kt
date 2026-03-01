@@ -10,12 +10,9 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import descriptionForm.DescriptionFormScreen
 import descriptionForm.DescriptionFormViewModel
 import greeting.GreetingScreen
-import greeting.GreetingViewModel
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
-import registrationForm.RegistrationFormScreen
-import registrationForm.RegistrationFormViewModel
 
 @Composable
 fun OnBoardingNavigation(
@@ -52,7 +49,7 @@ fun OnBoardingNavigation(
                 GreetingScreen(
                     vm = greetingViewModel,
                     svm = onBoardingViewModel,
-                    goToDescriptionForm = { onBoardingBackStack.add(Route.OnBoarding.RegistrationForm) },
+                    goToDescriptionForm = { onBoardingBackStack.add(Route.OnBoarding.DescriptionForm) },
                 )
             }
             entry<Route.OnBoarding.DescriptionForm> {
@@ -60,14 +57,6 @@ fun OnBoardingNavigation(
 
                 DescriptionFormScreen(
                     vm = descriptionFormViewModel,
-                    svm = onBoardingViewModel
-                )
-            }
-            entry<Route.OnBoarding.RegistrationForm> {
-                val registrationFormViewModel: RegistrationFormViewModel = koinViewModel()
-
-                RegistrationFormScreen(
-                    vm = registrationFormViewModel,
                     svm = onBoardingViewModel
                 )
             }

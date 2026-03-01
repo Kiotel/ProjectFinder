@@ -16,9 +16,9 @@ internal class OnboardingViewModel(
     private val getTokenUseCase: GetTokenUseCase,
 ) : ViewModel() {
 
-    private val _localState = MutableStateFlow(InternalOnboardingState())
+    private val _localState = MutableStateFlow(OnBoardingState())
 
-    val uiState: StateFlow<InternalOnboardingState> = combine(
+    val uiState: StateFlow<OnBoardingState> = combine(
         getTokenUseCase(), _localState
     ) { token, localState ->
         localState.copy(token = token)
@@ -27,7 +27,7 @@ internal class OnboardingViewModel(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = InternalOnboardingState(isLoading = true)
+        initialValue = OnBoardingState(isLoading = true)
     )
 
     private fun setToken() {

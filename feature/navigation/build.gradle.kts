@@ -8,7 +8,7 @@ plugins {
 }
 
 kotlin {
-    
+
     androidLibrary {
         namespace = "com.example.navigation"
         compileSdk = 36
@@ -42,25 +42,23 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                dependencies {
-                    implementation(libs.compose.runtime)
-                    implementation(libs.compose.foundation)
-                    implementation(libs.compose.material3)
-                    implementation(libs.compose.ui)
-                    implementation(libs.compose.components.resources)
-                    implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.compose.runtime)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.ui)
+                implementation(libs.compose.components.resources)
+                implementation(libs.compose.ui.tooling.preview)
 
-                    implementation(libs.compose.navigation3.ui)
-                    implementation(libs.compose.lifecycle.viewmodel.nav3)
+                implementation(libs.compose.navigation3.ui)
+                implementation(libs.compose.lifecycle.viewmodel.nav3)
 
-                    implementation(libs.koin.core)
-                    implementation(libs.koin.compose)
-                    implementation(libs.koin.compose.viewmodel)
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
 
-                    implementation(project(":core:domain"))
-                    implementation(project(":feature:shared"))
-                    implementation(project(":feature:onBoarding"))
-                }
+                implementation(project(":core:domain"))
+                implementation(project(":feature:shared"))
+                implementation(project(":feature:onBoarding"))
             }
         }
     }

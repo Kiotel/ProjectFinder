@@ -14,6 +14,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
 
 dependencyResolutionManagement {
     repositories {
@@ -36,3 +39,4 @@ include(":feature")
 include(":feature:navigation")
 include(":feature:onBoarding")
 include(":feature:shared")
+include(":feature:projectsInfo")
