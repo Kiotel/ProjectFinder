@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ProjectFinder</string>
+
+    <!-- REGISTRATION FORM ERRORS-->
+    <string name="error_email_length">Минимальная длина почты 3.</string>
+    <string name="error_email_wrong">Почта некорректна</string>
+
+    <string name="error_login_length">Минимальная длина логина 3.</string>
+
+    <string name="error_password_length">Минимальная длина пароля 8.</string>
+
+    <string name="error_password_and_passord_copy_not_equal">Пароль и его повтор не одинаковы.</string>
+    <!-- REGISTRATION FORM ERRORS-->
+</resources>

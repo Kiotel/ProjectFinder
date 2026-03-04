@@ -1,3 +1,5 @@
+import org.jetbrains.compose.resources.ResourcesExtension
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
@@ -77,6 +79,9 @@ kotlin {
             }
         }
     }
+}
 
+compose.resources {
+    this.generateResClass = ResourcesExtension.ResourceClassGeneration.Never
 }
 

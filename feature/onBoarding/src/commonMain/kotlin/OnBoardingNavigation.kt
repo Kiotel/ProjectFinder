@@ -26,27 +26,26 @@ fun OnBoardingNavigation(
             serializersModule = SerializersModule {
                 polymorphic(NavKey::class) {
                     subclass(
-                        Route.OnBoarding.Greeting::class,
-                        Route.OnBoarding.Greeting.serializer()
+                        Route.OnBoarding.Greeting::class, Route.OnBoarding.Greeting.serializer()
                     )
                     subclass(
                         Route.OnBoarding.DescriptionForm::class,
                         Route.OnBoarding.DescriptionForm.serializer()
                     )
+                    subclass(
+                        Route.OnBoarding.RegistrationForm::class,
+                        Route.OnBoarding.RegistrationForm.serializer()
+                    )
                 }
             }
-        },
-        Route.OnBoarding.Greeting
+        }, Route.OnBoarding.Greeting
     )
     val onBoardingViewModel: OnboardingViewModel = koinViewModel()
     NavDisplay(
-        modifier = modifier,
-        backStack = onBoardingBackStack,
-        entryDecorators = listOf(
+        modifier = modifier, backStack = onBoardingBackStack, entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
-        ),
-        entryProvider = entryProvider {
+        ), entryProvider = entryProvider {
             entry<Route.OnBoarding.Greeting> {
                 val greetingViewModel: GreetingViewModel = koinViewModel()
                 GreetingScreen(
@@ -59,16 +58,14 @@ fun OnBoardingNavigation(
                 val descriptionFormViewModel: DescriptionFormViewModel = koinViewModel()
 
                 DescriptionFormScreen(
-                    vm = descriptionFormViewModel,
-                    svm = onBoardingViewModel
+                    vm = descriptionFormViewModel, svm = onBoardingViewModel
                 )
             }
             entry<Route.OnBoarding.RegistrationForm> {
                 val registrationFormViewModel: RegistrationFormViewModel = koinViewModel()
 
                 RegistrationFormScreen(
-                    vm = registrationFormViewModel,
-                    svm = onBoardingViewModel
+                    vm = registrationFormViewModel, svm = onBoardingViewModel
                 )
             }
         }
