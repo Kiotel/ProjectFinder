@@ -59,6 +59,7 @@ kotlin {
                 implementation(libs.koin.compose.viewmodel)
 
                 implementation(project(":core:domain"))
+                implementation(project(":core:ui"))
                 implementation(project(":feature:shared"))
                 implementation(project(":feature:onBoarding"))
             }
