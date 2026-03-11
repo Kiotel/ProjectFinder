@@ -1,4 +1,4 @@
-package remote.apis.dtos
+package remote.apis.dtos.responses
 
 import kotlin.jvm.JvmInline
 

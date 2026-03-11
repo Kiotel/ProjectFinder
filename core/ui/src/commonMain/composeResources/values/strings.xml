@@ -3,12 +3,17 @@
 
     <!-- REGISTRATION FORM ERRORS-->
     <string name="error_email_length">Минимальная длина почты 3.</string>
-    <string name="error_email_wrong">Почта некорректна</string>
+    <string name="error_email_wrong">Почта некорректна.ы</string>
 
     <string name="error_login_length">Минимальная длина логина 3.</string>
 
     <string name="error_password_length">Минимальная длина пароля 8.</string>
+    <string name="error_password_must_contain_digits_and_letter">Нет либо цифр либо букв</string>
 
     <string name="error_password_and_passord_copy_not_equal">Пароль и его повтор не одинаковы.</string>
+
+    <string name="snackbar_registration_in_progress">Идет регистрация...</string>
+    <string name="snackbar_registration_success">Регистрация прошла успешно</string>
+    <string name="snackbar_registration_failed">Ошибка во время регистрации</string>
     <!-- REGISTRATION FORM ERRORS-->
 </resources>

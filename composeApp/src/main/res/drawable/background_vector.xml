@@ -1,0 +1,67 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        android:width="1080dp"
+        android:height="1920dp"
+        android:viewportWidth="1080"
+        android:viewportHeight="1920">
+    <path android:pathData="M0,0h1080v1920h-1080z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                    android:startX="0"
+                    android:startY="0"
+                    android:endX="0"
+                    android:endY="1920"
+                    android:type="linear">
+                <item
+                        android:offset="0"
+                        android:color="#FF4ECDC4" />
+                <item
+                        android:offset="0.5"
+                        android:color="#FF44A08D" />
+                <item
+                        android:offset="1"
+                        android:color="#FF667EEA" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+            android:pathData="M340,80l200,-80l200,80l0,160l-200,80l-200,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#0DFFFFFF"
+            android:strokeColor="#4DFFFFFF" />
+    <path
+            android:pathData="M0,400l160,-80l160,80l0,160l-160,80l-160,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#0DFFFFFF"
+            android:strokeColor="#4DFFFFFF" />
+    <path
+            android:pathData="M340,700l200,-80l200,80l0,160l-200,80l-200,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#14FFFFFF"
+            android:strokeColor="#66FFFFFF" />
+    <path
+            android:pathData="M780,550l160,-80l160,80l0,160l-160,80l-160,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#0DFFFFFF"
+            android:strokeColor="#4DFFFFFF" />
+    <path
+            android:pathData="M0,1100l160,-80l160,80l0,160l-160,80l-160,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#0FFFFFFF"
+            android:strokeColor="#59FFFFFF" />
+    <path
+            android:pathData="M340,1380l200,-80l200,80l0,160l-200,80l-200,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#14FFFFFF"
+            android:strokeColor="#66FFFFFF" />
+    <path
+            android:pathData="M-200,200l200,-80l200,80l0,160l-200,80l-200,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#08FFFFFF"
+            android:strokeColor="#33FFFFFF" />
+    <path
+            android:pathData="M900,1600l160,-80l160,80l0,160l-160,80l-160,-80z"
+            android:strokeWidth="2"
+            android:fillColor="#0DFFFFFF"
+            android:strokeColor="#4DFFFFFF" />
+</vector>

@@ -13,5 +13,6 @@ internal data class InternalRegistrationState(
     val passwordCopyErrorText: StringResource? = null,
     val consent: Boolean = false,
     val consentErrorText: StringResource? = null,
-    val registrationErrorText: StringResource? = null
+    val snackBarMessageResource: StringResource? = null,
+    val currentSnackBarMessageId: Int = 0,
 )

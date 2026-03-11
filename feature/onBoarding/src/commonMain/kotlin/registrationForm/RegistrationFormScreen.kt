@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,14 +19,19 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import registrationForm.models.RegistrationFormData
 import utils.AgreementLink
@@ -42,10 +49,25 @@ internal fun RegistrationFormScreen(
     modifier: Modifier = Modifier, vm: RegistrationFormViewModel, svm: OnboardingViewModel
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
+
     val scrollState = rememberScrollState()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.currentSnackBarMessageId) {
+        if (uiState.currentSnackBarMessageId != 0 && uiState.snackBarMessageResource != null) {
+            snackBarHostState.showSnackbar(
+                message = getString(uiState.snackBarMessageResource!!),
+                duration = SnackbarDuration.Long
+            )
+        }
+    }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(), containerColor = MaterialTheme.colorScheme.background
+        modifier = modifier.fillMaxSize(),
+        containerColor = Color.Transparent,
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier.imePadding().verticalScroll(scrollState).fillMaxSize()
@@ -70,7 +92,7 @@ internal fun RegistrationFormScreen(
                     passwordCopyErrorText = uiState.passwordCopyErrorText?.let { stringResource(it) },
                     consent = uiState.consent,
                     consentErrorText = uiState.consentErrorText?.let { stringResource(it) },
-                    registrationErrorText = uiState.registrationErrorText?.let { stringResource(it) }),
+                    registrationErrorText = uiState.snackBarMessageResource?.let { stringResource(it) }),
                 onEmailChange = { vm.handleIntent(RegistrationIntent.SetEmail(it)) },
                 onLoginChange = { vm.handleIntent(RegistrationIntent.SetLogin(it)) },
                 onPasswordChange = { vm.handleIntent(RegistrationIntent.SetPassword(it)) },
@@ -219,7 +241,7 @@ private fun RegistrationTextInput(
             }
         },
         isError = isError,
-        modifier = modifier.focusRequester(focusRequester),
+        modifier = modifier.focusRequester(focusRequester).requiredHeight(80.dp),
         value = value,
         onValueChange = onValueChange,
         singleLine = true,

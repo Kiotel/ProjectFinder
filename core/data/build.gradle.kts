@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.androidLint)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -43,6 +44,8 @@ kotlin {
                 implementation(libs.koin.core)
 
                 implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization)
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(libs.androidx.room.runtime)

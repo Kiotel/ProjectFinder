@@ -1,8 +1,6 @@
 import org.koin.dsl.module
-import useCases.GetTokenUseCase
-import useCases.SetTokenUseCase
+import useCases.RegisterUseCase
 
 val domainModule = module {
-    factory<GetTokenUseCase> { GetTokenUseCase(get()) }
-    factory<SetTokenUseCase> { SetTokenUseCase(get()) }
+    factory<RegisterUseCase> { RegisterUseCase(get()) }
 }

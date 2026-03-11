@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import useCases.GetTokenUseCase
-import useCases.SetTokenUseCase
+import useCases.RegisterUseCase
 
 internal class OnboardingViewModel(
-    private val setTokenUseCase: SetTokenUseCase,
+    private val setTokenUseCase: RegisterUseCase,
     private val getTokenUseCase: GetTokenUseCase,
 ) : ViewModel() {
 

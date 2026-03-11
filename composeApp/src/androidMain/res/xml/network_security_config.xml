@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow cleartext traffic ONLY for debug builds / dev servers -->
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Your dev server IP or domain -->
+        <domain includeSubdomains="true">10.131.170.155</domain>
+        <!-- Or use localhost for emulator -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <!-- Or allow all local/private IPs -->
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+
+    <!-- Block cleartext for everything else (production safety) -->
+    <domain-config>
+        <domain includeSubdomains="true">your-production-domain.com</domain>
+    </domain-config>
+</network-security-config>

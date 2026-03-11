@@ -1,13 +1,21 @@
+import local.datastore.TokenStore
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import remote.apis.AuthApi
 import remote.apis.TestApi
 import repositories.AuthRepository
 import repositories.AuthRepositoryImpl
+import utils.Logger
 
 val dataModule = module {
     single<TestApi> { TestApi() }
+    single<AuthApi> { AuthApi() }
 
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<TokenStore> { TokenStore(get()) }
+
+    single<Logger> { Logger }
+
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
 
     includes(platformModule)
 }

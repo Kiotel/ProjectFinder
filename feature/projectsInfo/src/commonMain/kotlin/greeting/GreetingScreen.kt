@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import components.TestButton
 
@@ -25,8 +26,8 @@ internal fun GreetingScreen(
     val sharedState by svm.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.background
+        modifier = modifier.fillMaxSize(),
+        containerColor = Color.Transparent
     ) { innerPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(innerPadding),

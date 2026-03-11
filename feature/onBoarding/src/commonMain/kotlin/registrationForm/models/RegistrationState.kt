@@ -13,7 +13,8 @@ internal data class RegistrationState(
     val passwordCopyErrorText: StringResource?,
     val consent: Boolean,
     val consentErrorText: StringResource?,
-    val registrationErrorText: StringResource?
+    val snackBarMessageResource: StringResource?,
+    val currentSnackBarMessageId: Int,
 ) {
     internal constructor(internalRegistrationState: InternalRegistrationState) : this(
         email = internalRegistrationState.email,
@@ -26,6 +27,7 @@ internal data class RegistrationState(
         passwordCopyErrorText = internalRegistrationState.passwordCopyErrorText,
         consent = internalRegistrationState.consent,
         consentErrorText = internalRegistrationState.consentErrorText,
-        registrationErrorText = internalRegistrationState.registrationErrorText
+        snackBarMessageResource = internalRegistrationState.snackBarMessageResource,
+        currentSnackBarMessageId = internalRegistrationState.currentSnackBarMessageId
     )
 }

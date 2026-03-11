@@ -1,13 +1,15 @@
 package remote.apis
 
-import remote.apis.dtos.KtorTextDto
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.delay
+import remote.apis.dtos.responses.KtorTextDto
 
 class TestApi {
-    private val client = HttpClient()
+    private val client = HttpClient() {
+    }
+
 
     suspend fun test(): KtorTextDto {
         val response = client.get("https://ktor.io/docs/")

@@ -8,19 +8,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import projectfinder.core.ui.generated.resources.Res
 import projectfinder.core.ui.generated.resources.error_email_length
 import projectfinder.core.ui.generated.resources.error_email_wrong
 import projectfinder.core.ui.generated.resources.error_login_length
 import projectfinder.core.ui.generated.resources.error_password_and_passord_copy_not_equal
 import projectfinder.core.ui.generated.resources.error_password_length
+import projectfinder.core.ui.generated.resources.error_password_must_contain_digits_and_letter
+import projectfinder.core.ui.generated.resources.snackbar_registration_failed
+import projectfinder.core.ui.generated.resources.snackbar_registration_in_progress
+import projectfinder.core.ui.generated.resources.snackbar_registration_success
 import registrationForm.models.InternalRegistrationState
 import registrationForm.models.RegistrationState
+import useCases.RegisterUseCase
 
-internal class RegistrationFormViewModel : ViewModel() {
+internal class RegistrationFormViewModel(
+    private val registerUseCase: RegisterUseCase
+) : ViewModel() {
     private val _internalState = MutableStateFlow(
         InternalRegistrationState()
     )
+
+
     val uiState: StateFlow<RegistrationState> = _internalState.map { internalState ->
         RegistrationState(
             email = internalState.email,
@@ -33,7 +43,8 @@ internal class RegistrationFormViewModel : ViewModel() {
             passwordCopyErrorText = internalState.passwordCopyErrorText,
             consent = internalState.consent,
             consentErrorText = internalState.consentErrorText,
-            registrationErrorText = internalState.registrationErrorText
+            snackBarMessageResource = internalState.snackBarMessageResource,
+            currentSnackBarMessageId = internalState.currentSnackBarMessageId
         )
     }.stateIn(
         scope = viewModelScope,
@@ -64,7 +75,14 @@ internal class RegistrationFormViewModel : ViewModel() {
             isValid = false
             updateState { it.copy(passwordErrorText = Res.string.error_password_length) }
         } else {
-            updateState { it.copy(passwordErrorText = null) }
+            if (!uiState.value.password.toCharArray()
+                    .any { it.isLetter() } || !uiState.value.password.toCharArray()
+                    .any { it.isDigit() }
+            ) {
+                updateState { it.copy(passwordErrorText = Res.string.error_password_must_contain_digits_and_letter) }
+            } else {
+                updateState { it.copy(passwordErrorText = null) }
+            }
         }
 
         if (uiState.value.password != uiState.value.passwordCopy) {
@@ -78,6 +96,38 @@ internal class RegistrationFormViewModel : ViewModel() {
 
     private fun onRegister() {
         val isFormValid = validateForm()
+
+        viewModelScope.launch {
+            if (isFormValid) {
+                updateState {
+                    it.copy(
+                        snackBarMessageResource = Res.string.snackbar_registration_in_progress,
+                        currentSnackBarMessageId = it.currentSnackBarMessageId + 1
+                    )
+                }
+                registerUseCase(
+                    username = uiState.value.login,
+                    email = uiState.value.email,
+                    password = uiState.value.password
+                ).collect { result ->
+                    result.onSuccess {
+                        updateState {
+                            it.copy(
+                                snackBarMessageResource = Res.string.snackbar_registration_success,
+                                currentSnackBarMessageId = it.currentSnackBarMessageId + 1
+                            )
+                        }
+                    }.onFailure {
+                        updateState {
+                            it.copy(
+                                snackBarMessageResource = Res.string.snackbar_registration_failed,
+                                currentSnackBarMessageId = it.currentSnackBarMessageId + 1
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     internal fun updateState(mutation: (InternalRegistrationState) -> InternalRegistrationState) {
