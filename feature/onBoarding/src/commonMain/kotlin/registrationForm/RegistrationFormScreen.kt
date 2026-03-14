@@ -3,6 +3,7 @@ package registrationForm
 import OnboardingViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -63,15 +65,12 @@ internal fun RegistrationFormScreen(
     }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
-        containerColor = Color.Transparent,
-        snackbarHost = {
+        modifier = modifier.fillMaxSize(), containerColor = Color.Transparent, snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
-        }
-    ) { innerPadding ->
+        }) { innerPadding ->
         Column(
-            modifier = Modifier.imePadding().verticalScroll(scrollState).fillMaxSize()
-                .padding(top = innerPadding.calculateTopPadding() + 36.dp),
+            modifier = Modifier.verticalScroll(scrollState).fillMaxSize()
+                .padding(top = innerPadding.calculateTopPadding() + 36.dp).imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(36.dp)
         ) {
@@ -121,11 +120,9 @@ private fun RegistrationForm(
     val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = modifier.fillMaxWidth().padding(12.dp)
-            .background(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = MaterialTheme.shapes.large
-            ),
+        modifier = modifier.fillMaxWidth().padding(12.dp).background(
+            color = MaterialTheme.colorScheme.surfaceContainer, shape = MaterialTheme.shapes.large
+        ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -141,7 +138,7 @@ private fun RegistrationForm(
             value = data.email,
             onValueChange = { onEmailChange(it) },
             keyboardType = KeyboardType.Email,
-            onNext = { loginFocus.requestFocus() },
+            onNext = { loginFocus.requestFocus(focusDirection = FocusDirection.Up) },
         )
         RegistrationTextInput(
             errorText = data.loginErrorText,
@@ -149,7 +146,7 @@ private fun RegistrationForm(
             labelText = "Логин",
             value = data.login,
             onValueChange = { onLoginChange(it) },
-            onNext = { passwordFocus.requestFocus() },
+            onNext = { passwordFocus.requestFocus(focusDirection = FocusDirection.Up) },
             focusRequester = loginFocus
         )
         RegistrationTextInput(
@@ -159,7 +156,7 @@ private fun RegistrationForm(
             value = data.password,
             onValueChange = { onPasswordChange(it) },
             keyboardType = KeyboardType.Password,
-            onNext = { passwordCopyFocus.requestFocus() },
+            onNext = { passwordCopyFocus.requestFocus(focusDirection = FocusDirection.Up) },
             focusRequester = passwordFocus
         )
         RegistrationTextInput(
@@ -213,39 +210,37 @@ private fun RegistrationTextInput(
     onNext: () -> Unit = {},
     focusRequester: FocusRequester = FocusRequester.Default
 ) {
-    OutlinedTextField(
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
-        keyboardActions = KeyboardActions(
-            onNext = { onNext() },
-            onDone = { onNext() }
-        ),
-        supportingText = {
-            Text(
-                text = if (isError) errorText ?: "" else " ",
-                style = MaterialTheme.typography.labelMedium
-            )
-        },
-        placeholder = {
-            Text(
-                text = placeHolderText ?: "", style = MaterialTheme.typography.labelMedium
-            )
-        },
-        label = {
-            if (labelText != null) {
+    Box(modifier = modifier.requiredHeight(80.dp)) {
+        OutlinedTextField(
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType, imeAction = imeAction
+            ),
+            keyboardActions = KeyboardActions(onNext = { onNext() }, onDone = { onNext() }),
+            supportingText = {
                 Text(
-                    text = labelText, style = MaterialTheme.typography.labelMedium
+                    text = if (isError) errorText ?: "" else " ",
+                    style = MaterialTheme.typography.labelMedium
                 )
-            }
-        },
-        isError = isError,
-        modifier = modifier.focusRequester(focusRequester).requiredHeight(80.dp),
-        value = value,
-        onValueChange = onValueChange,
-        singleLine = true,
-    )
+            },
+            placeholder = {
+                Text(
+                    text = placeHolderText ?: "", style = MaterialTheme.typography.labelMedium
+                )
+            },
+            label = {
+                if (labelText != null) {
+                    Text(
+                        text = labelText, style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            },
+            isError = isError,
+            modifier = Modifier.focusRequester(focusRequester),
+            value = value,
+            onValueChange = onValueChange,
+            singleLine = true,
+        )
+    }
 }
 
 @Preview(
