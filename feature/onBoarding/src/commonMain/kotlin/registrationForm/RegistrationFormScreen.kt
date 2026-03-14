@@ -15,8 +15,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -27,7 +32,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -37,6 +44,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -59,7 +68,8 @@ internal fun RegistrationFormScreen(
         if (uiState.currentSnackBarMessageId != 0 && uiState.snackBarMessageResource != null) {
             snackBarHostState.showSnackbar(
                 message = getString(uiState.snackBarMessageResource!!),
-                duration = SnackbarDuration.Long
+                duration = SnackbarDuration.Long,
+                withDismissAction = true
             )
         }
     }
@@ -117,6 +127,16 @@ private fun RegistrationForm(
     val passwordFocus = remember { FocusRequester() }
     val passwordCopyFocus = remember { FocusRequester() }
 
+    var hidePassword by remember { mutableStateOf(true) }
+    var hidePasswordCopy by remember { mutableStateOf(true) }
+
+    val passwordVisualTransformation = if (hidePassword) {
+        PasswordVisualTransformation()
+    } else VisualTransformation.None
+    val passwordCopyVisualTransformation = if (hidePasswordCopy) {
+        PasswordVisualTransformation()
+    } else VisualTransformation.None
+
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -150,6 +170,7 @@ private fun RegistrationForm(
             focusRequester = loginFocus
         )
         RegistrationTextInput(
+            isSecret = true,
             errorText = data.passwordErrorText,
             isError = !data.passwordErrorText.isNullOrBlank(),
             labelText = "Пароль",
@@ -160,6 +181,7 @@ private fun RegistrationForm(
             focusRequester = passwordFocus
         )
         RegistrationTextInput(
+            isSecret = true,
             errorText = data.passwordCopyErrorText,
             isError = !data.passwordCopyErrorText.isNullOrBlank(),
             labelText = "Повторите пароль",
@@ -208,14 +230,35 @@ private fun RegistrationTextInput(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
     onNext: () -> Unit = {},
-    focusRequester: FocusRequester = FocusRequester.Default
+    focusRequester: FocusRequester = FocusRequester.Default,
+    isSecret: Boolean = false
 ) {
+    var hide by remember { mutableStateOf(true) }
+
+    val visualTransformation = if (hide && isSecret) {
+        PasswordVisualTransformation()
+    } else VisualTransformation.None
+
     Box(modifier = modifier.requiredHeight(80.dp)) {
         OutlinedTextField(
+            visualTransformation = visualTransformation,
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType, imeAction = imeAction
             ),
             keyboardActions = KeyboardActions(onNext = { onNext() }, onDone = { onNext() }),
+            trailingIcon = {
+                if (isSecret) {
+                    IconButton(
+                        onClick = {
+                            hide = !hide
+                        }) {
+                        Icon(
+                            if (hide) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = null
+                        )
+                    }
+                }
+            },
             supportingText = {
                 Text(
                     text = if (isError) errorText ?: "" else " ",
