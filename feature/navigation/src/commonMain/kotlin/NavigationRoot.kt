@@ -14,12 +14,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -30,14 +29,14 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import utils.LocalHazeState
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
 @Composable
 internal fun NavigationRoot(modifier: Modifier = Modifier) {
@@ -57,9 +56,8 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
     CompositionLocalProvider(LocalHazeState provides hazeState) {
         Surface {
             Background(
-                modifier = modifier.hazeSource(LocalHazeState.current),
                 enabled = true,
-                useHexagonBackground = true,
+                useCirclesBackground = true,
                 painter = null
             ) {
                 NavDisplay(
@@ -79,263 +77,112 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
 
 @Composable
 private fun Background(
-    modifier: Modifier = Modifier, // This contains the hazeSource
+    modifier: Modifier = Modifier,
     enabled: Boolean,
     painter: Painter? = null,
-    useHexagonBackground: Boolean = false,
+    useCirclesBackground: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val isDarkTheme = isSystemInDarkTheme()
+    val hazeState = LocalHazeState.current
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        Box(modifier = modifier.fillMaxSize()) {
-            when {
-                enabled && useHexagonBackground -> {
-                    HexagonGradientBackground(isDarkTheme = isDarkTheme)
-                }
-
-                enabled && painter != null -> {
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                else -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
-                    )
-                }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .hazeSource(hazeState)
+        ) {
+            if (enabled && useCirclesBackground) {
+                MovingCirclesBackground(isDarkTheme = isDarkTheme)
+            } else if (painter != null) {
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
 
-        content()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .hazeEffect(
+                    state = hazeState,
+                    style = HazeStyle(
+                        blurRadius = 100.dp,
+                        noiseFactor = 0.1f,
+                        tint = HazeTint(
+                            color = if (isDarkTheme) Color.Black.copy(alpha = 0.1f)
+                            else Color.White.copy(alpha = 0.05f)
+                        )
+                    )
+                )
+        )
+
+        Box(modifier = modifier.fillMaxSize()) {
+            content()
+        }
     }
 }
-
 @Composable
-private fun HexagonGradientBackground(
+private fun MovingCirclesBackground(
     modifier: Modifier = Modifier,
     isDarkTheme: Boolean,
 ) {
-    val lightGradientColors = listOf(
-        Color(0xFFFF6B9D),
-        Color(0xFFC44569),
-        Color(0xFF4A90E2)
+    val infiniteTransition = rememberInfiniteTransition(label = "liquid_bg")
+
+    // Circle 1 Movement (Primary)
+    val x1 by infiniteTransition.animateFloat(
+        initialValue = 0.15f, targetValue = 0.85f,
+        animationSpec = infiniteRepeatable(tween(18000, easing = EaseInOut), RepeatMode.Reverse),
+        label = "c1_x"
+    )
+    val y1 by infiniteTransition.animateFloat(
+        initialValue = 0.2f, targetValue = 0.8f,
+        animationSpec = infiniteRepeatable(tween(13000, easing = EaseInOut), RepeatMode.Reverse),
+        label = "c1_y"
     )
 
-    val darkGradientColors = listOf(
-        Color(0xFF2D1B4E),
-        Color(0xFF1A1A2E),
-        Color(0xFF0F0F1E)
+    // Circle 2 Movement (Tertiary)
+    val x2 by infiniteTransition.animateFloat(
+        initialValue = 0.85f, targetValue = 0.15f,
+        animationSpec = infiniteRepeatable(tween(22000, easing = EaseInOut), RepeatMode.Reverse),
+        label = "c2_x"
+    )
+    val y2 by infiniteTransition.animateFloat(
+        initialValue = 0.75f, targetValue = 0.25f,
+        animationSpec = infiniteRepeatable(tween(16000, easing = EaseInOut), RepeatMode.Reverse),
+        label = "c2_y"
     )
 
-    val lightHexagonColor = Color.White.copy(alpha = 0.08f)
-    val darkHexagonColor = Color.White.copy(alpha = 0.05f)
+    val color1 = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val color2 = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.4f)
+    val bgColor = MaterialTheme.colorScheme.background
 
-    // Анимация для каждого шестиугольника
-    val infiniteTransition = rememberInfiniteTransition(label = "hexagonFloat")
+    Canvas(modifier = modifier.fillMaxSize().background(bgColor)) {
+        val radius1 = size.minDimension * 0.7f
+        val radius2 = size.minDimension * 0.6f
 
-    // Параметры анимации для 6 шестиугольников
-    val hex1OffsetX = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 30f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(6000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex1X"
-    )
-    val hex1OffsetY = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 20f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(5000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex1Y"
-    )
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(color1, Color.Transparent),
+                center = Offset(size.width * x1, size.height * y1),
+                radius = radius1
+            ),
+            center = Offset(size.width * x1, size.height * y1),
+            radius = radius1
+        )
 
-    val hex2OffsetX = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 25f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(7000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex2X"
-    )
-    val hex2OffsetY = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 35f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(6500, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex2Y"
-    )
-
-    val hex3OffsetX = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 35f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(5500, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex3X"
-    )
-    val hex3OffsetY = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 25f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(7500, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex3Y"
-    )
-
-    val hex4OffsetX = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 30f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(6500, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex4X"
-    )
-    val hex4OffsetY = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 30f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(5500, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex4Y"
-    )
-
-    val hex5OffsetX = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 20f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(7000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex5X"
-    )
-    val hex5OffsetY = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 35f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(6000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex5Y"
-    )
-
-    val hex6OffsetX = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 25f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(5000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex6X"
-    )
-    val hex6OffsetY = infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 20f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(7000, easing = EaseInOut),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "hex6Y"
-    )
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(
-                    colors = if (isDarkTheme) darkGradientColors else lightGradientColors,
-                    start = Offset(0f, 0f),
-                    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-                )
-            )
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val hexagonColor = if (isDarkTheme) darkHexagonColor else lightHexagonColor
-
-            // Шестиугольники с анимированными позициями
-            drawHexagon(
-                centerX = size.width * 0.15f + hex1OffsetX.value,
-                centerY = size.height * 0.2f + hex1OffsetY.value,
-                radius = 80.dp.toPx(),
-                color = hexagonColor
-            )
-
-            drawHexagon(
-                centerX = size.width * 0.75f + hex2OffsetX.value,
-                centerY = size.height * 0.15f + hex2OffsetY.value,
-                radius = 70.dp.toPx(),
-                color = hexagonColor
-            )
-
-            drawHexagon(
-                centerX = size.width * 0.25f + hex3OffsetX.value,
-                centerY = size.height * 0.5f + hex3OffsetY.value,
-                radius = 90.dp.toPx(),
-                color = hexagonColor
-            )
-
-            drawHexagon(
-                centerX = size.width * 0.7f + hex4OffsetX.value,
-                centerY = size.height * 0.55f + hex4OffsetY.value,
-                radius = 75.dp.toPx(),
-                color = hexagonColor
-            )
-
-            drawHexagon(
-                centerX = size.width * 0.2f + hex5OffsetX.value,
-                centerY = size.height * 0.85f + hex5OffsetY.value,
-                radius = 65.dp.toPx(),
-                color = hexagonColor
-            )
-
-            drawHexagon(
-                centerX = size.width * 0.8f + hex6OffsetX.value,
-                centerY = size.height * 0.8f + hex6OffsetY.value,
-                radius = 85.dp.toPx(),
-                color = hexagonColor
-            )
-        }
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(color2, Color.Transparent),
+                center = Offset(size.width * x2, size.height * y2),
+                radius = radius2
+            ),
+            center = Offset(size.width * x2, size.height * y2),
+            radius = radius2
+        )
     }
-}
-
-private fun DrawScope.drawHexagon(
-    centerX: Float,
-    centerY: Float,
-    radius: Float,
-    color: Color
-) {
-    val points = mutableListOf<Offset>()
-    for (i in 0 until 6) {
-        val angle = (60 * i - 30) * PI / 180.0
-        val x = (centerX + radius * cos(angle)).toFloat()
-        val y = (centerY + radius * sin(angle)).toFloat()
-        points.add(Offset(x, y))
-    }
-    drawPath(
-        path = Path().apply {
-            moveTo(points[0].x, points[0].y)
-            for (i in 1 until points.size) {
-                lineTo(points[i].x, points[i].y)
-            }
-            close()
-        },
-        color = color
-    )
 }

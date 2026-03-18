@@ -2,7 +2,6 @@ package registrationForm
 
 import OnboardingViewModel
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -52,9 +50,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.chrisbanes.haze.hazeEffect
+import components.BrandTitle
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.materials.HazeMaterials
+import modifiers.glassEffect
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import registrationForm.models.RegistrationFormData
@@ -92,19 +90,16 @@ internal fun RegistrationFormScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(36.dp)
         ) {
-            Text(
-                text = "Добро пожаловать!",
-                style = MaterialTheme.typography.displaySmallEmphasized,
-                textAlign = TextAlign.Center
-            )
+            BrandTitle()
             RegistrationForm(
                 modifier = Modifier.padding(12.dp).background(Color.Transparent)
-                    .clip(shape = MaterialTheme.shapes.extraLarge).hazeEffect(
-                        state = LocalHazeState.current, style = HazeMaterials.ultraThin()
-                    ).border(
-                        width = 1.dp,
-                        color = Color.White.copy(alpha = 0.15f),
-                        shape = MaterialTheme.shapes.extraLarge
+                    .glassEffect(
+                        LocalHazeState.current,
+                        shape = MaterialTheme.shapes.extraLarge,
+                        fillAlpha = 0.3f,
+                        borderAlpha = 0.4f,
+                        borderWidth = 2.dp,
+                        blurRadius = 10.dp
                     ),
                 data = RegistrationFormData(
                     email = uiState.email,
@@ -152,6 +147,7 @@ private fun RegistrationForm(
     ) {
         Text(
             text = "Регистрация",
+
             modifier = Modifier.padding(top = 24.dp),
             style = MaterialTheme.typography.displaySmallEmphasized
         )

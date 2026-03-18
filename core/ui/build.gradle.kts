@@ -39,6 +39,12 @@ kotlin {
     }
 
     sourceSets {
+        androidMain {
+            dependencies {
+                implementation(libs.ui.tooling)
+            }
+        }
+
         commonMain {
             dependencies {
                 implementation(libs.compose.runtime)
