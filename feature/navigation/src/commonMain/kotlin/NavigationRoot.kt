@@ -11,8 +11,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -29,8 +30,11 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import utils.LocalHazeState
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -48,17 +52,26 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
             }
         }, Route.OnBoarding
     )
-    Scaffold {
-        Background(enabled = true, useHexagonBackground = true, painter = null) {
-            NavDisplay(
-                modifier = modifier, backStack = rootBackStack, entryDecorators = listOf(
-                    rememberSaveableStateHolderNavEntryDecorator(),
-                    rememberViewModelStoreNavEntryDecorator()
-                ), entryProvider = entryProvider {
-                    entry<Route.OnBoarding> {
-                        OnBoardingNavigation()
-                    }
-                })
+    val hazeState = rememberHazeState()
+
+    CompositionLocalProvider(LocalHazeState provides hazeState) {
+        Surface {
+            Background(
+                modifier = modifier.hazeSource(LocalHazeState.current),
+                enabled = true,
+                useHexagonBackground = true,
+                painter = null
+            ) {
+                NavDisplay(
+                    modifier = modifier, backStack = rootBackStack, entryDecorators = listOf(
+                        rememberSaveableStateHolderNavEntryDecorator(),
+                        rememberViewModelStoreNavEntryDecorator()
+                    ), entryProvider = entryProvider {
+                        entry<Route.OnBoarding> {
+                            OnBoardingNavigation()
+                        }
+                    })
+            }
         }
     }
 }
@@ -66,6 +79,7 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
 
 @Composable
 private fun Background(
+    modifier: Modifier = Modifier, // This contains the hazeSource
     enabled: Boolean,
     painter: Painter? = null,
     useHexagonBackground: Boolean = false,
@@ -73,43 +87,40 @@ private fun Background(
 ) {
     val isDarkTheme = isSystemInDarkTheme()
 
-    when {
-        enabled && useHexagonBackground -> {
-            HexagonGradientBackground(
-                isDarkTheme = isDarkTheme
-            ) {
-                content()
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Box(modifier = modifier.fillMaxSize()) {
+            when {
+                enabled && useHexagonBackground -> {
+                    HexagonGradientBackground(isDarkTheme = isDarkTheme)
+                }
+
+                enabled && painter != null -> {
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                else -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background)
+                    )
+                }
             }
         }
 
-        enabled && painter != null -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-                content()
-            }
-        }
-
-        else -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                content()
-            }
-        }
+        content()
     }
 }
 
 @Composable
 private fun HexagonGradientBackground(
+    modifier: Modifier = Modifier,
     isDarkTheme: Boolean,
-    content: @Composable () -> Unit
 ) {
     val lightGradientColors = listOf(
         Color(0xFFFF6B9D),
@@ -245,7 +256,7 @@ private fun HexagonGradientBackground(
     )
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
@@ -301,7 +312,6 @@ private fun HexagonGradientBackground(
                 color = hexagonColor
             )
         }
-        content()
     }
 }
 

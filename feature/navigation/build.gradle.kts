@@ -55,6 +55,9 @@ kotlin {
                 implementation(libs.compose.material.icons.extended)
                 implementation(libs.compose.lifecycle.viewmodel.nav3)
 
+                implementation(libs.haze)
+                implementation(libs.haze.materials)
+
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)

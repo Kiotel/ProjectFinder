@@ -1,7 +1,6 @@
 package descriptionForm
 
 import OnboardingViewModel
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,11 +42,7 @@ internal fun DescriptionFormScreen(
 @Composable
 private fun RegistrationForm(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.fillMaxSize().padding(12.dp)
-            .background(
-                color = MaterialTheme.colorScheme.surfaceContainer,
-                shape = MaterialTheme.shapes.large
-            ),
+        modifier = modifier.fillMaxSize().padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = "Регистрация", style = MaterialTheme.typography.displaySmallEmphasized)
