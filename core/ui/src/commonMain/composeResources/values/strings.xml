@@ -3,7 +3,7 @@
 
     <!-- REGISTRATION FORM ERRORS-->
     <string name="error_email_length">Минимальная длина почты 3.</string>
-    <string name="error_email_wrong">Почта некорректна.ы</string>
+    <string name="error_email_wrong">Почта некорректна.</string>
 
     <string name="error_login_length">Минимальная длина логина 3.</string>
 
