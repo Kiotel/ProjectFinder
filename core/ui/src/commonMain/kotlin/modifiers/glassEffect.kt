@@ -1,6 +1,8 @@
 package modifiers
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -13,10 +15,11 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 
+@Composable
 fun Modifier.glassEffect(
     hazeState: HazeState,
     shape: Shape = RectangleShape,
-    tint: Color = Color.White,
+    tint: Color = if (isSystemInDarkTheme()) Color.Black else Color.White,
     blurRadius: Dp = 20.dp,
     fillAlpha: Float = 0.15f,
     borderAlpha: Float = 0.2f,
@@ -30,9 +33,8 @@ fun Modifier.glassEffect(
             tints = listOf(HazeTint(tint.copy(alpha = fillAlpha))),
         )
     )
-
     .border(
         width = borderWidth,
-        color = Color.White.copy(alpha = borderAlpha),
+        color = tint.copy(alpha = borderAlpha),
         shape = shape
     )

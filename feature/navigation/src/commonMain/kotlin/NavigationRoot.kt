@@ -111,10 +111,10 @@ private fun Background(
                 .hazeEffect(
                     state = hazeState,
                     style = HazeStyle(
-                        blurRadius = 100.dp,
+                        blurRadius = 50.dp,
                         noiseFactor = 0.1f,
                         tint = HazeTint(
-                            color = if (isDarkTheme) Color.Black.copy(alpha = 0.1f)
+                            color = if (isDarkTheme) Color.Black.copy(alpha = 0.05f)
                             else Color.White.copy(alpha = 0.05f)
                         )
                     )
@@ -126,6 +126,7 @@ private fun Background(
         }
     }
 }
+
 @Composable
 private fun MovingCirclesBackground(
     modifier: Modifier = Modifier,
@@ -157,8 +158,14 @@ private fun MovingCirclesBackground(
         label = "c2_y"
     )
 
-    val color1 = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-    val color2 = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.4f)
+    val color1 =
+        (if (!isDarkTheme) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryFixedDim).copy(
+            alpha = 0.5f
+        )
+    val color2 =
+        (if (!isDarkTheme) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.tertiaryFixedDim).copy(
+            alpha = 0.4f
+        )
     val bgColor = MaterialTheme.colorScheme.background
 
     Canvas(modifier = modifier.fillMaxSize().background(bgColor)) {
