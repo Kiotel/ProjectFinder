@@ -55,7 +55,6 @@ kotlin {
                 implementation(libs.compose.ui.tooling.preview)
 
                 implementation(libs.compose.navigation3.ui)
-                implementation(libs.compose.material.icons.extended)
                 implementation(libs.compose.lifecycle.viewmodel.nav3)
 
                 implementation(libs.haze)
@@ -77,4 +76,5 @@ kotlin {
 
 compose.resources {
     publicResClass = true
+    generateResClass = auto
 }

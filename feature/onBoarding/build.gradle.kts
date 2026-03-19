@@ -53,9 +53,9 @@ kotlin {
                 implementation(libs.compose.ui)
                 implementation(libs.compose.components.resources)
                 implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.material.icons.extended)
 
                 implementation(libs.compose.navigation3.ui)
-                implementation(libs.compose.material.icons.extended)
                 implementation(libs.compose.lifecycle.viewmodel.nav3)
 
                 implementation(libs.haze)
