@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -56,19 +57,17 @@ internal fun DetailedProfileScreen(
         ) {
             Box(
                 modifier = Modifier.fillMaxWidth().height(140.dp)
-                    .background(color = MaterialTheme.colorScheme.primaryContainer)
+                    .background(color = MaterialTheme.colorScheme.primary)
             ) {
                 Row(
                     modifier = Modifier.align(Alignment.Center).padding(innerPadding)
-                        .padding(horizontal = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
                         modifier = Modifier.size(96.dp),
                         onClick = {},
                         shapes = IconButtonShapes(
-                            shape = CircleShape,
-                            pressedShape = MaterialTheme.shapes.medium
+                            shape = CircleShape, pressedShape = MaterialTheme.shapes.medium
                         ),
                     ) {
                         Icon(
@@ -83,14 +82,14 @@ internal fun DetailedProfileScreen(
                             textAlign = TextAlign.Start,
                             style = MaterialTheme.typography.titleLargeEmphasized,
                             fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                         Text(
                             text = "19 лет",
                             textAlign = TextAlign.Start,
                             style = MaterialTheme.typography.titleSmallEmphasized,
                             fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -103,13 +102,11 @@ internal fun DetailedProfileScreen(
                 ProfilePart(title = "Образование") {
                     ProfilePartText(text = "Ростовская обл, г. Таганрог · ЮФУ")
                     HorizontalDivider(
-                        color = Color.Transparent,
-                        modifier = Modifier.cheapGlassEffect()
+                        color = Color.Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     ProfilePartText(text = "Кафедра САПР")
                     HorizontalDivider(
-                        color = Color.Transparent,
-                        modifier = Modifier.cheapGlassEffect()
+                        color = Color.Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     ProfilePartText(text = "Программа 09.03.02 · очная")
                 }
@@ -117,13 +114,11 @@ internal fun DetailedProfileScreen(
                 ProfilePart(title = "Личная информация") {
                     ProfilePartText(text = "Студент 2 курса, люблю капибар и компьютеры")
                     HorizontalDivider(
-                        color = Color.Transparent,
-                        modifier = Modifier.cheapGlassEffect()
+                        color = Color.Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     ProfilePartText(text = "Открытость, порядочность, честность")
                     HorizontalDivider(
-                        color = Color.Transparent,
-                        modifier = Modifier.cheapGlassEffect()
+                        color = Color.Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     ProfilePartText(text = "Photoshop, Figma, React JS")
                 }
@@ -131,13 +126,11 @@ internal fun DetailedProfileScreen(
                 ProfilePart(title = "Обратная связь") {
                     ProfilePartText(text = "Гибкий, 2–3 ч/день · Выходные: сб, вс")
                     HorizontalDivider(
-                        color = Color.Transparent,
-                        modifier = Modifier.cheapGlassEffect()
+                        color = Color.Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     ProfilePartText(text = "rastegaev@sfedu.ru")
                     HorizontalDivider(
-                        color = Color.Transparent,
-                        modifier = Modifier.cheapGlassEffect()
+                        color = Color.Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     ProfilePartText(text = "t.me @сарурс")
                 }
@@ -155,18 +148,23 @@ private fun ProfilePart(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            HorizontalDivider(
+                thickness = 1.5.dp, modifier = Modifier.weight(1f).cheapGlassEffect(
+                    fillAlpha = 0.4f, borderAlpha = 0.0f
+                ), color = Color.Transparent
+            )
             Text(
+                modifier = Modifier.wrapContentWidth(),
                 text = title,
                 style = MaterialTheme.typography.titleLargeEmphasized,
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.ExtraBold
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1
             )
             HorizontalDivider(
-                modifier = Modifier.cheapGlassEffect(
-                    fillAlpha = 0.4f,
-                    borderAlpha = 0.0f
-                ),
-                color = Color.Transparent
+                thickness = 1.5.dp, modifier = Modifier.weight(1f).cheapGlassEffect(
+                    fillAlpha = 0.4f, borderAlpha = 0.0f
+                ), color = Color.Transparent
             )
         }
         Box(
@@ -175,7 +173,7 @@ private fun ProfilePart(
             )
         ) {
             Column(
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
             ) {
                 content(this)
             }
@@ -185,7 +183,7 @@ private fun ProfilePart(
 
 @Composable
 private fun ProfilePartText(modifier: Modifier = Modifier, text: String) {
-    Text(modifier = modifier.padding(vertical = 4.dp), text = text)
+    Text(modifier = modifier.padding(vertical = 8.dp), text = text)
 }
 
 @Preview
