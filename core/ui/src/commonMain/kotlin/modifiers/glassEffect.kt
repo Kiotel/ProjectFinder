@@ -1,5 +1,6 @@
 package modifiers
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
@@ -32,6 +33,25 @@ fun Modifier.glassEffect(
             blurRadius = blurRadius,
             tints = listOf(HazeTint(tint.copy(alpha = fillAlpha))),
         )
+    )
+    .border(
+        width = borderWidth,
+        color = tint.copy(alpha = borderAlpha),
+        shape = shape
+    )
+
+@Composable
+fun Modifier.cheapGlassEffect(
+    shape: Shape = RectangleShape,
+    tint: Color = if (isSystemInDarkTheme()) Color.Black else Color.White,
+    fillAlpha: Float = 0.15f,
+    borderAlpha: Float = 0.2f,
+    borderWidth: Dp = 1.dp
+): Modifier = this
+    .clip(shape)
+    .background(
+        color = tint.copy(alpha = fillAlpha),
+        shape = shape
     )
     .border(
         width = borderWidth,

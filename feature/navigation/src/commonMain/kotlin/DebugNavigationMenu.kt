@@ -15,27 +15,34 @@ internal fun DebugNavigationMenu(
     modifier: Modifier = Modifier,
     navigateTo: (route: Route) -> Unit
 ) {
+    var show by remember { mutableStateOf(true) }
     var isExpanded by remember { mutableStateOf((true)) }
 
-    Box(
-        modifier = modifier
-    ) {
-        Button(
-            onClick = { isExpanded = true },
-            content = { Text("DebugNavigation") }
-        )
-        DropdownMenu(
-            expanded = isExpanded,
-            onDismissRequest = { isExpanded = false },
+    if (show) {
+        Box(
+            modifier = modifier
         ) {
-            DropdownMenuItem(
-                text = { Text(Route.Profile.toString()) },
-                onClick = { navigateTo(Route.Profile) }
+            Button(
+                onClick = { isExpanded = true },
+                content = { Text("DebugNavigation") }
             )
-            DropdownMenuItem(
-                text = { Text(Route.OnBoarding.toString()) },
-                onClick = { navigateTo(Route.OnBoarding) }
-            )
+            DropdownMenu(
+                expanded = isExpanded,
+                onDismissRequest = { isExpanded = false },
+            ) {
+                DropdownMenuItem(
+                    text = { Text(Route.Profile.toString()) },
+                    onClick = { navigateTo(Route.Profile) }
+                )
+                DropdownMenuItem(
+                    text = { Text(Route.OnBoarding.toString()) },
+                    onClick = { navigateTo(Route.OnBoarding) }
+                )
+                DropdownMenuItem(
+                    text = { Text("Спрятать меню") },
+                    onClick = { show = false }
+                )
+            }
         }
     }
 }
