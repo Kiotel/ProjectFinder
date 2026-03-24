@@ -11,9 +11,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,20 +55,44 @@ internal fun DetailedProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
-                modifier = Modifier.fillMaxWidth().height(120.dp)
+                modifier = Modifier.fillMaxWidth().height(140.dp)
                     .background(color = MaterialTheme.colorScheme.primaryContainer)
             ) {
-                Column(
+                Row(
                     modifier = Modifier.align(Alignment.Center).padding(innerPadding)
-                        .padding(horizontal = 12.dp)
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        "Дизайн Дизайнер Дизайнерович",
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleLargeEmphasized,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    IconButton(
+                        modifier = Modifier.size(96.dp),
+                        onClick = {},
+                        shapes = IconButtonShapes(
+                            shape = CircleShape,
+                            pressedShape = MaterialTheme.shapes.medium
+                        ),
+                    ) {
+                        Icon(
+                            modifier = Modifier.fillMaxSize(),
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = null
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "Дизайн Дизайнер Дизайнерович",
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.titleLargeEmphasized,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Text(
+                            text = "19 лет",
+                            textAlign = TextAlign.Start,
+                            style = MaterialTheme.typography.titleSmallEmphasized,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
                 }
             }
             Column(
@@ -144,7 +175,7 @@ private fun ProfilePart(
             )
         ) {
             Column(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(12.dp),
             ) {
                 content(this)
             }

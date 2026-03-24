@@ -25,20 +25,14 @@ fun Modifier.glassEffect(
     fillAlpha: Float = 0.15f,
     borderAlpha: Float = 0.2f,
     borderWidth: Dp = 1.dp
-): Modifier = this
-    .clip(shape)
-    .hazeEffect(
-        state = hazeState,
-        style = HazeStyle(
-            blurRadius = blurRadius,
-            tints = listOf(HazeTint(tint.copy(alpha = fillAlpha))),
-        )
+): Modifier = this.clip(shape).hazeEffect(
+    state = hazeState, style = HazeStyle(
+        blurRadius = blurRadius,
+        tints = listOf(HazeTint(tint.copy(alpha = fillAlpha))),
     )
-    .border(
-        width = borderWidth,
-        color = tint.copy(alpha = borderAlpha),
-        shape = shape
-    )
+).border(
+    width = borderWidth, color = tint.copy(alpha = borderAlpha), shape = shape
+)
 
 @Composable
 fun Modifier.cheapGlassEffect(
@@ -47,14 +41,8 @@ fun Modifier.cheapGlassEffect(
     fillAlpha: Float = 0.15f,
     borderAlpha: Float = 0.2f,
     borderWidth: Dp = 1.dp
-): Modifier = this
-    .clip(shape)
-    .background(
-        color = tint.copy(alpha = fillAlpha),
-        shape = shape
-    )
-    .border(
-        width = borderWidth,
-        color = tint.copy(alpha = borderAlpha),
-        shape = shape
-    )
+): Modifier = this.clip(shape).background(
+    color = tint.copy(alpha = fillAlpha), shape = shape
+).border(
+    width = borderWidth, color = tint.copy(alpha = borderAlpha), shape = shape
+)
