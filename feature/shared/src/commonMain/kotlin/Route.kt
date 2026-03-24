@@ -22,6 +22,12 @@ sealed interface Route: NavKey {
         @Serializable
         data object PasswordReset: Route
     }
+
+    @Serializable
+    data object Profile : Route {
+        @Serializable
+        data object Detailed : Route
+    }
     @Serializable
     data object Error: Route{
         @Serializable

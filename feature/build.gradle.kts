@@ -9,7 +9,7 @@ plugins {
 kotlin {
 
     androidLibrary {
-        namespace = "com.example.feature"
+        namespace = "valera.app.feature"
         compileSdk = 36
         minSdk = 24
     }

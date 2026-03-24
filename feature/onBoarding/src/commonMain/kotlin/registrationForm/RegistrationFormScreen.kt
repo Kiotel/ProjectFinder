@@ -23,16 +23,12 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,10 +50,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import components.BrandTitle
+import components.ScreenLayout
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.rememberHazeState
 import modifiers.glassEffect
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import registrationForm.models.RegistrationFormData
 import utils.AgreementLink
@@ -72,22 +68,12 @@ internal fun RegistrationFormScreen(
     val uiState by vm.uiState.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
-    val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(uiState.currentSnackBarMessageId) {
-        if (uiState.currentSnackBarMessageId != 0 && uiState.snackBarMessageResource != null) {
-            snackBarHostState.showSnackbar(
-                message = getString(uiState.snackBarMessageResource!!),
-                duration = SnackbarDuration.Long,
-                withDismissAction = true
-            )
-        }
-    }
-
-    Scaffold(
-        modifier = modifier.fillMaxSize(), containerColor = Color.Transparent, snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        }) { innerPadding ->
+    ScreenLayout(
+        modifier = modifier,
+        snackBarId = uiState.currentSnackBarMessageId,
+        snackBarText = if (uiState.snackBarMessageResource != null) stringResource(uiState.snackBarMessageResource!!) else null,
+        snackBarDuration = SnackbarDuration.Long
+    ) { innerPadding ->
         Column(
             modifier = Modifier.verticalScroll(scrollState).fillMaxSize()
                 .padding(top = innerPadding.calculateTopPadding() + 36.dp).imePadding(),

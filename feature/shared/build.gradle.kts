@@ -8,7 +8,7 @@ plugins {
 kotlin {
 
     androidLibrary {
-        namespace = "com.example.shared"
+        namespace = "valera.app.shared"
         compileSdk = 36
         minSdk = 24
     }

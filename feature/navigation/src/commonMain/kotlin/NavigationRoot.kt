@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -45,6 +46,7 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
             serializersModule = SerializersModule {
                 polymorphic(NavKey::class) {
                     subclass(Route.OnBoarding::class, Route.OnBoarding.serializer())
+                    subclass(Route.Profile::class, Route.Profile.serializer())
                     subclass(Route.Auth::class, Route.Auth.serializer())
                     subclass(Route.Error::class, Route.Error.serializer())
                 }
@@ -55,20 +57,29 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
 
     CompositionLocalProvider(LocalHazeState provides hazeState) {
         Surface {
-            Background(
-                enabled = true,
-                useCirclesBackground = true,
-                painter = null
-            ) {
-                NavDisplay(
-                    modifier = modifier, backStack = rootBackStack, entryDecorators = listOf(
-                        rememberSaveableStateHolderNavEntryDecorator(),
-                        rememberViewModelStoreNavEntryDecorator()
-                    ), entryProvider = entryProvider {
-                        entry<Route.OnBoarding> {
-                            OnBoardingNavigation()
-                        }
-                    })
+            Box {
+                Background(
+                    enabled = true,
+                    useCirclesBackground = true,
+                    painter = null
+                ) {
+                    NavDisplay(
+                        modifier = modifier, backStack = rootBackStack, entryDecorators = listOf(
+                            rememberSaveableStateHolderNavEntryDecorator(),
+                            rememberViewModelStoreNavEntryDecorator()
+                        ), entryProvider = entryProvider {
+                            entry<Route.OnBoarding> {
+                                OnBoardingNavigation()
+                            }
+                            entry<Route.Profile> {
+                                ProfileNavigation()
+                            }
+                        })
+                }
+                DebugNavigationMenu(
+                    modifier = Modifier.systemBarsPadding(),
+                    navigateTo = { rootBackStack.add(it) }
+                )
             }
         }
     }

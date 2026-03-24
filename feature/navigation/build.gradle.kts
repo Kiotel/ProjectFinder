@@ -12,7 +12,7 @@ plugins {
 kotlin {
 
     androidLibrary {
-        namespace = "com.example.navigation"
+        namespace = "valera.app.navigation"
         compileSdk = 36
         minSdk = 24
     }
@@ -65,6 +65,7 @@ kotlin {
                 implementation(project(":core:ui"))
                 implementation(project(":feature:shared"))
                 implementation(project(":feature:onBoarding"))
+                implementation(project(":feature:profile"))
             }
         }
     }
