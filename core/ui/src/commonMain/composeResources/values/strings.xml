@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ProjectFinder</string>
 
-    <!-- REGISTRATION FORM ERRORS-->
+    <!-- REGISTRATION SCREEN-->
     <string name="error_email_length">Минимальная длина почты 3.</string>
     <string name="error_email_wrong">Почта некорректна.</string>
 
@@ -14,6 +14,14 @@
 
     <string name="snackbar_registration_in_progress">Идет регистрация...</string>
     <string name="snackbar_registration_success">Регистрация прошла успешно</string>
-    <string name="snackbar_registration_failed">Ошибка во время регистрации</string>
-    <!-- REGISTRATION FORM ERRORS-->
+    <string name="snackbar_registration_failed">Неизвестная во время регистрации</string>
+    <string name="snackbar_registration_email_already_ocupied">Почта уже занята</string>
+    <!-- REGISTRATION SCREEN-->
+
+    <!-- LOGIN SCREEN-->
+    <string name="snackbar_login_in_progress">Идет авторизация...</string>
+    <string name="snackbar_login_success">Успешная авторизация</string>
+    <string name="snackbar_login_unknown_error">Неизвестная во время авторизации</string>
+    <string name="snackbar_login_server_error">Неизвестная во время авторизации</string>
+    <!-- LOGIN SCREEN-->
 </resources>

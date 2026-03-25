@@ -17,7 +17,8 @@ import registration.RegistrationViewModel
 
 @Composable
 fun AuthNavigation(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAuth: () -> Unit
 ) {
     val authBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -51,7 +52,8 @@ fun AuthNavigation(
                 LoginScreen(
                     vm = loginViewModel,
                     svm = authViewModel,
-                    goToRegister = { authBackStack.add(Route.Auth.Registration) }
+                    goToRegister = { authBackStack.add(Route.Auth.Registration) },
+                    onAuth = onAuth
                 )
             }
         }

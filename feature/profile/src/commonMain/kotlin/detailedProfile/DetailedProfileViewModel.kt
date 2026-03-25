@@ -41,7 +41,7 @@ internal class DetailedProfileViewModel(
         initialValue = DetailedProfileState(InternalDetailedProfileState())
     )
 
-    internal fun updateState(mutation: (InternalDetailedProfileState) -> InternalDetailedProfileState) {
+    private fun updateState(mutation: (InternalDetailedProfileState) -> InternalDetailedProfileState) {
         _internalState.update(mutation)
     }
 

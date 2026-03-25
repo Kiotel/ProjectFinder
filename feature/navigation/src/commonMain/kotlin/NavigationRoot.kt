@@ -69,7 +69,12 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
                             rememberViewModelStoreNavEntryDecorator()
                         ), entryProvider = entryProvider {
                             entry<Route.Auth> {
-                                AuthNavigation()
+                                AuthNavigation(
+                                    onAuth = {
+                                        rootBackStack.clear()
+                                        rootBackStack.add(Route.OnBoarding)
+                                    }
+                                )
                             }
                             entry<Route.OnBoarding> {
                                 OnBoardingNavigation()

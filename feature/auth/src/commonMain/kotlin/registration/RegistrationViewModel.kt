@@ -130,7 +130,7 @@ internal class RegistrationViewModel(
         }
     }
 
-    internal fun updateState(mutation: (InternalRegistrationState) -> InternalRegistrationState) {
+    private fun updateState(mutation: (InternalRegistrationState) -> InternalRegistrationState) {
         _internalState.update(mutation)
     }
 
