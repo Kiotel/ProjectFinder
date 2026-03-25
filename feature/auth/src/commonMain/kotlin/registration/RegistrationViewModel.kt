@@ -1,4 +1,4 @@
-package registrationForm
+package registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,11 +19,11 @@ import projectfinder.core.ui.generated.resources.error_password_must_contain_dig
 import projectfinder.core.ui.generated.resources.snackbar_registration_failed
 import projectfinder.core.ui.generated.resources.snackbar_registration_in_progress
 import projectfinder.core.ui.generated.resources.snackbar_registration_success
-import registrationForm.models.InternalRegistrationState
-import registrationForm.models.RegistrationState
+import registration.models.InternalRegistrationState
+import registration.models.RegistrationState
 import useCases.RegisterUseCase
 
-internal class RegistrationFormViewModel(
+internal class RegistrationViewModel(
     private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
     private val _internalState = MutableStateFlow(

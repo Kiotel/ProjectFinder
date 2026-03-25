@@ -1,4 +1,4 @@
-package registrationForm
+package registration
 
 internal sealed interface RegistrationIntent {
     data class SetEmail(val newEmail: String) : RegistrationIntent

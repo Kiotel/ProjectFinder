@@ -1,8 +1,8 @@
-package registrationForm.models
+package login.models
 
 import org.jetbrains.compose.resources.StringResource
 
-internal data class RegistrationState(
+internal data class LoginState(
     val email: String,
     val emailErrorText: StringResource?,
     val login: String,
@@ -16,7 +16,7 @@ internal data class RegistrationState(
     val snackBarMessageResource: StringResource?,
     val currentSnackBarMessageId: Int,
 ) {
-    internal constructor(internalRegistrationState: InternalRegistrationState) : this(
+    internal constructor(internalRegistrationState: InternalLoginState) : this(
         email = internalRegistrationState.email,
         emailErrorText = internalRegistrationState.emailErrorText,
         login = internalRegistrationState.login,

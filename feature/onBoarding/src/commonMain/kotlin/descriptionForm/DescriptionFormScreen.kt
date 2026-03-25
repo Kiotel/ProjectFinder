@@ -34,13 +34,13 @@ internal fun DescriptionFormScreen(
                 style = MaterialTheme.typography.displaySmallEmphasized,
                 textAlign = TextAlign.Center
             )
-            RegistrationForm()
+            Registration()
         }
     }
 }
 
 @Composable
-private fun RegistrationForm(modifier: Modifier = Modifier) {
+private fun Registration(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize().padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -1,6 +1,6 @@
-package registrationForm
+package registration
 
-import OnboardingViewModel
+import AuthViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,15 +55,14 @@ import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.rememberHazeState
 import modifiers.glassEffect
 import org.jetbrains.compose.resources.stringResource
-import registrationForm.models.RegistrationFormData
+import registration.models.RegistrationData
 import utils.AgreementLink
 import utils.LocalHazeState
 
-
 @OptIn(ExperimentalHazeMaterialsApi::class)
 @Composable
-internal fun RegistrationFormScreen(
-    modifier: Modifier = Modifier, vm: RegistrationFormViewModel, svm: OnboardingViewModel
+internal fun RegistrationScreen(
+    modifier: Modifier = Modifier, vm: RegistrationViewModel, svm: AuthViewModel
 ) {
     val uiState by vm.uiState.collectAsStateWithLifecycle()
 
@@ -71,7 +70,13 @@ internal fun RegistrationFormScreen(
     ScreenLayout(
         modifier = modifier,
         snackBarId = uiState.currentSnackBarMessageId,
-        snackBarText = if (uiState.snackBarMessageResource != null) stringResource(uiState.snackBarMessageResource!!) else null,
+        snackBarText = if (uiState.snackBarMessageResource != null) {
+            stringResource(
+                uiState.snackBarMessageResource!!
+            )
+        } else {
+            null
+        },
         snackBarDuration = SnackbarDuration.Long
     ) { innerPadding ->
         Column(
@@ -81,17 +86,17 @@ internal fun RegistrationFormScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             BrandTitle()
-            RegistrationForm(
+            Registration(
                 modifier = Modifier.padding(12.dp).background(Color.Transparent)
-                    .glassEffect(
-                        LocalHazeState.current,
-                        shape = MaterialTheme.shapes.extraLarge,
-                        fillAlpha = 0.3f,
-                        borderAlpha = 0.4f,
-                        borderWidth = 2.dp,
-                        blurRadius = 10.dp
-                    ),
-                data = RegistrationFormData(
+                .glassEffect(
+                    LocalHazeState.current,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    fillAlpha = 0.3f,
+                    borderAlpha = 0.4f,
+                    borderWidth = 2.dp,
+                    blurRadius = 10.dp
+                ),
+                data = RegistrationData(
                     email = uiState.email,
                     emailErrorText = uiState.emailErrorText?.let { stringResource(it) },
                     login = uiState.login,
@@ -114,9 +119,9 @@ internal fun RegistrationFormScreen(
 }
 
 @Composable
-private fun RegistrationForm(
+private fun Registration(
     modifier: Modifier = Modifier,
-    data: RegistrationFormData,
+    data: RegistrationData,
     onEmailChange: (newEmail: String) -> Unit,
     onLoginChange: (newLogin: String) -> Unit,
     onPasswordChange: (newPassword: String) -> Unit,
@@ -201,7 +206,6 @@ private fun RegistrationForm(
                     )
                     AgreementLink(link = "https://example.com")
                 }
-
             }
             Button(
                 modifier = Modifier.padding(bottom = 24.dp),
@@ -236,8 +240,7 @@ private fun RegistrationTextInput(
         if (hide && isSecret) PasswordVisualTransformation() else VisualTransformation.None
 
     Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         if (labelText != null) {
             Text(
@@ -250,25 +253,20 @@ private fun RegistrationTextInput(
         }
 
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .glassEffect(
-                    hazeState = LocalHazeState.current,
-                    blurRadius = 10.dp,
-                    shape = MaterialTheme.shapes.medium,
-                    fillAlpha = 0.2f
-                )
+            modifier = Modifier.fillMaxWidth().glassEffect(
+                hazeState = LocalHazeState.current,
+                blurRadius = 10.dp,
+                shape = MaterialTheme.shapes.medium,
+                fillAlpha = 0.2f
+            )
         ) {
             TextField(
                 value = value,
                 onValueChange = onValueChange,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
+                modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                 visualTransformation = visualTransformation,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = keyboardType,
-                    imeAction = imeAction
+                    keyboardType = keyboardType, imeAction = imeAction
                 ),
                 keyboardActions = KeyboardActions(onNext = { onNext() }, onDone = { onNext() }),
                 placeholder = {
@@ -324,10 +322,10 @@ private fun RegistrationTextInputPreview() {
     showBackground = true, widthDp = 360
 )
 @Composable
-private fun RegistrationFormPreview() {
+private fun RegistrationPreview() {
     val hazeState = rememberHazeState()
     CompositionLocalProvider(LocalHazeState provides hazeState) {
-        val registrationData = RegistrationFormData(
+        val registrationData = RegistrationData(
             email = "PreviewEmail",
             login = "PreviewLogin",
             password = "PreviewPassword",
@@ -340,7 +338,7 @@ private fun RegistrationFormPreview() {
             consentErrorText = null,
             registrationErrorText = null
         )
-        RegistrationForm(
+        Registration(
             data = registrationData,
             onEmailChange = {},
             onLoginChange = {},

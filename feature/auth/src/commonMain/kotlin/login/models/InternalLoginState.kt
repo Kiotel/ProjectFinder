@@ -1,8 +1,8 @@
-package registrationForm.models
+package login.models
 
 import org.jetbrains.compose.resources.StringResource
 
-internal data class InternalRegistrationState(
+internal data class InternalLoginState(
     val email: String = "",
     val emailErrorText: StringResource? = null,
     val login: String = "",

@@ -14,7 +14,7 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "valera.app.profile"
+        namespace = "valera.app.auth"
         compileSdk = 36
         minSdk = 24
     }
@@ -23,7 +23,7 @@ kotlin {
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
     }
 
-    val xcfName = "feature:profileKit"
+    val xcfName = "feature:authKit"
 
     iosX64 {
         binaries.framework {

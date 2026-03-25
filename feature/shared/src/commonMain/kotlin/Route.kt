@@ -2,25 +2,26 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface Route: NavKey {
+sealed interface Route : NavKey {
     @Serializable
-    data object OnBoarding: Route {
+    data object OnBoarding : Route {
         @Serializable
-        data object Greeting: Route
-        @Serializable
-        data object DescriptionForm: Route
+        data object Greeting : Route
 
         @Serializable
-        data object RegistrationForm: Route
+        data object DescriptionForm : Route
     }
+
     @Serializable
-    data object Auth: Route {
+    data object Auth : Route {
         @Serializable
-        data object Login: Route
+        data object Registration : Route
+
         @Serializable
-        data object Registration: Route
+        data object Login : Route
+
         @Serializable
-        data object PasswordReset: Route
+        data object PasswordReset : Route
     }
 
     @Serializable
@@ -28,9 +29,10 @@ sealed interface Route: NavKey {
         @Serializable
         data object Detailed : Route
     }
+
     @Serializable
-    data object Error: Route{
+    data object Error : Route {
         @Serializable
-        data object UnknownError: Route
+        data object UnknownError : Route
     }
 }

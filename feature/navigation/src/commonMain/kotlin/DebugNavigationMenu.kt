@@ -31,6 +31,10 @@ internal fun DebugNavigationMenu(
                 onDismissRequest = { isExpanded = false },
             ) {
                 DropdownMenuItem(
+                    text = { Text(Route.Auth.toString()) },
+                    onClick = { navigateTo(Route.Auth) }
+                )
+                DropdownMenuItem(
                     text = { Text(Route.Profile.toString()) },
                     onClick = { navigateTo(Route.Profile) }
                 )

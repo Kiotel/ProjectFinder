@@ -1,9 +1,9 @@
-package registrationForm.models
+package registration.models
 
 import androidx.compose.runtime.Stable
 
 @Stable
-internal data class RegistrationFormData(
+internal data class RegistrationData(
     val email: String,
     val emailErrorText: String?,
     val login: String,

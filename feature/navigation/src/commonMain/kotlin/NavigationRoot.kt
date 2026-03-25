@@ -51,7 +51,7 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
                     subclass(Route.Error::class, Route.Error.serializer())
                 }
             }
-        }, Route.OnBoarding
+        }, Route.Auth
     )
     val hazeState = rememberHazeState()
 
@@ -68,6 +68,9 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
                             rememberSaveableStateHolderNavEntryDecorator(),
                             rememberViewModelStoreNavEntryDecorator()
                         ), entryProvider = entryProvider {
+                            entry<Route.Auth> {
+                                AuthNavigation()
+                            }
                             entry<Route.OnBoarding> {
                                 OnBoardingNavigation()
                             }

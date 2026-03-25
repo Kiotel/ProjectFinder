@@ -51,6 +51,8 @@ kotlin {
                 implementation(libs.compose.components.resources)
                 implementation(libs.compose.ui.tooling.preview)
 
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
                 implementation(libs.compose.navigation3.ui)
                 implementation(libs.compose.lifecycle.viewmodel.nav3)
 
