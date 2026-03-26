@@ -3,32 +3,40 @@ package components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.jetbrains.compose.resources.getString
+import utils.SnackBarManager
 
 @Composable
 fun ScreenLayout(
     modifier: Modifier = Modifier,
-    snackBarId: Int = 0,
-    snackBarText: String? = null,
-    snackBarDuration: SnackbarDuration = SnackbarDuration.Short,
+    snackBarManager: SnackBarManager? = null,
     content: @Composable (PaddingValues) -> Unit,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(snackBarId) {
-        if (snackBarId != 0 && snackBarText != null) {
-            snackBarHostState.showSnackbar(
-                message = snackBarText,
-                duration = snackBarDuration,
-                withDismissAction = true
-            )
+    if (snackBarManager != null) {
+        val currentMessage by snackBarManager.currentMessage.collectAsStateWithLifecycle()
+        LaunchedEffect(currentMessage) {
+            currentMessage?.let { messageState ->
+                if (currentMessage?.messageResource != null) {
+                    snackBarHostState.showSnackbar(
+                        message = getString(
+                            currentMessage!!.messageResource
+                        ),
+                        duration = messageState.duration
+                    )
+                    snackBarManager.messageShown(messageState.id)
+                }
+            }
         }
     }
 

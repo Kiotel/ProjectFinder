@@ -1,8 +1,6 @@
 package login
 
-import AuthViewModel
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,18 +12,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FloatingActionButtonDefaults.elevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
@@ -35,43 +28,30 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import components.BrandTitle
 import components.RegistrationTextInput
 import components.ScreenLayout
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import login.models.LoginFormData
+import login.models.LoginState
 import modifiers.glassEffect
-import org.jetbrains.compose.resources.stringResource
 import utils.LocalHazeState
+import utils.SnackBarManager
 
 @OptIn(ExperimentalHazeMaterialsApi::class)
 @Composable
 internal fun LoginScreen(
     modifier: Modifier = Modifier,
-    vm: LoginViewModel,
-    svm: AuthViewModel,
+    uiState: LoginState,
+    snackBarManager: SnackBarManager,
+    handleIntent: (intent: LoginIntent) -> Unit,
     goToRegister: () -> Unit,
-    onAuth: () -> Unit
 ) {
-    val uiState by vm.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(uiState.authed) {
-        if (uiState.authed) onAuth()
-    }
 
     val scrollState = rememberScrollState()
     ScreenLayout(
         modifier = modifier,
-        snackBarId = uiState.currentSnackBarMessageId,
-        snackBarText = if (uiState.snackBarMessageResource != null) {
-            stringResource(
-                uiState.snackBarMessageResource!!
-            )
-        } else {
-            null
-        },
-        snackBarDuration = SnackbarDuration.Long
+        snackBarManager = snackBarManager,
     ) { innerPadding ->
         Column(
             modifier = Modifier.verticalScroll(scrollState).fillMaxSize()
@@ -79,9 +59,7 @@ internal fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            BrandTitle(modifier = Modifier.clickable {
-                vm.getUserInfo()
-            })
+            BrandTitle()
             LoginForm(
                 modifier = Modifier.padding(12.dp).background(Color.Transparent)
                     .glassEffect(
@@ -96,9 +74,9 @@ internal fun LoginScreen(
                     email = uiState.email,
                     password = uiState.password,
                 ),
-                onEmailChange = { vm.handleIntent(LoginIntent.SetEmail(it)) },
-                onPasswordChange = { vm.handleIntent(LoginIntent.SetPassword(it)) },
-                onLogin = { vm.handleIntent(LoginIntent.OnLogin) })
+                onEmailChange = { handleIntent(LoginIntent.SetEmail(it)) },
+                onPasswordChange = { handleIntent(LoginIntent.SetPassword(it)) },
+                onLogin = { handleIntent(LoginIntent.OnLogin) })
             OutlinedButton(
                 modifier = Modifier.padding(bottom = 24.dp),
                 elevation = ButtonDefaults.buttonElevation(
@@ -149,10 +127,15 @@ private fun LoginForm(
                 isSecret = true,
                 labelText = "Пароль",
                 value = data.password,
-                onValueChange = { onPasswordChange(it) },
+                onValueChange = {
+                    onPasswordChange(it)
+                },
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
-                onNext = { focusManager.clearFocus() },
+                onNext = {
+                    focusManager.clearFocus()
+                    onLogin()
+                },
                 focusRequester = passwordFocus
             )
             Button(
@@ -160,7 +143,10 @@ private fun LoginForm(
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 2.dp,
                 ),
-                onClick = onLogin,
+                onClick = {
+                    focusManager.clearFocus()
+                    onLogin()
+                },
             ) {
                 Text(text = "Войти", style = MaterialTheme.typography.labelLarge)
             }

@@ -2,6 +2,7 @@ package registration.models
 
 import org.jetbrains.compose.resources.StringResource
 
+
 internal data class InternalRegistrationState(
     val email: String = "",
     val emailErrorText: StringResource? = null,
@@ -13,6 +14,5 @@ internal data class InternalRegistrationState(
     val passwordCopyErrorText: StringResource? = null,
     val consent: Boolean = false,
     val consentErrorText: StringResource? = null,
-    val snackBarMessageResource: StringResource? = null,
-    val currentSnackBarMessageId: Int = 0,
+    val isAuthed: Boolean = false
 )

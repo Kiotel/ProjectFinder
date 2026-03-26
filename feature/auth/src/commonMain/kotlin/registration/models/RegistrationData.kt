@@ -14,5 +14,4 @@ internal data class RegistrationData(
     val passwordCopyErrorText: String?,
     val consent: Boolean,
     val consentErrorText: String?,
-    val registrationErrorText: String?
 )

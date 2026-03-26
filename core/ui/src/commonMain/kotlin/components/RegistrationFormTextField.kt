@@ -85,7 +85,7 @@ fun RegistrationTextInput(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = keyboardType, imeAction = imeAction
                 ),
-                keyboardActions = KeyboardActions(onNext = { onNext() }, onDone = { onNext() }),
+                keyboardActions = KeyboardActions(onNext = { onNext() }, onDone = { onNext() }, onSend = {onNext()}, onSearch = {onNext()}, onGo = {onNext()}),
                 placeholder = {
                     if (placeHolderText != null) {
                         Text(text = placeHolderText, style = MaterialTheme.typography.bodyMedium)

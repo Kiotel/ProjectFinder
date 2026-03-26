@@ -22,9 +22,11 @@ import projectfinder.core.ui.generated.resources.snackbar_registration_success
 import registration.models.InternalRegistrationState
 import registration.models.RegistrationState
 import useCases.RegisterUseCase
+import utils.SnackBarManager
 
 internal class RegistrationViewModel(
-    private val registerUseCase: RegisterUseCase
+    private val registerUseCase: RegisterUseCase,
+    val snackBarManager: SnackBarManager
 ) : ViewModel() {
     private val _internalState = MutableStateFlow(
         InternalRegistrationState()
@@ -43,8 +45,7 @@ internal class RegistrationViewModel(
             passwordCopyErrorText = internalState.passwordCopyErrorText,
             consent = internalState.consent,
             consentErrorText = internalState.consentErrorText,
-            snackBarMessageResource = internalState.snackBarMessageResource,
-            currentSnackBarMessageId = internalState.currentSnackBarMessageId
+            isAuthed = internalState.isAuthed
         )
     }.stateIn(
         scope = viewModelScope,
@@ -99,31 +100,17 @@ internal class RegistrationViewModel(
 
         viewModelScope.launch {
             if (isFormValid) {
-                updateState {
-                    it.copy(
-                        snackBarMessageResource = Res.string.snackbar_registration_in_progress,
-                        currentSnackBarMessageId = it.currentSnackBarMessageId + 1
-                    )
-                }
+                snackBarManager.showMessage(Res.string.snackbar_registration_in_progress)
                 registerUseCase(
                     username = uiState.value.login,
                     email = uiState.value.email,
                     password = uiState.value.password
                 ).collect { result ->
                     result.onSuccess {
-                        updateState {
-                            it.copy(
-                                snackBarMessageResource = Res.string.snackbar_registration_success,
-                                currentSnackBarMessageId = it.currentSnackBarMessageId + 1
-                            )
-                        }
+                        snackBarManager.showMessage(Res.string.snackbar_registration_success)
+                        updateState { it.copy(isAuthed = true) }
                     }.onFailure {
-                        updateState {
-                            it.copy(
-                                snackBarMessageResource = Res.string.snackbar_registration_failed,
-                                currentSnackBarMessageId = it.currentSnackBarMessageId + 1
-                            )
-                        }
+                        snackBarManager.showMessage(Res.string.snackbar_registration_failed)
                     }
                 }
             }

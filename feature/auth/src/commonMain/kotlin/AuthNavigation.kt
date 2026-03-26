@@ -1,5 +1,8 @@
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -43,17 +46,31 @@ fun AuthNavigation(
         ), entryProvider = entryProvider {
             entry<Route.Auth.Registration> {
                 val registrationViewModel: RegistrationViewModel = koinViewModel()
+                val uiState by registrationViewModel.uiState.collectAsStateWithLifecycle()
+
+                LaunchedEffect(uiState.isAuthed) {
+                    if (uiState.isAuthed) onAuth()
+                }
+
                 RegistrationScreen(
-                    vm = registrationViewModel, svm = authViewModel
+                    uiState = uiState,
+                    handleIntent = registrationViewModel::handleIntent,
+                    snackBarManager = registrationViewModel.snackBarManager
                 )
             }
             entry<Route.Auth.Login> {
                 val loginViewModel: LoginViewModel = koinViewModel()
+                val uiState by loginViewModel.uiState.collectAsStateWithLifecycle()
+
+                LaunchedEffect(uiState.isAuthed) {
+                    if (uiState.isAuthed) onAuth()
+                }
+
                 LoginScreen(
-                    vm = loginViewModel,
-                    svm = authViewModel,
+                    uiState = uiState,
+                    handleIntent = loginViewModel::handleIntent,
+                    snackBarManager = loginViewModel.snackBarManager,
                     goToRegister = { authBackStack.add(Route.Auth.Registration) },
-                    onAuth = onAuth
                 )
             }
         }

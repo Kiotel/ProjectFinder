@@ -1,6 +1,5 @@
 package registration
 
-import AuthViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,11 +15,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +31,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import components.BrandTitle
 import components.RegistrationTextInput
 import components.ScreenLayout
@@ -43,28 +39,23 @@ import dev.chrisbanes.haze.rememberHazeState
 import modifiers.glassEffect
 import org.jetbrains.compose.resources.stringResource
 import registration.models.RegistrationData
+import registration.models.RegistrationState
 import utils.AgreementLink
 import utils.LocalHazeState
+import utils.SnackBarManager
 
 @OptIn(ExperimentalHazeMaterialsApi::class)
 @Composable
 internal fun RegistrationScreen(
-    modifier: Modifier = Modifier, vm: RegistrationViewModel, svm: AuthViewModel
+    modifier: Modifier = Modifier,
+    uiState: RegistrationState,
+    handleIntent: (intent: RegistrationIntent) -> Unit,
+    snackBarManager: SnackBarManager,
 ) {
-    val uiState by vm.uiState.collectAsStateWithLifecycle()
-
     val scrollState = rememberScrollState()
     ScreenLayout(
         modifier = modifier,
-        snackBarId = uiState.currentSnackBarMessageId,
-        snackBarText = if (uiState.snackBarMessageResource != null) {
-            stringResource(
-                uiState.snackBarMessageResource!!
-            )
-        } else {
-            null
-        },
-        snackBarDuration = SnackbarDuration.Long
+        snackBarManager = snackBarManager
     ) { innerPadding ->
         Column(
             modifier = Modifier.verticalScroll(scrollState).fillMaxSize()
@@ -75,14 +66,14 @@ internal fun RegistrationScreen(
             BrandTitle()
             RegistrationForm(
                 modifier = Modifier.padding(12.dp).background(Color.Transparent)
-                .glassEffect(
-                    LocalHazeState.current,
-                    shape = MaterialTheme.shapes.extraLarge,
-                    fillAlpha = 0.3f,
-                    borderAlpha = 0.4f,
-                    borderWidth = 2.dp,
-                    blurRadius = 10.dp
-                ),
+                    .glassEffect(
+                        LocalHazeState.current,
+                        shape = MaterialTheme.shapes.extraLarge,
+                        fillAlpha = 0.3f,
+                        borderAlpha = 0.4f,
+                        borderWidth = 2.dp,
+                        blurRadius = 10.dp
+                    ),
                 data = RegistrationData(
                     email = uiState.email,
                     emailErrorText = uiState.emailErrorText?.let { stringResource(it) },
@@ -93,14 +84,13 @@ internal fun RegistrationScreen(
                     passwordCopy = uiState.passwordCopy,
                     passwordCopyErrorText = uiState.passwordCopyErrorText?.let { stringResource(it) },
                     consent = uiState.consent,
-                    consentErrorText = uiState.consentErrorText?.let { stringResource(it) },
-                    registrationErrorText = uiState.snackBarMessageResource?.let { stringResource(it) }),
-                onEmailChange = { vm.handleIntent(RegistrationIntent.SetEmail(it)) },
-                onLoginChange = { vm.handleIntent(RegistrationIntent.SetLogin(it)) },
-                onPasswordChange = { vm.handleIntent(RegistrationIntent.SetPassword(it)) },
-                onPasswordCopyChange = { vm.handleIntent(RegistrationIntent.SetPasswordCopy(it)) },
-                onConsentChange = { vm.handleIntent(RegistrationIntent.SetConsent(it)) },
-                onRegistration = { vm.handleIntent(RegistrationIntent.OnRegister) })
+                    consentErrorText = uiState.consentErrorText?.let { stringResource(it) }),
+                onEmailChange = { handleIntent(RegistrationIntent.SetEmail(it)) },
+                onLoginChange = { handleIntent(RegistrationIntent.SetLogin(it)) },
+                onPasswordChange = { handleIntent(RegistrationIntent.SetPassword(it)) },
+                onPasswordCopyChange = { handleIntent(RegistrationIntent.SetPasswordCopy(it)) },
+                onConsentChange = { handleIntent(RegistrationIntent.SetConsent(it)) },
+                onRegistration = { handleIntent(RegistrationIntent.OnRegister) })
         }
     }
 }
@@ -208,7 +198,6 @@ private fun RegistrationForm(
 }
 
 
-
 @Preview(
     showBackground = true, widthDp = 360
 )
@@ -227,7 +216,6 @@ private fun RegistrationFormPreview() {
             passwordErrorText = null,
             passwordCopyErrorText = null,
             consentErrorText = null,
-            registrationErrorText = null
         )
         RegistrationForm(
             data = registrationData,
