@@ -1,8 +1,5 @@
 package models
 
-import kotlin.jvm.JvmInline
-
-@JvmInline
-value class KtorText(
+data class KtorText(
     val text: String
 )

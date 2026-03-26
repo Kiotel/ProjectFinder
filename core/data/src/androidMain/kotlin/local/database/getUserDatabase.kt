@@ -1,9 +1,15 @@
 package local.database
 
-/*
-fun getTestDataBase(context: Context): RoomDatabase.Builder<TestDataBase> {
+import android.content.Context
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.coroutines.Dispatchers
+
+
+fun getUserDatabase(context: Context): RoomDatabase.Builder<UserDataBase> {
     val dbFile = context.getDatabasePath("user.db")
-    return Room.databaseBuilder<TestDataBase>(
+    return Room.databaseBuilder<UserDataBase>(
         context = context.applicationContext,
         name = dbFile.absolutePath
     )
@@ -11,4 +17,4 @@ fun getTestDataBase(context: Context): RoomDatabase.Builder<TestDataBase> {
         .fallbackToDestructiveMigration(true)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
-}*/
+}

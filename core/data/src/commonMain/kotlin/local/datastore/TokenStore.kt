@@ -32,12 +32,12 @@ class TokenStore(
             if (exception is IOException) emit(emptyPreferences()) else throw exception
         }
         .map { preferences ->
-            preferences[PreferencesKeys.access_token]?.ifBlank { null }
+            preferences[PreferencesKeys.refresh_token]?.ifBlank { null }
         }
 
     suspend fun setRefreshToken(token: String?) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.access_token] = token ?: ""
+            preferences[PreferencesKeys.refresh_token] = token ?: ""
         }
     }
 }

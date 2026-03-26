@@ -1,4 +1,4 @@
-package local.database.enitities
+package local.database.entities
 
 import androidx.room.Dao
 import androidx.room.Entity

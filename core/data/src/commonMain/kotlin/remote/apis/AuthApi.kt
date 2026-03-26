@@ -10,7 +10,8 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import remote.apis.dtos.requests.RegisterBodyDto
+import remote.apis.dtos.requests.RequestLoginBodyDto
+import remote.apis.dtos.requests.RequestRegisterBodyDto
 import utils.Consts
 
 class AuthApi {
@@ -31,10 +32,21 @@ class AuthApi {
         client.post("${Consts.BASE_URL}/auth/register") {
             contentType(ContentType.Application.Json)
             setBody(
-                RegisterBodyDto(
+                RequestRegisterBodyDto(
                     username = username,
                     email = email,
                     password = password,
+                )
+            )
+        }
+
+    suspend fun login(email: String, password: String) =
+        client.post("${Consts.BASE_URL}/auth/login") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                RequestLoginBodyDto(
+                    email = email,
+                    password = password
                 )
             )
         }

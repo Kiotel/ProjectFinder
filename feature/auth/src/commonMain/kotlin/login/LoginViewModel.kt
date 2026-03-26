@@ -20,10 +20,16 @@ import projectfinder.core.ui.generated.resources.Res
 import projectfinder.core.ui.generated.resources.error_login_length
 import projectfinder.core.ui.generated.resources.snackbar_login_in_progress
 import projectfinder.core.ui.generated.resources.snackbar_login_success
+import projectfinder.core.ui.generated.resources.snackbar_login_unknown_error
+import projectfinder.core.ui.generated.resources.snackbar_registration_failed
+import projectfinder.core.ui.generated.resources.snackbar_registration_success
+import useCases.GetUserInfoUseCase
+import useCases.LoginUseCase
 import useCases.RegisterUseCase
 
 internal class LoginViewModel(
-    private val registerUseCase: RegisterUseCase
+    private val loginUseCase: LoginUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
     private val _internalState = MutableStateFlow(
         InternalLoginState()
@@ -56,15 +62,33 @@ internal class LoginViewModel(
                     currentSnackBarMessageId = uiState.value.currentSnackBarMessageId + 1
                 )
             }
-            delay(3000)
-            // login process
-            updateState {
-                it.copy(
-                    authed = true,
-                    snackBarMessageResource = Res.string.snackbar_login_success,
-                    currentSnackBarMessageId = uiState.value.currentSnackBarMessageId + 1
-                )
+            loginUseCase(
+                email = uiState.value.email,
+                password = uiState.value.password
+            ).collect { result ->
+                result.onSuccess {
+                    updateState {
+                        it.copy(
+                            snackBarMessageResource = Res.string.snackbar_login_success,
+                            currentSnackBarMessageId = it.currentSnackBarMessageId + 1,
+                            authed = true
+                        )
+                    }
+                }.onFailure {
+                    updateState {
+                        it.copy(
+                            snackBarMessageResource = Res.string.snackbar_login_unknown_error,
+                            currentSnackBarMessageId = it.currentSnackBarMessageId + 1
+                        )
+                    }
+                }
             }
+        }
+    }
+
+    fun getUserInfo() {
+        viewModelScope.launch {
+            getUserInfoUseCase()
         }
     }
 

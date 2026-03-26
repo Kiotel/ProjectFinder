@@ -7,14 +7,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import platform.Foundation.NSHomeDirectory
 
-//fun getTestDataBase(): RoomDatabase.Builder<TestDataBase> {
-//    val dbFile = NSHomeDirectory() + "/user.db"
-//    return Room.databaseBuilder<TestDataBase>(
-//        name = dbFile,
-//        // factory = { TestDataBase::class.instantiateImpl() }
-//    )
-//        .fallbackToDestructiveMigrationOnDowngrade(true)
-//        .fallbackToDestructiveMigration(true)
-//        .setDriver(BundledSQLiteDriver())
-//        .setQueryCoroutineContext(Dispatchers.IO)
-//}
+fun getTestDataBase(): RoomDatabase.Builder<UserDataBase> {
+    val dbFile = NSHomeDirectory() + "/user.db"
+    return Room.databaseBuilder<UserDataBase>(
+        name = dbFile,
+        // factory = { TestDataBase::class.instantiateImpl() }
+    )
+        .fallbackToDestructiveMigrationOnDowngrade(true)
+        .fallbackToDestructiveMigration(true)
+        .setDriver(BundledSQLiteDriver())
+        .setQueryCoroutineContext(Dispatchers.IO)
+}
