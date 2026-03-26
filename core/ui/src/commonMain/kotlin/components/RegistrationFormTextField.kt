@@ -34,7 +34,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.chrisbanes.haze.rememberHazeState
-import modifiers.glassEffect
+import modifiers.cheapGlassEffect
 import utils.LocalHazeState
 
 @Composable
@@ -70,9 +70,7 @@ fun RegistrationTextInput(
         }
 
         Box(
-            modifier = Modifier.fillMaxWidth().glassEffect(
-                hazeState = LocalHazeState.current,
-                blurRadius = 10.dp,
+            modifier = Modifier.fillMaxWidth().cheapGlassEffect(
                 shape = MaterialTheme.shapes.medium,
                 fillAlpha = 0.2f
             )

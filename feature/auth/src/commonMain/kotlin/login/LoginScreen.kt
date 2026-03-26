@@ -34,6 +34,7 @@ import components.ScreenLayout
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import login.models.LoginFormData
 import login.models.LoginState
+import modifiers.cheapGlassEffect
 import modifiers.glassEffect
 import utils.LocalHazeState
 import utils.SnackBarManager
@@ -78,10 +79,11 @@ internal fun LoginScreen(
                 onPasswordChange = { handleIntent(LoginIntent.SetPassword(it)) },
                 onLogin = { handleIntent(LoginIntent.OnLogin) })
             OutlinedButton(
-                modifier = Modifier.padding(bottom = 24.dp),
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 2.dp,
+                modifier = Modifier.cheapGlassEffect(ButtonDefaults.outlinedShape),
+                colors = ButtonDefaults.outlinedButtonColors().copy(
+                    containerColor = Color.Transparent,
                 ),
+                border = null,
                 onClick = goToRegister,
             ) {
                 Text(text = "Зарегистрироваться", style = MaterialTheme.typography.labelLarge)
