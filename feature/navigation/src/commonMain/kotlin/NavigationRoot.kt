@@ -30,6 +30,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
@@ -94,6 +95,7 @@ internal fun NavigationRoot(modifier: Modifier = Modifier) {
 }
 
 
+@OptIn(ExperimentalHazeApi::class)
 @Composable
 private fun Background(
     modifier: Modifier = Modifier,
@@ -130,8 +132,8 @@ private fun Background(
                 .hazeEffect(
                     state = hazeState,
                     style = HazeStyle(
-                        blurRadius = 50.dp,
-                        noiseFactor = 0.1f,
+                        blurRadius = 20.dp,
+                        noiseFactor = 0f,
                         tint = HazeTint(
                             color = if (isDarkTheme) Color.Black.copy(alpha = 0.05f)
                             else Color.White.copy(alpha = 0.05f)

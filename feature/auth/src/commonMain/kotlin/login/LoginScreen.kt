@@ -35,8 +35,6 @@ import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import login.models.LoginFormData
 import login.models.LoginState
 import modifiers.cheapGlassEffect
-import modifiers.glassEffect
-import utils.LocalHazeState
 import utils.SnackBarManager
 
 @OptIn(ExperimentalHazeMaterialsApi::class)
@@ -63,13 +61,11 @@ internal fun LoginScreen(
             BrandTitle()
             LoginForm(
                 modifier = Modifier.padding(12.dp).background(Color.Transparent)
-                    .glassEffect(
-                        LocalHazeState.current,
+                    .cheapGlassEffect(
                         shape = MaterialTheme.shapes.extraLarge,
                         fillAlpha = 0.3f,
                         borderAlpha = 0.4f,
                         borderWidth = 2.dp,
-                        blurRadius = 10.dp
                     ),
                 data = LoginFormData(
                     email = uiState.email,

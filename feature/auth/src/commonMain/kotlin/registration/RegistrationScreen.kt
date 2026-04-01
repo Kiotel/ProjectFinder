@@ -36,7 +36,7 @@ import components.RegistrationTextInput
 import components.ScreenLayout
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.rememberHazeState
-import modifiers.glassEffect
+import modifiers.cheapGlassEffect
 import org.jetbrains.compose.resources.stringResource
 import registration.models.RegistrationData
 import registration.models.RegistrationState
@@ -66,13 +66,11 @@ internal fun RegistrationScreen(
             BrandTitle()
             RegistrationForm(
                 modifier = Modifier.padding(12.dp).background(Color.Transparent)
-                    .glassEffect(
-                        LocalHazeState.current,
+                    .cheapGlassEffect(
                         shape = MaterialTheme.shapes.extraLarge,
                         fillAlpha = 0.3f,
                         borderAlpha = 0.4f,
                         borderWidth = 2.dp,
-                        blurRadius = 10.dp
                     ),
                 data = RegistrationData(
                     email = uiState.email,

@@ -41,7 +41,8 @@ fun Modifier.cheapGlassEffect(
     fillAlpha: Float = 0.15f,
     borderAlpha: Float = 0.2f,
     borderWidth: Dp = 1.dp
-): Modifier = this.clip(shape).background(
+): Modifier = this.clip(shape)
+    .background(
     color = tint.copy(alpha = fillAlpha), shape = shape
 ).border(
     width = borderWidth, color = tint.copy(alpha = borderAlpha), shape = shape
