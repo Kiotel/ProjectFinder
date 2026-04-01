@@ -1,18 +1,21 @@
 package description.models
 
-import org.jetbrains.compose.resources.StringResource
-
 
 internal data class InternalDescriptionState(
-    val email: String = "",
-    val emailErrorText: StringResource? = null,
-    val login: String = "",
-    val loginErrorText: StringResource? = null,
-    val password: String = "",
-    val passwordErrorText: StringResource? = null,
-    val passwordCopy: String = "",
-    val passwordCopyErrorText: StringResource? = null,
-    val consent: Boolean = false,
-    val consentErrorText: StringResource? = null,
-    val isAuthed: Boolean = false
+    // Учебное заведение
+    val region: String = "",
+    val university: String = "",
+    val department: String = "",
+    val programme: String = "",
+    val studyType: String = "",
+
+    // Личная информация
+    val about: String = "",
+    val qualities: String = "",
+    val skills: String = "",
+
+    // Контакты
+    val workingHours: String = "",
+    val wishes: String = "",
+    val waysToContact: String = "",
 )

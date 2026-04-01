@@ -1,31 +1,29 @@
 package description.models
 
-import org.jetbrains.compose.resources.StringResource
-
 internal data class DescriptionState(
-    val email: String,
-    val emailErrorText: StringResource?,
-    val login: String,
-    val loginErrorText: StringResource?,
-    val password: String,
-    val passwordErrorText: StringResource?,
-    val passwordCopy: String,
-    val passwordCopyErrorText: StringResource?,
-    val consent: Boolean,
-    val consentErrorText: StringResource?,
-    val isAuthed: Boolean
+    val region: String,
+    val university: String,
+    val department: String,
+    val programme: String,
+    val studyType: String,
+    val about: String,
+    val qualities: String,
+    val skills: String,
+    val workingHours: String,
+    val wishes: String,
+    val waysToContact: String,
 ) {
     internal constructor(internalDescriptionState: InternalDescriptionState) : this(
-        email = internalDescriptionState.email,
-        emailErrorText = internalDescriptionState.emailErrorText,
-        login = internalDescriptionState.login,
-        loginErrorText = internalDescriptionState.loginErrorText,
-        password = internalDescriptionState.password,
-        passwordErrorText = internalDescriptionState.passwordErrorText,
-        passwordCopy = internalDescriptionState.passwordCopy,
-        passwordCopyErrorText = internalDescriptionState.passwordCopyErrorText,
-        consent = internalDescriptionState.consent,
-        consentErrorText = internalDescriptionState.consentErrorText,
-        isAuthed = internalDescriptionState.isAuthed
+        region = internalDescriptionState.region,
+        university = internalDescriptionState.university,
+        department = internalDescriptionState.department,
+        programme = internalDescriptionState.programme,
+        studyType = internalDescriptionState.studyType,
+        about = internalDescriptionState.about,
+        qualities = internalDescriptionState.qualities,
+        skills = internalDescriptionState.skills,
+        workingHours = internalDescriptionState.workingHours,
+        wishes = internalDescriptionState.wishes,
+        waysToContact = internalDescriptionState.waysToContact
     )
 }

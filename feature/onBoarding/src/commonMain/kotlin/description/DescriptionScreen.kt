@@ -53,148 +53,70 @@ internal fun DescriptionScreen(
                 descriptionText = "Для правильной работы алгоритмов поиска заполните информацию честно — это поможет найти команду быстрее"
             )
             Column(
-                modifier = Modifier.fillMaxSize().padding(top = 24.dp).imePadding(),
+                modifier = Modifier.fillMaxSize().padding(top = 12.dp).imePadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                DescriptionPart(title = "Образование") {
+                DescriptionPart(title = "Учебное заведение") {
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.region,
+                        onValueChange = { handleIntent(DescriptionIntent.SetRegion(it)) },
+                        labelText = "РЕГИОН"
                     )
                     HorizontalDivider(
                         color = Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.university,
+                        onValueChange = { handleIntent(DescriptionIntent.SetUniversity(it)) },
+                        labelText = "ВУЗ"
                     )
                     HorizontalDivider(
                         color = Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.department,
+                        onValueChange = { handleIntent(DescriptionIntent.SetDepartment(it)) },
+                        labelText = "КАФЕДРА"
                     )
                     HorizontalDivider(
                         color = Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.programme,
+                        onValueChange = { handleIntent(DescriptionIntent.SetProgramme(it)) },
+                        labelText = "ПРОГРАММА"
                     )
                     HorizontalDivider(
                         color = Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.studyType,
+                        onValueChange = { handleIntent(DescriptionIntent.SetStudyType(it)) },
+                        labelText = "ФОРМА"
                     )
                 }
-                DescriptionPart(title = "Образование") {
+                DescriptionPart(title = "Личная информация") {
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.about,
+                        onValueChange = { handleIntent(DescriptionIntent.SetAbout(it)) },
+                        labelText = "О СЕБЕ"
                     )
                     HorizontalDivider(
                         color = Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.qualities,
+                        onValueChange = { handleIntent(DescriptionIntent.SetQualities(it)) },
+                        labelText = "КАЧЕСТВА"
                     )
                     HorizontalDivider(
                         color = Transparent, modifier = Modifier.cheapGlassEffect()
                     )
                     DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                }
-                DescriptionPart(title = "Образование") {
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                }
-                DescriptionPart(title = "Образование") {
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = "Some value", onValueChange = {}, labelText = "РЕГИОН/ВУЗ"
+                        value = uiState.skills,
+                        onValueChange = { handleIntent(DescriptionIntent.SetSkills(it)) },
+                        labelText = "НАВЫКИ"
                     )
                 }
             }
@@ -223,7 +145,7 @@ private fun Header(
                 color = MaterialTheme.colorScheme.primary,
             )
         }
-        Text(text = buildAnnotatedString {
+        Text(modifier = Modifier.padding(top = 8.dp), text = buildAnnotatedString {
             titleTextList.forEachIndexed { index, str ->
                 withStyle(
                     style = MaterialTheme.typography.headlineMediumEmphasized.toSpanStyle().copy(
@@ -236,6 +158,7 @@ private fun Header(
             }
         })
         Text(
+            modifier = Modifier.padding(top = 12.dp),
             text = descriptionText,
             style = MaterialTheme.typography.bodyMediumEmphasized,
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
@@ -272,7 +195,7 @@ private fun DescriptionPart(
             )
         }
         Box(
-            modifier.background(Transparent).fillMaxWidth().cheapGlassEffect(
+            modifier.padding(top = 8.dp).background(Transparent).fillMaxWidth().cheapGlassEffect(
                 shape = MaterialTheme.shapes.large, fillAlpha = 0.4f, borderAlpha = 0.6f
             )
         ) {
