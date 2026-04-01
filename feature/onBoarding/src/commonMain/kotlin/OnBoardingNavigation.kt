@@ -1,5 +1,7 @@
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -7,10 +9,8 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import descriptionForm.DescriptionFormScreen
-import descriptionForm.DescriptionFormViewModel
-import greeting.GreetingScreen
-import greeting.GreetingViewModel
+import description.DescriptionScreen
+import description.DescriptionViewModel
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
@@ -27,12 +27,12 @@ fun OnBoardingNavigation(
                         Route.OnBoarding.Greeting::class, Route.OnBoarding.Greeting.serializer()
                     )
                     subclass(
-                        Route.OnBoarding.DescriptionForm::class,
-                        Route.OnBoarding.DescriptionForm.serializer()
+                        Route.OnBoarding.Description::class,
+                        Route.OnBoarding.Description.serializer()
                     )
                 }
             }
-        }, Route.OnBoarding.Greeting
+        }, Route.OnBoarding.Description
     )
     val onBoardingViewModel: OnboardingViewModel = koinViewModel()
     NavDisplay(
@@ -40,19 +40,14 @@ fun OnBoardingNavigation(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ), entryProvider = entryProvider {
-            entry<Route.OnBoarding.Greeting> {
-                val greetingViewModel: GreetingViewModel = koinViewModel()
-                GreetingScreen(
-                    vm = greetingViewModel,
-                    svm = onBoardingViewModel,
-                    goToDescriptionForm = { onBoardingBackStack.add(Route.OnBoarding.DescriptionForm) },
-                )
-            }
-            entry<Route.OnBoarding.DescriptionForm> {
-                val descriptionFormViewModel: DescriptionFormViewModel = koinViewModel()
+            entry<Route.OnBoarding.Description> {
+                val descriptionViewModel: DescriptionViewModel = koinViewModel()
+                val uiState by descriptionViewModel.uiState.collectAsStateWithLifecycle()
 
-                DescriptionFormScreen(
-                    vm = descriptionFormViewModel, svm = onBoardingViewModel
+                DescriptionScreen(
+                    uiState = uiState,
+                    handleIntent = descriptionViewModel::handleIntent,
+                    snackBarManager = descriptionViewModel.snackBarManager
                 )
             }
         }

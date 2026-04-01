@@ -9,7 +9,7 @@ sealed interface Route : NavKey {
         data object Greeting : Route
 
         @Serializable
-        data object DescriptionForm : Route
+        data object Description : Route
     }
 
     @Serializable

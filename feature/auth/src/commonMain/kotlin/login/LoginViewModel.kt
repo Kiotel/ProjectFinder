@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import login.models.InternalLoginState
 import login.models.LoginState
 import projectfinder.core.ui.generated.resources.Res
+import projectfinder.core.ui.generated.resources.snackbar_field_is_empty
 import projectfinder.core.ui.generated.resources.snackbar_login_in_progress
 import projectfinder.core.ui.generated.resources.snackbar_login_success
 import projectfinder.core.ui.generated.resources.snackbar_login_unknown_error
@@ -45,7 +46,17 @@ internal class LoginViewModel(
         _internalState.update(mutation)
     }
 
+    private fun validateForm(): Boolean {
+        return !(uiState.value.email.isBlank() || uiState.value.password.isEmpty())
+    }
+
     private fun onLogin() {
+        val isFormValid = validateForm()
+        if (!isFormValid){
+            snackBarManager.showMessage(Res.string.snackbar_field_is_empty)
+            return
+        }
+
         viewModelScope.launch {
             snackBarManager.showMessage(Res.string.snackbar_login_in_progress)
             loginUseCase(

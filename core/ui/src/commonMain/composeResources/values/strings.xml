@@ -23,5 +23,6 @@
     <string name="snackbar_login_success">Успешная авторизация</string>
     <string name="snackbar_login_unknown_error">Неизвестная во время авторизации</string>
     <string name="snackbar_login_server_error">Неизвестная во время авторизации</string>
+    <string name="snackbar_field_is_empty">Поля пароля и почты должны быть заполнены</string>
     <!-- LOGIN SCREEN-->
 </resources>

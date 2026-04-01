@@ -75,7 +75,10 @@ internal fun LoginScreen(
                 onPasswordChange = { handleIntent(LoginIntent.SetPassword(it)) },
                 onLogin = { handleIntent(LoginIntent.OnLogin) })
             OutlinedButton(
-                modifier = Modifier.cheapGlassEffect(ButtonDefaults.outlinedShape),
+                modifier = Modifier.cheapGlassEffect(
+                    tint = MaterialTheme.colorScheme.secondary,
+                    shape = ButtonDefaults.outlinedShape
+                ),
                 colors = ButtonDefaults.outlinedButtonColors().copy(
                     containerColor = Color.Transparent,
                 ),
@@ -137,7 +140,9 @@ private fun LoginForm(
                 focusRequester = passwordFocus
             )
             Button(
-                modifier = Modifier.padding(bottom = 24.dp),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                shape = MaterialTheme.shapes.medium,
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 2.dp,
                 ),
