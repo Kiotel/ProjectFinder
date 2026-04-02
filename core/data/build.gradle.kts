@@ -45,11 +45,14 @@ kotlin {
 
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.auth)
                 implementation(libs.ktor.serialization)
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(libs.androidx.room.runtime)
                 implementation(libs.androidx.sqlite.bundled)
+
+                implementation(libs.ksafe)
 
                 implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastore.preferences)
