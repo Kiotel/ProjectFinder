@@ -38,10 +38,14 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import org.koin.compose.viewmodel.koinViewModel
 import utils.LocalHazeState
 
 @Composable
-internal fun NavigationRoot(modifier: Modifier = Modifier) {
+internal fun NavigationRoot(
+    modifier: Modifier = Modifier,
+    navigationViewModel: NavigationViewModel = koinViewModel()
+) {
     val rootBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
             serializersModule = SerializersModule {

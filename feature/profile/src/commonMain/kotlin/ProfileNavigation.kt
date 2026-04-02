@@ -32,7 +32,7 @@ fun ProfileNavigation(
     NavDisplay(
         modifier = modifier, backStack = profileBackStack, entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
+            rememberViewModelStoreNavEntryDecorator(),
         ), entryProvider = entryProvider {
             entry<Route.Profile.Detailed> {
                 val detailedProfileViewModel: DetailedProfileViewModel = koinViewModel()

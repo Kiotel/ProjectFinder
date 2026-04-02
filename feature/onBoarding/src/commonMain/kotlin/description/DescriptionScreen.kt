@@ -8,29 +8,63 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import components.ScreenLayout
 import description.models.DescriptionState
 import modifiers.cheapGlassEffect
 import utils.SnackBarManager
+
+enum class Steps(val stepNumber: Int, val stepInfo: StepInfo) {
+    STEP1(
+        stepNumber = 1, stepInfo = StepInfo(
+            title = "Заполните форму",
+            description = "Для правильной работы алгоритмов поиска заполните информацию честно — это поможет найти команду быстрее."
+        )
+    ),
+    STEP2(
+        stepNumber = 2, stepInfo = StepInfo(
+            title = "Обратная связь",
+            description = "Укажите как с вами можно связаться и когда вы готовы к работе в команде."
+        )
+    ),
+    STEP3(
+        stepNumber = 3, stepInfo = StepInfo(
+            title = "Данные успешно обновлены",
+            description = "Теперь вам доступны все возможности приложения."
+        )
+    )
+}
+
+data class StepInfo(
+    val title: String,
+    val description: String,
+)
 
 @Composable
 internal fun DescriptionScreen(
@@ -40,6 +74,7 @@ internal fun DescriptionScreen(
     snackBarManager: SnackBarManager,
 ) {
     val scrollState = rememberScrollState()
+    var currentStep by rememberSaveable { mutableStateOf(1) }
     ScreenLayout(
         modifier = modifier, snackBarManager = snackBarManager
     ) { innerPadding ->
@@ -48,76 +83,39 @@ internal fun DescriptionScreen(
                 .padding(vertical = 12.dp, horizontal = 12.dp),
         ) {
             Header(
-                step = 1,
-                titleText = "Заполните форму",
-                descriptionText = "Для правильной работы алгоритмов поиска заполните информацию честно — это поможет найти команду быстрее"
+                step = Steps.entries.firstOrNull { it.stepNumber == currentStep } ?: Steps.STEP3,
             )
             Column(
                 modifier = Modifier.fillMaxSize().padding(top = 12.dp).imePadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                DescriptionPart(title = "Учебное заведение") {
-                    DescriptionPartTextField(
-                        value = uiState.region,
-                        onValueChange = { handleIntent(DescriptionIntent.SetRegion(it)) },
-                        labelText = "РЕГИОН"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = uiState.university,
-                        onValueChange = { handleIntent(DescriptionIntent.SetUniversity(it)) },
-                        labelText = "ВУЗ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = uiState.department,
-                        onValueChange = { handleIntent(DescriptionIntent.SetDepartment(it)) },
-                        labelText = "КАФЕДРА"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = uiState.programme,
-                        onValueChange = { handleIntent(DescriptionIntent.SetProgramme(it)) },
-                        labelText = "ПРОГРАММА"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = uiState.studyType,
-                        onValueChange = { handleIntent(DescriptionIntent.SetStudyType(it)) },
-                        labelText = "ФОРМА"
-                    )
+                when (currentStep) {
+                    1 -> Step1(uiState, handleIntent)
+                    2 -> Step2(uiState, handleIntent)
+                    else -> Text("Success")
                 }
-                DescriptionPart(title = "Личная информация") {
-                    DescriptionPartTextField(
-                        value = uiState.about,
-                        onValueChange = { handleIntent(DescriptionIntent.SetAbout(it)) },
-                        labelText = "О СЕБЕ"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = uiState.qualities,
-                        onValueChange = { handleIntent(DescriptionIntent.SetQualities(it)) },
-                        labelText = "КАЧЕСТВА"
-                    )
-                    HorizontalDivider(
-                        color = Transparent, modifier = Modifier.cheapGlassEffect()
-                    )
-                    DescriptionPartTextField(
-                        value = uiState.skills,
-                        onValueChange = { handleIntent(DescriptionIntent.SetSkills(it)) },
-                        labelText = "НАВЫКИ"
-                    )
+                Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)) {
+                    Button(
+                        colors = ButtonDefaults.buttonColors().copy(
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        ),
+                        modifier = Modifier.align(Alignment.CenterStart),
+                        enabled = currentStep > 1,
+                        onClick = {
+                            currentStep -= 1
+                        },
+                    ) {
+                        Text(text = "<-")
+                    }
+                    Button(
+                        modifier = Modifier.align(Alignment.Center),
+                        onClick = {
+                            currentStep += 1
+                        },
+                    ) {
+                        Text(text = "Далее ->")
+                    }
                 }
             }
         }
@@ -125,13 +123,110 @@ internal fun DescriptionScreen(
 }
 
 @Composable
+private fun Step1(
+    uiState: DescriptionState,
+    handleIntent: (intent: DescriptionIntent) -> Unit
+) {
+    DescriptionPart(title = "Учебное заведение") {
+        DescriptionPartTextField(
+            value = uiState.region,
+            onValueChange = { handleIntent(DescriptionIntent.SetRegion(it)) },
+            labelText = "РЕГИОН"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.university,
+            onValueChange = { handleIntent(DescriptionIntent.SetUniversity(it)) },
+            labelText = "ВУЗ"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.department,
+            onValueChange = { handleIntent(DescriptionIntent.SetDepartment(it)) },
+            labelText = "КАФЕДРА"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.programme,
+            onValueChange = { handleIntent(DescriptionIntent.SetProgramme(it)) },
+            labelText = "ПРОГРАММА"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.studyType,
+            onValueChange = { handleIntent(DescriptionIntent.SetStudyType(it)) },
+            labelText = "ФОРМА"
+        )
+    }
+    DescriptionPart(title = "Личная информация") {
+        DescriptionPartTextField(
+            value = uiState.about,
+            onValueChange = { handleIntent(DescriptionIntent.SetAbout(it)) },
+            labelText = "О СЕБЕ"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.qualities,
+            onValueChange = { handleIntent(DescriptionIntent.SetQualities(it)) },
+            labelText = "КАЧЕСТВА"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.skills,
+            onValueChange = { handleIntent(DescriptionIntent.SetSkills(it)) },
+            labelText = "НАВЫКИ"
+        )
+    }
+}
+
+@Composable
+private fun Step2(
+    uiState: DescriptionState,
+    handleIntent: (intent: DescriptionIntent) -> Unit
+) {
+    DescriptionPart(title = "Контакты") {
+        DescriptionPartTextField(
+            value = uiState.workingHours,
+            onValueChange = { handleIntent(DescriptionIntent.SetAbout(it)) },
+            labelText = "ГРАФИК РАБОТЫ"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.wishes,
+            onValueChange = { handleIntent(DescriptionIntent.SetQualities(it)) },
+            labelText = "ПОЖЕЛАНИЯ"
+        )
+        HorizontalDivider(
+            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        )
+        DescriptionPartTextField(
+            value = uiState.waysToContact,
+            onValueChange = { handleIntent(DescriptionIntent.SetSkills(it)) },
+            labelText = "СПОСОБЫ СВЯЗИ"
+        )
+    }
+}
+
+@Composable
 private fun Header(
     modifier: Modifier = Modifier,
-    step: Int,
-    titleText: String,
-    descriptionText: String
+    step: Steps,
 ) {
-    val titleTextList = remember { titleText.split(" ") }
+    val titleTextList = remember(step) { step.stepInfo.title.split(" ") }
     Column(modifier = modifier) {
         Box(
             modifier = Modifier.cheapGlassEffect(
@@ -140,7 +235,7 @@ private fun Header(
             )
         ) {
             Text(
-                text = "Шаг $step из 3",
+                text = "Шаг ${step.stepNumber} из 3",
                 modifier = Modifier.padding(vertical = 4.dp, horizontal = 12.dp),
                 color = MaterialTheme.colorScheme.primary,
             )
@@ -159,7 +254,7 @@ private fun Header(
         })
         Text(
             modifier = Modifier.padding(top = 12.dp),
-            text = descriptionText,
+            text = step.stepInfo.description,
             style = MaterialTheme.typography.bodyMediumEmphasized,
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
         )
@@ -216,7 +311,7 @@ private fun DescriptionPartTextField(
     onValueChange: (newValue: String) -> Unit
 ) {
     TextField(
-        modifier = modifier.padding(vertical = 4.dp),
+        modifier = modifier.heightIn(68.dp, Dp.Unspecified).padding(vertical = 4.dp),
         value = value,
         onValueChange = onValueChange,
         label = {
