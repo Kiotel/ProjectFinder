@@ -6,10 +6,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import models.InternalNavigationState
 import models.NavigationState
+import useCases.GetIsAuthedUseCase
 
 internal class NavigationViewModel(
+    private val getIsAuthedUseCase: GetIsAuthedUseCase
 ) : ViewModel() {
 
     private val _internalState = MutableStateFlow(
@@ -31,9 +34,22 @@ internal class NavigationViewModel(
         _internalState.update(mutation)
     }
 
+    private fun checkIsAuthed() {
+        viewModelScope.launch {
+            getIsAuthedUseCase().collect { it ->
+                it.onSuccess {
+                    println("USER IS AUTHED")
+                }
+                it.onFailure { error ->
+                    println("USER IS NOT AUTHED. Error: ${error.stackTraceToString()}")
+                }
+            }
+        }
+    }
+
     fun handleIntent(intent: NavigationIntent) {
         when (intent) {
-            else -> {}
+            NavigationIntent.CheckIsAuthed -> checkIsAuthed()
         }
     }
 }

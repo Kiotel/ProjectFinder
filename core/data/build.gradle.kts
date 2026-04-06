@@ -46,7 +46,8 @@ kotlin {
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.client.auth)
-                implementation(libs.ktor.serialization)
+                implementation(libs.ktor.client.serialization)
+                implementation(libs.ktor.client.logging)
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(libs.androidx.room.runtime)

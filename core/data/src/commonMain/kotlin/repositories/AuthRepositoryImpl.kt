@@ -5,18 +5,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import local.database.UserDataBase
-import local.datastore.TokenStore
+import local.secureStore.TokenStore
 import mapppers.toDomain
 import mapppers.toEntity
 import models.User
 import remote.apis.AuthApi
 import remote.apis.dtos.common.UserDto
 import remote.apis.dtos.responses.ResponseLoginDto
+import remote.apis.dtos.responses.ResponseRefreshTokenDto
 import remote.apis.dtos.responses.ResponseRegisterDto
 import utils.Logger
-import utils.Logger.e
-import kotlin.text.isBlank
-import kotlin.time.Clock
 import kotlin.time.Clock.System.now
 import kotlin.time.Instant
 
@@ -31,8 +29,7 @@ class AuthRepositoryImpl(
             "AuthRepositoryImpl/logOut", "Started wiping all auth data"
         )
         try {
-            tokenStore.setRefreshToken(null)
-            tokenStore.setAccessToken(null)
+            tokenStore.setTokens("", "")
             userDataBase.userDao().get()?.let { userDataBase.userDao().delete(it) }
         } catch (e: Exception) {
             logger.e(
@@ -69,8 +66,7 @@ class AuthRepositoryImpl(
                 val userInfo = result.userDto
                 userDataBase.userDao().upsert(userInfo.toEntity())
 
-                tokenStore.setAccessToken(accessToken)
-                tokenStore.setRefreshToken(refreshToken)
+                tokenStore.setTokens(accessToken = accessToken, refreshToken = refreshToken)
 
                 logger.i(
                     "AuthRepositoryImpl/register",
@@ -88,6 +84,54 @@ class AuthRepositoryImpl(
             }
         }.catch { e ->
             logger.e("AuthRepositoryImpl/register", "Exception: $e")
+            emit(Result.failure(e))
+        }
+
+    override fun isAuthed(): Flow<Result<Unit>> =
+        flow {
+            logger.i(
+                "AuthRepositoryImpl/isAuthed",
+                "Checking is authed...."
+            )
+
+            val response = authApi.refreshAuthToken(
+                tokenStore.refreshToken
+            )
+
+            logger.i(
+                "AuthRepositoryImpl/isAuthed",
+                "Server response is: $response"
+            )
+
+            if (response.status.value in 200..299) {
+                val result = response.body<ResponseRefreshTokenDto>()
+
+                val accessToken = result.accessToken.takeUnless { it.isBlank() }
+                    ?: error("Access token is empty in response")
+                val refreshToken = result.refreshToken.takeUnless { it.isBlank() }
+                    ?: error("Refresh token is empty in response")
+
+                val userInfo = result.userDto
+                userDataBase.userDao().upsert(userInfo.toEntity())
+
+                tokenStore.setTokens(accessToken = accessToken, refreshToken = refreshToken)
+
+                logger.i(
+                    "AuthRepositoryImpl/isAuthed",
+                    "Successfully checked. Tokens: $accessToken and $refreshToken"
+                )
+
+                emit(Result.success(Unit))
+            }
+            if (response.status.value in 400..499) {
+                logger.w(
+                    "AuthRepositoryImpl/isAuthed", "Client error"
+                )
+
+                emit(Result.failure(Throwable("Not authorized")))
+            }
+        }.catch { e ->
+            logger.e("AuthRepositoryImpl/isAuthed", "Exception: $e")
             emit(Result.failure(e))
         }
 
@@ -112,8 +156,7 @@ class AuthRepositoryImpl(
             val userInfo = result.userDto
 
             userDataBase.userDao().upsert(userInfo.toEntity())
-            tokenStore.setAccessToken(accessToken)
-            tokenStore.setRefreshToken(refreshToken)
+            tokenStore.setTokens(accessToken = accessToken, refreshToken = refreshToken)
 
             logger.i(
                 "AuthRepositoryImpl/login",

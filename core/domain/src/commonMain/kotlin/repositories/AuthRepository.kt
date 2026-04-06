@@ -8,5 +8,6 @@ interface AuthRepository {
     fun login(email: String, password: String): Flow<Result<Unit>>
     suspend fun getUserInfo(cacheTtl: Long): Result<User>
 
-    suspend fun logOut(): Unit
+    fun isAuthed(): Flow<Result<Unit>>
+    suspend fun logOut()
 }

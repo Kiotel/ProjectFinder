@@ -2,9 +2,14 @@ package remote.apis
 
 
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -18,10 +23,11 @@ import local.secureStore.TokenStore
 import remote.apis.dtos.requests.RequestLoginBodyDto
 import remote.apis.dtos.requests.RequestRefreshAuthTokenBodyDto
 import remote.apis.dtos.requests.RequestRegisterBodyDto
+import remote.apis.dtos.responses.ResponseRefreshTokenDto
 import utils.Consts
 
 
-class AuthApi(
+class BackendApi(
     private val tokenStore: TokenStore
 ) {
     @OptIn(ExperimentalSerializationApi::class)
@@ -37,10 +43,10 @@ class AuthApi(
             json(json)
         }
         install(Logging) {
-            logger = io.ktor.client.plugins.logging.Logger.DEFAULT
+            logger = Logger.DEFAULT
             level = LogLevel.ALL
         }
-        /*install(Auth) {
+        install(Auth) {
             bearer {
                 loadTokens {
 
@@ -60,7 +66,7 @@ class AuthApi(
                 }
             }
 
-        }*/
+        }
     }
 
 

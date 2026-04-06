@@ -38,13 +38,14 @@ import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import org.koin.compose.viewmodel.koinViewModel
+import models.NavigationState
 import utils.LocalHazeState
 
 @Composable
 internal fun NavigationRoot(
     modifier: Modifier = Modifier,
-    navigationViewModel: NavigationViewModel = koinViewModel()
+    uiState: NavigationState,
+    handleIntent: (intent: NavigationIntent) -> Unit
 ) {
     val rootBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -91,7 +92,8 @@ internal fun NavigationRoot(
                 }
                 DebugNavigationMenu(
                     modifier = Modifier.systemBarsPadding(),
-                    navigateTo = { rootBackStack.add(it) }
+                    navigateTo = { rootBackStack.add(it) },
+                    onCheckAuth = { handleIntent(NavigationIntent.CheckIsAuthed) }
                 )
             }
         }
