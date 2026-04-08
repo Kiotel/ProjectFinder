@@ -18,7 +18,7 @@ import utils.Logger
 import kotlin.time.Clock.System.now
 import kotlin.time.Instant
 
-class AuthRepositoryImpl(
+internal class AuthRepositoryImpl(
     private val tokenStore: TokenStore,
     private val authApi: AuthApi,
     private val logger: Logger,

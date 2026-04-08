@@ -10,7 +10,7 @@ private data class AuthTokens(
     val refreshToken: String = ""
 )
 
-class TokenStore(
+internal class TokenStore(
     private val kSafe: KSafe
 ) {
     private var tokens by kSafe(AuthTokens())

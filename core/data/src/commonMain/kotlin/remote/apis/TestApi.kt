@@ -6,8 +6,8 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.coroutines.delay
 import remote.apis.dtos.responses.KtorTextDto
 
-class TestApi {
-    private val client = HttpClient() {
+internal class TestApi {
+    private val client = HttpClient {
     }
 
 

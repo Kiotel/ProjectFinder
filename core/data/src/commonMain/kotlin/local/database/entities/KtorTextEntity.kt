@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlin.time.Clock
 
 @Entity(tableName = "ktor_text")
-data class KtorTextEntity(
+internal data class KtorTextEntity(
     @PrimaryKey val text: String,
     val lastUpdated: Long = Clock.System.now().toEpochMilliseconds()
 )
 
 @Dao
-interface KtorTextDao {
+internal interface KtorTextDao {
     @Upsert
     suspend fun insert(text: KtorTextEntity)
 

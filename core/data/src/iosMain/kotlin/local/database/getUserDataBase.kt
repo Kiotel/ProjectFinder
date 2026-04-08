@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import platform.Foundation.NSHomeDirectory
 
-fun getTestDataBase(): RoomDatabase.Builder<UserDataBase> {
+internal fun getUserDataBase(): RoomDatabase.Builder<UserDataBase> {
     val dbFile = NSHomeDirectory() + "/user.db"
     return Room.databaseBuilder<UserDataBase>(
         name = dbFile,

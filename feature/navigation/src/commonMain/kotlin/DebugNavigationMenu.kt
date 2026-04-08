@@ -14,7 +14,8 @@ import androidx.compose.ui.Modifier
 internal fun DebugNavigationMenu(
     modifier: Modifier = Modifier,
     navigateTo: (route: Route) -> Unit,
-    onCheckAuth: () -> Unit
+    onGetProjects: () -> Unit,
+    onCheckAuth: () -> Unit,
 ) {
     var show by remember { mutableStateOf(true) }
     var isExpanded by remember { mutableStateOf((true)) }
@@ -46,6 +47,10 @@ internal fun DebugNavigationMenu(
                 DropdownMenuItem(
                     text = { Text("Проверить авторизацию") },
                     onClick = onCheckAuth
+                )
+                DropdownMenuItem(
+                    text = { Text("Получить проекты") },
+                    onClick = onGetProjects
                 )
                 DropdownMenuItem(
                     text = { Text("Спрятать меню") },

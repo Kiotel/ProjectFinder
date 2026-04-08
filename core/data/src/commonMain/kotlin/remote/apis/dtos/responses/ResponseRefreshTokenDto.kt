@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import remote.apis.dtos.common.UserDto
 
 @Serializable
-data class ResponseRefreshTokenDto(
+internal data class ResponseRefreshTokenDto(
     @Serializable @SerialName("accessToken") val accessToken: String,
     @Serializable @SerialName("refreshToken") val refreshToken: String,
     @Serializable @SerialName("user") val userDto: UserDto,

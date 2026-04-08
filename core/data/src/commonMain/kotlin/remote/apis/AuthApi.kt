@@ -21,7 +21,7 @@ import remote.apis.dtos.requests.RequestRegisterBodyDto
 import utils.Consts
 
 
-class AuthApi(
+internal class AuthApi(
     private val tokenStore: TokenStore
 ) {
     @OptIn(ExperimentalSerializationApi::class)
@@ -40,27 +40,6 @@ class AuthApi(
             logger = io.ktor.client.plugins.logging.Logger.DEFAULT
             level = LogLevel.ALL
         }
-        /*install(Auth) {
-            bearer {
-                loadTokens {
-
-                    BearerTokens(tokenStore.accessToken, tokenStore.refreshToken)
-                }
-                refreshTokens {
-                    val newInfo =
-                        refreshAuthToken(tokenStore.refreshToken).body<ResponseRefreshTokenDto>()
-
-
-                    tokenStore.setTokens(
-                        accessToken = newInfo.accessToken,
-                        refreshToken = newInfo.refreshToken
-                    )
-
-                    BearerTokens(tokenStore.accessToken, tokenStore.refreshToken)
-                }
-            }
-
-        }*/
     }
 
 

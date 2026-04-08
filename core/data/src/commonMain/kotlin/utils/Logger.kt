@@ -1,6 +1,6 @@
 package utils
 
-object Logger {
+internal object Logger {
     fun i(tag: String, message: String) {
         println("🔵INFO: $tag $message")
     }

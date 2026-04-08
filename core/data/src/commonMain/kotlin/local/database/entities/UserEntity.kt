@@ -4,15 +4,13 @@ import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Entity
-import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
-import kotlin.time.Clock
 
 @Entity(tableName = "user")
-data class UserEntity(
+internal data class UserEntity(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "user_name") val userName: String,
     @ColumnInfo(name = "email") val email: String,
@@ -22,7 +20,7 @@ data class UserEntity(
 )
 
 @Dao
-interface UserDao {
+internal interface UserDao {
     @Upsert
     suspend fun upsert(user: UserEntity)
 

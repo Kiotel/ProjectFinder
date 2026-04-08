@@ -10,9 +10,11 @@ import kotlinx.coroutines.launch
 import models.InternalNavigationState
 import models.NavigationState
 import useCases.GetIsAuthedUseCase
+import useCases.GetProjectsUseCase
 
 internal class NavigationViewModel(
-    private val getIsAuthedUseCase: GetIsAuthedUseCase
+    private val getIsAuthedUseCase: GetIsAuthedUseCase,
+    private val getProjectsUseCase: GetProjectsUseCase
 ) : ViewModel() {
 
     private val _internalState = MutableStateFlow(
@@ -36,7 +38,7 @@ internal class NavigationViewModel(
 
     private fun checkIsAuthed() {
         viewModelScope.launch {
-            getIsAuthedUseCase().collect { it ->
+            getIsAuthedUseCase().collect {
                 it.onSuccess {
                     println("USER IS AUTHED")
                 }
@@ -47,9 +49,33 @@ internal class NavigationViewModel(
         }
     }
 
+    private fun getProjects() {
+        viewModelScope.launch {
+            getProjectsUseCase(page = 1, limit = 50).collect { it ->
+                it.onSuccess { projects ->
+                    println(
+                        "NavigationViewModel/getProjects. Got projects: ${
+                            projects.map {
+                                "\nid ${it.id}\n" +
+                                "title ${it.title}\n" + 
+                                "authorName ${it.authorName}\n" +
+                                "updateAt ${it.updatedAt}\n" +
+                                "createdAt ${it.createdAt}\n"
+                            }
+                        }"
+                    )
+                }
+                it.onFailure { e ->
+                    println("NavigationViewModel/getProjects. Got failure: $e")
+                }
+            }
+        }
+    }
+
     fun handleIntent(intent: NavigationIntent) {
         when (intent) {
             NavigationIntent.CheckIsAuthed -> checkIsAuthed()
+            NavigationIntent.GetProjects -> getProjects()
         }
     }
 }

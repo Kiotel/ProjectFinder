@@ -7,9 +7,9 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 
 
-internal fun getUserDatabase(context: Context): RoomDatabase.Builder<UserDataBase> {
-    val dbFile = context.getDatabasePath("user.db")
-    return Room.databaseBuilder<UserDataBase>(
+internal fun getProjectsDatabase(context: Context): RoomDatabase.Builder<ProjectsDataBase> {
+    val dbFile = context.getDatabasePath("projects.db")
+    return Room.databaseBuilder<ProjectsDataBase>(
         context = context.applicationContext,
         name = dbFile.absolutePath
     )

@@ -65,9 +65,7 @@ internal fun NavigationRoot(
         Surface {
             Box {
                 Background(
-                    enabled = true,
-                    useCirclesBackground = true,
-                    painter = null
+                    enabled = true, useCirclesBackground = true, painter = null
                 ) {
                     NavDisplay(
                         modifier = modifier, backStack = rootBackStack, entryDecorators = listOf(
@@ -79,8 +77,7 @@ internal fun NavigationRoot(
                                     onAuth = {
                                         rootBackStack.clear()
                                         rootBackStack.add(Route.OnBoarding)
-                                    }
-                                )
+                                    })
                             }
                             entry<Route.OnBoarding> {
                                 OnBoardingNavigation()
@@ -93,8 +90,8 @@ internal fun NavigationRoot(
                 DebugNavigationMenu(
                     modifier = Modifier.systemBarsPadding(),
                     navigateTo = { rootBackStack.add(it) },
-                    onCheckAuth = { handleIntent(NavigationIntent.CheckIsAuthed) }
-                )
+                    onCheckAuth = { handleIntent(NavigationIntent.CheckIsAuthed) },
+                    onGetProjects = { handleIntent(NavigationIntent.GetProjects) })
             }
         }
     }
@@ -116,9 +113,7 @@ private fun Background(
     Box(modifier = Modifier.fillMaxSize()) {
 
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .hazeSource(hazeState)
+            modifier = Modifier.fillMaxSize().hazeSource(hazeState)
         ) {
             if (enabled && useCirclesBackground) {
                 MovingCirclesBackground(isDarkTheme = isDarkTheme)
@@ -133,14 +128,9 @@ private fun Background(
         }
 
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .hazeEffect(
-                    state = hazeState,
-                    style = HazeStyle(
-                        blurRadius = 20.dp,
-                        noiseFactor = 0f,
-                        tint = HazeTint(
+            modifier = Modifier.fillMaxSize().hazeEffect(
+                    state = hazeState, style = HazeStyle(
+                        blurRadius = 20.dp, noiseFactor = 0f, tint = HazeTint(
                             color = if (isDarkTheme) Color.Black.copy(alpha = 0.05f)
                             else Color.White.copy(alpha = 0.05f)
                         )
@@ -163,24 +153,28 @@ private fun MovingCirclesBackground(
 
     // Circle 1 Movement (Primary)
     val x1 by infiniteTransition.animateFloat(
-        initialValue = 0.15f, targetValue = 0.85f,
+        initialValue = 0.15f,
+        targetValue = 0.85f,
         animationSpec = infiniteRepeatable(tween(18000, easing = EaseInOut), RepeatMode.Reverse),
         label = "c1_x"
     )
     val y1 by infiniteTransition.animateFloat(
-        initialValue = 0.2f, targetValue = 0.8f,
+        initialValue = 0.2f,
+        targetValue = 0.8f,
         animationSpec = infiniteRepeatable(tween(13000, easing = EaseInOut), RepeatMode.Reverse),
         label = "c1_y"
     )
 
     // Circle 2 Movement (Tertiary)
     val x2 by infiniteTransition.animateFloat(
-        initialValue = 0.85f, targetValue = 0.15f,
+        initialValue = 0.85f,
+        targetValue = 0.15f,
         animationSpec = infiniteRepeatable(tween(22000, easing = EaseInOut), RepeatMode.Reverse),
         label = "c2_x"
     )
     val y2 by infiniteTransition.animateFloat(
-        initialValue = 0.75f, targetValue = 0.25f,
+        initialValue = 0.75f,
+        targetValue = 0.25f,
         animationSpec = infiniteRepeatable(tween(16000, easing = EaseInOut), RepeatMode.Reverse),
         label = "c2_y"
     )
@@ -204,9 +198,7 @@ private fun MovingCirclesBackground(
                 colors = listOf(color1, Color.Transparent),
                 center = Offset(size.width * x1, size.height * y1),
                 radius = radius1
-            ),
-            center = Offset(size.width * x1, size.height * y1),
-            radius = radius1
+            ), center = Offset(size.width * x1, size.height * y1), radius = radius1
         )
 
         drawCircle(
@@ -214,9 +206,7 @@ private fun MovingCirclesBackground(
                 colors = listOf(color2, Color.Transparent),
                 center = Offset(size.width * x2, size.height * y2),
                 radius = radius2
-            ),
-            center = Offset(size.width * x2, size.height * y2),
-            radius = radius2
+            ), center = Offset(size.width * x2, size.height * y2), radius = radius2
         )
     }
 }
