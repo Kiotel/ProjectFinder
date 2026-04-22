@@ -31,6 +31,15 @@ sealed interface Route : NavKey {
     }
 
     @Serializable
+    data object Projects : Route {
+        @Serializable
+        data object AllProjects : Route
+
+        @Serializable
+        data class DetailedProject(val id: Int) : Route
+    }
+
+    @Serializable
     data object Error : Route {
         @Serializable
         data object UnknownError : Route

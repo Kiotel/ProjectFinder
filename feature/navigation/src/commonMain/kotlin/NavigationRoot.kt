@@ -55,6 +55,7 @@ internal fun NavigationRoot(
                     subclass(Route.Profile::class, Route.Profile.serializer())
                     subclass(Route.Auth::class, Route.Auth.serializer())
                     subclass(Route.Error::class, Route.Error.serializer())
+                    subclass(Route.Projects::class, Route.Projects.serializer())
                 }
             }
         }, Route.Auth
@@ -84,6 +85,9 @@ internal fun NavigationRoot(
                             }
                             entry<Route.Profile> {
                                 ProfileNavigation()
+                            }
+                            entry<Route.Projects>{
+                                ProjectsNavigation()
                             }
                         })
                 }

@@ -41,6 +41,10 @@ internal fun DebugNavigationMenu(
                     onClick = { navigateTo(Route.Profile) }
                 )
                 DropdownMenuItem(
+                    text = { Text(Route.Projects.toString()) },
+                    onClick = { navigateTo(Route.Projects) }
+                )
+                DropdownMenuItem(
                     text = { Text(Route.OnBoarding.toString()) },
                     onClick = { navigateTo(Route.OnBoarding) }
                 )

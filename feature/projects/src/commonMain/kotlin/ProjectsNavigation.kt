@@ -1,0 +1,51 @@
+import allProjects.AllProjectsScreen
+import allProjects.AllProjectsViewModel
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun ProjectsNavigation(
+    modifier: Modifier = Modifier,
+) {
+    val authBackStack = rememberNavBackStack(
+        configuration = SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                polymorphic(NavKey::class) {
+                    subclass(
+                        Route.Projects.AllProjects::class, Route.Projects.AllProjects.serializer()
+                    )
+                }
+            }
+        }, Route.Projects.AllProjects
+    )
+    val projectsViewModel: ProjectsViewModel = koinViewModel()
+    NavDisplay(
+        modifier = modifier, backStack = authBackStack, entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ), entryProvider = entryProvider {
+            entry<Route.Projects.AllProjects> {
+                val allProjectsViewModel: AllProjectsViewModel = koinViewModel()
+                val uiState by allProjectsViewModel.uiState.collectAsStateWithLifecycle()
+
+                AllProjectsScreen(
+                    uiState = uiState,
+                    handleIntent = allProjectsViewModel::handleIntent,
+                    snackBarManager = allProjectsViewModel.snackBarManager
+                )
+            }
+        }
+    )
+}

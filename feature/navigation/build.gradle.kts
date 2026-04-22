@@ -69,6 +69,7 @@ kotlin {
                 implementation(project(":feature:onBoarding"))
                 implementation(project(":feature:profile"))
                 implementation(project(":feature:auth"))
+                implementation(project(":feature:projects"))
             }
         }
     }

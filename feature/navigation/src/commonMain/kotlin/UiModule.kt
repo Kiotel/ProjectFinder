@@ -9,6 +9,6 @@ val uiModule = module {
 
     singleOf(::SnackBarManager)
 
-    includes(onBoardingModule, profileModule, authModule)
+    includes(onBoardingModule, profileModule, authModule, projectsModule)
 }
 

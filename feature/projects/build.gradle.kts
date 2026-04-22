@@ -10,7 +10,7 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "valera.app.projectsInfo"
+        namespace = "valera.app.projects"
         compileSdk = 36
         minSdk = 24
     }
@@ -19,7 +19,7 @@ kotlin {
         optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
     }
 
-    val xcfName = "feature:projectsInfoKit"
+    val xcfName = "feature:projectsKit"
 
     iosX64 {
         binaries.framework {
