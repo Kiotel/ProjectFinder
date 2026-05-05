@@ -38,12 +38,14 @@ fun ProjectsNavigation(
         ), entryProvider = entryProvider {
             entry<Route.Projects.AllProjects> {
                 val allProjectsViewModel: AllProjectsViewModel = koinViewModel()
+                val pagingFlow = allProjectsViewModel.projectsFlow
                 val uiState by allProjectsViewModel.uiState.collectAsStateWithLifecycle()
 
                 AllProjectsScreen(
                     uiState = uiState,
                     handleIntent = allProjectsViewModel::handleIntent,
-                    snackBarManager = allProjectsViewModel.snackBarManager
+                    snackBarManager = allProjectsViewModel.snackBarManager,
+                    pagingFlow = pagingFlow
                 )
             }
         }

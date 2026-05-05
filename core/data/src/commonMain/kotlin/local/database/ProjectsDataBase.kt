@@ -1,4 +1,4 @@
-package local.database
+/*package local.database
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
@@ -9,7 +9,7 @@ import local.database.entities.ProjectEntity
 import local.database.entities.ProjectsDao
 import local.database.utils.converters.ListStringConverter
 
-@Database(entities = [ProjectEntity::class], version = 1)
+@Database(entities = [ProjectEntity::class], version = 2)
 @ConstructedBy(ProjectsDataBaseConstructor::class)
 @TypeConverters(ListStringConverter::class)
 internal abstract class ProjectsDataBase : RoomDatabase() {
@@ -21,4 +21,4 @@ internal abstract class ProjectsDataBase : RoomDatabase() {
 internal expect object ProjectsDataBaseConstructor : RoomDatabaseConstructor<ProjectsDataBase> {
     override fun initialize(): ProjectsDataBase
 }
-
+*/

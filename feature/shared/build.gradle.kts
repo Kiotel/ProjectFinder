@@ -32,6 +32,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.compose.navigation3.ui)
+
             }
         }
 

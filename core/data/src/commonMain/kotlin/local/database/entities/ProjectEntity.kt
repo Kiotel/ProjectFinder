@@ -1,12 +1,13 @@
 package local.database.entities
 
+import androidx.paging.PagingSource
 import androidx.room.ColumnInfo
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Upsert
 
 @Entity(tableName = "projects")
 internal data class ProjectEntity(
@@ -29,12 +30,12 @@ internal data class ProjectEntity(
 
 @Dao
 internal interface ProjectsDao {
-    @Upsert
-    suspend fun upsert(user: ProjectEntity)
+    @Insert(onConflict = REPLACE)
+    suspend fun insertAll(projects: List<ProjectEntity>)
 
-    @Delete
-    suspend fun delete(user: ProjectEntity)
+    @Query("SELECT * FROM projects WHERE title LIKE :query")
+    fun pagingSource(query: String): PagingSource<Int, ProjectEntity>
 
-    @Query("SELECT * FROM projects LIMIT :limit OFFSET :offset")
-    suspend fun getPaged(offset: Int, limit: Int): List<ProjectEntity>
+    @Query("DELETE FROM projects")
+    suspend fun clearAll()
 }

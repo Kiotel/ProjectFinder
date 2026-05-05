@@ -34,6 +34,9 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(libs.kotlin.stdlib)
+
+                implementation(libs.androidx.paging.compose)
+                implementation(libs.androidx.paging.common)
             }
         }
 

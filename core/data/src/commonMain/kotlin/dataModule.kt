@@ -20,7 +20,7 @@ val dataModule = module {
     single<Logger> { Logger }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get()) }
-    single<ProjectsRepository> { ProjectRepositoryImpl(get(), get(), get()) }
+    single<ProjectsRepository> { ProjectRepositoryImpl(get(), get()) }
 
     includes(platformModule)
 }

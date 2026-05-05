@@ -1,9 +1,7 @@
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import eu.anifantakis.lib.ksafe.KSafe
-import local.database.ProjectsDataBase
 import local.database.UserDataBase
-import local.database.getProjectsDatabase
 import local.database.getUserDatabase
 import local.datastore.createDataStore
 import org.koin.android.ext.koin.androidContext
@@ -13,5 +11,4 @@ internal actual val platformModule = module {
     single<DataStore<Preferences>> { createDataStore(context = get()) }
     single<KSafe> { KSafe(androidContext()) }
     single<UserDataBase> { getUserDatabase(get()).build() }
-    single<ProjectsDataBase> { getProjectsDatabase(get()).build() }
 }

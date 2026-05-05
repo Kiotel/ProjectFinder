@@ -52,6 +52,9 @@ kotlin {
                 implementation(libs.androidx.datastore)
                 implementation(libs.androidx.datastore.preferences)
 
+                implementation(libs.androidx.paging.compose)
+                implementation(libs.androidx.paging.common)
+
                 implementation(project(":core:domain"))
             }
         }
