@@ -15,12 +15,6 @@ kotlin {
 
     val xcfName = "feature:sharedKit"
 
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
-
     iosArm64 {
         binaries.framework {
             baseName = xcfName

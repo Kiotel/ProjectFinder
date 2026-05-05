@@ -21,12 +21,6 @@ kotlin {
 
     val xcfName = "feature:projectsKit"
 
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
-
     iosArm64 {
         binaries.framework {
             baseName = xcfName
@@ -52,13 +46,13 @@ kotlin {
                 implementation(libs.compose.ui.tooling.preview)
 
                 implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(libs.androidx.lifecycle.runtime)
 
                 implementation(libs.compose.navigation3.ui)
                 implementation(libs.compose.lifecycle.viewmodel.nav3)
 
                 implementation(libs.haze)
                 implementation(libs.haze.materials)
-
 
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.kotlinx.coroutines.core)
@@ -67,6 +61,9 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
 
+                implementation(libs.androidx.paging.compose)
+                implementation(libs.androidx.paging.common)
+
                 implementation(project(":core:ui"))
                 implementation(project(":core:domain"))
                 implementation(project(":feature:shared"))
@@ -74,6 +71,7 @@ kotlin {
         }
         androidMain {
             dependencies {
+
                 implementation(libs.ui.tooling)
             }
         }
