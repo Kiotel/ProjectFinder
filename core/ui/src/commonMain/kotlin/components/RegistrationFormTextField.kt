@@ -93,7 +93,7 @@ fun RegistrationTextInput(
                     if (isSecret) {
                         IconButton(onClick = { hide = !hide }) {
                             Icon(
-                                if (hide) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                if (hide) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                                 contentDescription = null
                             )
                         }
