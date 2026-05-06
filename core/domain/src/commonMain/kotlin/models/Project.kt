@@ -1,7 +1,11 @@
 package models
 
+import androidx.compose.runtime.Stable
+import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
+@Stable
+@Serializable
 data class Project(
     val id: String,
     val authorId: String,

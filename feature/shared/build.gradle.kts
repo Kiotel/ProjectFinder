@@ -33,6 +33,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.compose.navigation3.ui)
 
+                implementation(project(":core:domain"))
             }
         }
 

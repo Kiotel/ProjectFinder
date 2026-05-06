@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import org.jetbrains.compose.resources.getString
 import utils.SnackBarManager
 
 @Composable
@@ -27,11 +26,9 @@ fun ScreenLayout(
         val currentMessage by snackBarManager.currentMessage.collectAsStateWithLifecycle()
         LaunchedEffect(currentMessage) {
             currentMessage?.let { messageState ->
-                if (currentMessage?.messageResource != null) {
+                if (currentMessage?.message != null) {
                     snackBarHostState.showSnackbar(
-                        message = getString(
-                            currentMessage!!.messageResource
-                        ),
+                        message = currentMessage!!.message,
                         duration = messageState.duration
                     )
                     snackBarManager.messageShown(messageState.id)

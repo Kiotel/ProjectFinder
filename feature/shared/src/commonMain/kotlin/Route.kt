@@ -1,5 +1,6 @@
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
+import models.Project
 
 @Serializable
 sealed interface Route : NavKey {
@@ -36,7 +37,7 @@ sealed interface Route : NavKey {
         data object AllProjects : Route
 
         @Serializable
-        data class DetailedProject(val id: Int) : Route
+        data class DetailedProject(val project: Project) : Route
     }
 
     @Serializable

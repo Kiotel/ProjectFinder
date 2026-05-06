@@ -1,6 +1,7 @@
 package repositories
 
 import io.ktor.client.call.body
+import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import mapppers.toDomain
@@ -24,7 +25,10 @@ internal class ProjectRepositoryImpl(
                     "Fetched projects: ${fetchedProjects.map { "$it\n" }}"
                 )
                 emit(Result.success(fetchedProjects.map { it.toDomain() }))
-            } catch (e: Exception) {
+            }catch(_: CancellationException){
+                return@flow
+            }
+            catch (e: Exception) {
                 logger.e(
                     "ProjectsRepositoryImpl/getProjects",
                     "Error during fetch: ${e.stackTraceToString()}"

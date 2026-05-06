@@ -2,15 +2,19 @@ package utils
 
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.Stable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 data class SnackbarMessage(
     val id: Long,
-    val messageResource: StringResource,
+    val message: String,
     val duration: SnackbarDuration
 )
 
@@ -22,11 +26,22 @@ class SnackBarManager {
     private var messageIdCounter: Long = 0
 
     fun showMessage(message: StringResource, duration: SnackbarDuration = SnackbarDuration.Short) {
-        messageIdCounter++
+        CoroutineScope(Dispatchers.Main).launch {
+            messageIdCounter++
+            val text: String = getString(message)
+            _currentMessage.value = SnackbarMessage(
+                id = messageIdCounter,
+                message = text,
+                duration = duration
+            )
+        }
+    }
 
+    fun showMessage(message: String, duration: SnackbarDuration = SnackbarDuration.Short) {
+        messageIdCounter++
         _currentMessage.value = SnackbarMessage(
             id = messageIdCounter,
-            messageResource = message,
+            message = message,
             duration = duration
         )
     }

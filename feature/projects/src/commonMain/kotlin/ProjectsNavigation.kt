@@ -11,6 +11,8 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import detailedProject.DetailedProjectScreen
+import detailedProject.DetailedProjectViewModel
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
@@ -25,6 +27,10 @@ fun ProjectsNavigation(
                 polymorphic(NavKey::class) {
                     subclass(
                         Route.Projects.AllProjects::class, Route.Projects.AllProjects.serializer()
+                    )
+                    subclass(
+                        Route.Projects.DetailedProject::class,
+                        Route.Projects.DetailedProject.serializer()
                     )
                 }
             }
@@ -45,7 +51,23 @@ fun ProjectsNavigation(
                     uiState = uiState,
                     handleIntent = allProjectsViewModel::handleIntent,
                     snackBarManager = allProjectsViewModel.snackBarManager,
-                    pagingFlow = pagingFlow
+                    pagingFlow = pagingFlow,
+                    goToProject = {
+                        authBackStack.add(Route.Projects.DetailedProject(it))
+                    },
+                )
+            }
+            entry<Route.Projects.DetailedProject> {
+                val detailedProjectViewModel: DetailedProjectViewModel = koinViewModel()
+                val uiState by detailedProjectViewModel.uiState.collectAsStateWithLifecycle()
+
+                val projectFromNavigation = it.project
+                detailedProjectViewModel.setProject(projectFromNavigation)
+
+                DetailedProjectScreen(
+                    uiState = uiState,
+                    handleIntent = detailedProjectViewModel::handleIntent,
+                    snackBarManager = detailedProjectViewModel.snackBarManager,
                 )
             }
         }

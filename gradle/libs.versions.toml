@@ -8,6 +8,7 @@ androidx-appcompat = "1.7.1"
 androidx-core = "1.18.0"
 androidx-lifecycle = "2.10.0"
 composeMultiplatform = "1.10.3"
+serializationJson = "1.11.0"
 kotlin = "2.3.21"
 ksafe = "1.8.1"
 ksp = "2.3.7"
@@ -69,6 +70,8 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+
+kotlinx-serialization-json = {module  = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson"}
 
 compose-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "multiplatform-nav3-ui" }
 compose-lifecycle-viewmodel-nav3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }

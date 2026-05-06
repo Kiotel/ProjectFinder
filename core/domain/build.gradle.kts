@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -34,6 +35,8 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(libs.kotlin.stdlib)
+
+                implementation(libs.kotlinx.serialization.json)
 
                 implementation(libs.androidx.paging.compose)
                 implementation(libs.androidx.paging.common)
