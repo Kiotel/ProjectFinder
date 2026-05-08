@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -60,10 +63,25 @@ internal fun NavigationRoot(
             }
         }, Route.Auth
     )
+    var currentRoute by remember { mutableStateOf<Route>(Route.Auth) }
+    fun navigateTo(route: Route) {
+        rootBackStack.add(Route.OnBoarding)
+        currentRoute = route
+    }
+
     val hazeState = rememberHazeState()
 
     CompositionLocalProvider(LocalHazeState provides hazeState) {
-        Surface {
+        Scaffold(
+            bottomBar = {
+                AppNavigationBar(
+                    navigateTo = {
+                        rootBackStack.add(it)
+                    },
+                    currentRoute = currentRoute
+                )
+            }
+        ) {
             Box {
                 Background(
                     enabled = true, useCirclesBackground = true, painter = null
@@ -77,7 +95,7 @@ internal fun NavigationRoot(
                                 AuthNavigation(
                                     onAuth = {
                                         rootBackStack.clear()
-                                        rootBackStack.add(Route.OnBoarding)
+                                        navigateTo(Route.OnBoarding)
                                     })
                             }
                             entry<Route.OnBoarding> {
@@ -86,7 +104,7 @@ internal fun NavigationRoot(
                             entry<Route.Profile> {
                                 ProfileNavigation()
                             }
-                            entry<Route.Projects>{
+                            entry<Route.Projects> {
                                 ProjectsNavigation()
                             }
                         })
@@ -133,13 +151,13 @@ private fun Background(
 
         Box(
             modifier = Modifier.fillMaxSize().hazeEffect(
-                    state = hazeState, style = HazeStyle(
-                        blurRadius = 20.dp, noiseFactor = 0f, tint = HazeTint(
-                            color = if (isDarkTheme) Color.Black.copy(alpha = 0.05f)
-                            else Color.White.copy(alpha = 0.05f)
-                        )
+                state = hazeState, style = HazeStyle(
+                    blurRadius = 20.dp, noiseFactor = 0f, tint = HazeTint(
+                        color = if (isDarkTheme) Color.Black.copy(alpha = 0.05f)
+                        else Color.White.copy(alpha = 0.05f)
                     )
                 )
+            )
         )
 
         Box(modifier = modifier.fillMaxSize()) {
