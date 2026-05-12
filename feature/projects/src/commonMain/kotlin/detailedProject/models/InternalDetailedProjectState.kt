@@ -6,6 +6,7 @@ import models.ProjectStatus
 import kotlin.time.Clock.System.now
 
 internal data class InternalDetailedProjectState(
+    val isLiked: Boolean = false,
     val project: Project = Project(
         id = "...",
         authorId = "...",

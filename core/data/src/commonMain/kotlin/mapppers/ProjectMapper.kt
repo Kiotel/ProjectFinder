@@ -4,11 +4,11 @@ import local.database.entities.ProjectEntity
 import models.Project
 import models.ProjectStage
 import models.ProjectStatus
-import remote.apis.dtos.common.ProjectDto
+import remote.apis.dtos.common.ResponseProjectDto
 import kotlin.time.Clock.System
 import kotlin.time.Instant
 
-internal fun ProjectDto.toEntity() = ProjectEntity(
+internal fun ResponseProjectDto.toEntity() = ProjectEntity(
     id = this.id,
     authorId = this.authorId,
     title = this.title,
@@ -27,7 +27,7 @@ internal fun ProjectDto.toEntity() = ProjectEntity(
     lastFetched = System.now().toEpochMilliseconds()
 )
 
-internal fun ProjectDto.toDomain() = Project(
+internal fun ResponseProjectDto.toDomain() = Project(
     id = this.id,
     authorId = this.authorId,
     title = this.title,

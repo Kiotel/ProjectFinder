@@ -9,10 +9,6 @@ plugins {
 }
 
 kotlin {
-
-    // Target declarations - add or remove as needed below. These define
-    // which platforms this KMP module supports.
-    // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
         namespace = "valera.app.profile"
         compileSdk = 36
@@ -41,6 +37,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
+                implementation(libs.kotlin.stdlib)
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
@@ -50,6 +47,7 @@ kotlin {
                 implementation(libs.material.icons.extended)
 
                 implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(libs.androidx.lifecycle.runtime)
 
                 implementation(libs.compose.navigation3.ui)
                 implementation(libs.compose.lifecycle.viewmodel.nav3)
@@ -63,6 +61,9 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
+
+                implementation(libs.androidx.paging.compose)
+                implementation(libs.androidx.paging.common)
 
                 implementation(project(":core:ui"))
                 implementation(project(":core:domain"))

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ProjectDto(
+internal data class ResponseProjectDto(
     @SerialName("id") val id: String,
     @SerialName("authorId") val authorId: String,
     @SerialName("title") val title: String,

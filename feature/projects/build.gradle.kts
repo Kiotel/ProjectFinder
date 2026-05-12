@@ -44,6 +44,7 @@ kotlin {
                 implementation(libs.compose.ui)
                 implementation(libs.compose.components.resources)
                 implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.material.icons.extended)
 
                 implementation(libs.androidx.lifecycle.runtimeCompose)
                 implementation(libs.androidx.lifecycle.runtime)
@@ -71,7 +72,6 @@ kotlin {
         }
         androidMain {
             dependencies {
-
                 implementation(libs.ui.tooling)
             }
         }

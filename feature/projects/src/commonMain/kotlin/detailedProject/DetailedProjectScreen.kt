@@ -2,9 +2,16 @@ package detailedProject
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import components.ScreenLayout
 import detailedProject.models.DetailedProjectState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
@@ -35,7 +42,16 @@ internal fun DetailedProjectScreen(
             Text("Views: ${uiState.project.viewsCount}")
             Text("Created at: ${uiState.project.createdAt}")
             Text("Updated at: ${uiState.project.updatedAt}")
+            IconButton(
+                onClick = { handleIntent(DetailedProjectIntent.LikeProject) },
+                content = {
+                    Icon(
+                        if (uiState.isLiked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        tint = if (uiState.isLiked) Color.Red else LocalContentColor.current,
+                        contentDescription = null
+                    )
+                }
+            )
         }
-        // TODO: Сделать и протестить лайки и просмотры
     }
 }
