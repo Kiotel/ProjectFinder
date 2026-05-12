@@ -1,3 +1,4 @@
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Grid3x3
@@ -8,6 +9,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.unit.dp
+import modifiers.cheapGlassEffect
 
 @Composable
 internal fun AppNavigationBar(
@@ -15,7 +19,11 @@ internal fun AppNavigationBar(
     navigateTo: (route: Route) -> Unit,
     currentRoute: Route
 ) {
-    NavigationBar(modifier = modifier, windowInsets = NavigationBarDefaults.windowInsets) {
+    NavigationBar(
+        modifier = modifier.height(56.dp).cheapGlassEffect(),
+        windowInsets = NavigationBarDefaults.windowInsets,
+        containerColor = Transparent
+    ) {
         NavigationBarItem(
             selected = currentRoute == Route.Profile,
             onClick = {

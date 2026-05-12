@@ -1,7 +1,9 @@
+import androidx.compose.runtime.Immutable
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 import models.Project
 
+@Immutable
 @Serializable
 sealed interface Route : NavKey {
     @Serializable

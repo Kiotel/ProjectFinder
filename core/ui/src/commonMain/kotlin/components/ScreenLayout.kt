@@ -1,16 +1,21 @@
 package components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import utils.SnackBarManager
 
@@ -41,6 +46,16 @@ fun ScreenLayout(
         modifier = modifier.fillMaxSize(), containerColor = Color.Transparent, snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }) { innerPadding ->
-        content(innerPadding)
+        val resultContentPadding by remember {
+            derivedStateOf {
+                PaddingValues(
+                    top = innerPadding.calculateTopPadding(),
+                    start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                    end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
+                    bottom = innerPadding.calculateBottomPadding() + 56.dp
+                )
+            }
+        }
+        content(resultContentPadding)
     }
 }
