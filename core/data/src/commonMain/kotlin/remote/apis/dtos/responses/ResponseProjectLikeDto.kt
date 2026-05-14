@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class ResponseProjectLikeDto(
-    @Serializable @SerialName("liked") val liked: Boolean
+    @Serializable @SerialName("liked") val liked: Boolean?
 )

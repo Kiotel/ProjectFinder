@@ -6,18 +6,18 @@ import remote.apis.dtos.common.UserDto
 import kotlin.time.Clock.System
 
 internal fun UserDto.toEntity() = UserEntity(
-    id = this.id,
-    userName = this.username,
-    email = this.email,
+    id = this.id ?: "no id",
+    userName = this.username ?: "no username",
+    email = this.email ?: "no email",
     fullName = this.fullName,
     avatarUrl = this.avatarUrl,
     lastUpdated = System.now().toEpochMilliseconds()
 )
 
 internal fun UserDto.toDomain() = User(
-    id = this.id,
-    userName = this.username,
-    email = this.email,
+    id = this.id ?: "no id",
+    userName = this.username ?: "no username",
+    email = this.email ?: "no email",
     fullName = this.fullName,
     avatarUrl = this.avatarUrl
 )

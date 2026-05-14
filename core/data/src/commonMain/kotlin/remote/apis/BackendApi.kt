@@ -55,7 +55,7 @@ internal class BackendApi(
 
 
                     tokenStore.setTokens(
-                        accessToken = newInfo.accessToken, refreshToken = newInfo.refreshToken
+                        accessToken = newInfo.accessToken ?: "no access token", refreshToken = newInfo.refreshToken ?: "no refresh token"
                     )
 
                     BearerTokens(tokenStore.accessToken, tokenStore.refreshToken)

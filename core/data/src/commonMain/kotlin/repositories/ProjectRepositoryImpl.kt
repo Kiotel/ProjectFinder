@@ -39,7 +39,7 @@ internal class ProjectRepositoryImpl(
     override fun likeProject(projectId: String): Flow<Result<Boolean>> = flow {
         try {
             val apiResult = backendApi.likeProject(projectId)
-            val isLiked = apiResult.body<ResponseProjectLikeDto>().liked
+            val isLiked = apiResult.body<ResponseProjectLikeDto>().liked ?: error("API ERROR: NO LIKE")
             logger.i(
                 "ProjectsRepositoryImpl/likeProject",
                 "Like project $projectId: $isLiked}"

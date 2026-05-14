@@ -106,13 +106,14 @@ internal class AuthRepositoryImpl(
             if (response.status.value in 200..299) {
                 val result = response.body<ResponseRefreshTokenDto>()
 
-                val accessToken = result.accessToken.takeUnless { it.isBlank() }
+                val accessToken = result.accessToken.takeUnless { it.isNullOrBlank() }
                     ?: error("Access token is empty in response")
-                val refreshToken = result.refreshToken.takeUnless { it.isBlank() }
+                val refreshToken = result.refreshToken.takeUnless { it.isNullOrBlank() }
                     ?: error("Refresh token is empty in response")
 
-                val userInfo = result.userDto
-                userDataBase.userDao().upsert(userInfo.toEntity())
+                if (result.userDto != null) {
+                    userDataBase.userDao().upsert(result.userDto.toEntity())
+                }
 
                 tokenStore.setTokens(accessToken = accessToken, refreshToken = refreshToken)
 
@@ -149,13 +150,14 @@ internal class AuthRepositoryImpl(
         if (response.status.value in 200..299) {
             val result = response.body<ResponseLoginDto>()
 
-            val accessToken = result.accessToken.takeUnless { it.isBlank() }
+            val accessToken = result.accessToken.takeUnless { it.isNullOrBlank() }
                 ?: error("Access token is empty in response")
-            val refreshToken = result.refreshToken.takeUnless { it.isBlank() }
+            val refreshToken = result.refreshToken.takeUnless { it.isNullOrBlank() }
                 ?: error("Refresh token is empty in response")
-            val userInfo = result.userDto
 
-            userDataBase.userDao().upsert(userInfo.toEntity())
+            if (result.userDto != null) {
+                userDataBase.userDao().upsert(result.userDto.toEntity())
+            }
             tokenStore.setTokens(accessToken = accessToken, refreshToken = refreshToken)
 
             logger.i(

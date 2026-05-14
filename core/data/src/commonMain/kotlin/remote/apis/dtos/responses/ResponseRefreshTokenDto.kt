@@ -6,7 +6,7 @@ import remote.apis.dtos.common.UserDto
 
 @Serializable
 internal data class ResponseRefreshTokenDto(
-    @Serializable @SerialName("accessToken") val accessToken: String,
-    @Serializable @SerialName("refreshToken") val refreshToken: String,
-    @Serializable @SerialName("user") val userDto: UserDto,
+    @Serializable @SerialName("accessToken") val accessToken: String?,
+    @Serializable @SerialName("refreshToken") val refreshToken: String?,
+    @Serializable @SerialName("user") val userDto: UserDto?,
 )
