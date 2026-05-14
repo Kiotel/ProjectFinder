@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -15,8 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import defaults.AppNavigationBarDefaults
 import utils.SnackBarManager
 
 @Composable
@@ -44,7 +45,10 @@ fun ScreenLayout(
 
     Scaffold(
         modifier = modifier.fillMaxSize(), containerColor = Color.Transparent, snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
+            SnackbarHost(
+                modifier = Modifier.padding(bottom = AppNavigationBarDefaults.height),
+                hostState = snackBarHostState
+            )
         }) { innerPadding ->
         val resultContentPadding by remember {
             derivedStateOf {
@@ -52,7 +56,7 @@ fun ScreenLayout(
                     top = innerPadding.calculateTopPadding(),
                     start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
                     end = innerPadding.calculateEndPadding(LayoutDirection.Ltr),
-                    bottom = innerPadding.calculateBottomPadding() + 56.dp
+                    bottom = innerPadding.calculateBottomPadding() + AppNavigationBarDefaults.height
                 )
             }
         }

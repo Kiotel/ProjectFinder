@@ -31,7 +31,7 @@ enum class ProjectStage {
     UNKNOWN;
 
     companion object {
-        fun fromString(value: String): ProjectStage {
+        fun fromString(value: String?): ProjectStage {
             return ProjectStage.entries.firstOrNull { it.name == value } ?: UNKNOWN
         }
     }
@@ -44,7 +44,7 @@ enum class ProjectStatus {
     UNKNOWN;
 
     companion object {
-        fun fromString(value: String): ProjectStatus {
+        fun fromString(value: String?): ProjectStatus {
             return ProjectStatus.entries.firstOrNull { it.name == value } ?: UNKNOWN
         }
     }

@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.unit.dp
+import defaults.AppNavigationBarDefaults
 import modifiers.cheapGlassEffect
 
 @Composable
@@ -20,7 +20,7 @@ internal fun AppNavigationBar(
     currentRoute: Route
 ) {
     NavigationBar(
-        modifier = modifier.height(56.dp).cheapGlassEffect(),
+        modifier = modifier.height(AppNavigationBarDefaults.height).cheapGlassEffect(),
         windowInsets = NavigationBarDefaults.windowInsets,
         containerColor = Transparent
     ) {
