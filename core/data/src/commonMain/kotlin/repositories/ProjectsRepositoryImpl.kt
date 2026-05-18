@@ -11,7 +11,7 @@ import remote.apis.dtos.common.ResponseProjectDto
 import remote.apis.dtos.responses.ResponseProjectLikeDto
 import kotlin.time.Duration
 
-internal class ProjectRepositoryImpl(
+internal class ProjectsRepositoryImpl(
     private val backendApi: BackendApi,
     private val logger: utils.Logger
 ) : ProjectsRepository {
@@ -39,10 +39,30 @@ internal class ProjectRepositoryImpl(
     override fun likeProject(projectId: String): Flow<Result<Boolean>> = flow {
         try {
             val apiResult = backendApi.likeProject(projectId)
-            val isLiked = apiResult.body<ResponseProjectLikeDto>().liked ?: error("API ERROR: NO LIKE")
+            val isLiked =
+                apiResult.body<ResponseProjectLikeDto>().liked ?: error("API ERROR: NO LIKE")
             logger.i(
                 "ProjectsRepositoryImpl/likeProject",
                 "Like project $projectId: $isLiked}"
+            )
+            emit(Result.success(isLiked))
+        } catch (e: Exception) {
+            logger.e(
+                "ProjectsRepositoryImpl/likeProject",
+                "Error during like: ${e.stackTraceToString()}"
+            )
+            emit(Result.failure(e))
+        }
+    }
+
+    override fun getProject(projectId: String): Flow<Project> = flow {
+        try {
+            TODO("Сделать получение проекта")
+            val apiResult = backendApi.getProject(projectId)
+            val project = apiResult.body<ResponseProjectLikeDto>().liked ?: error("API ERROR: NO LIKE")
+            logger.i(
+                "ProjectsRepositoryImpl/likeProject",
+                "Like project $projectId: $project.}"
             )
             emit(Result.success(isLiked))
         } catch (e: Exception) {

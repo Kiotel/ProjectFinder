@@ -27,9 +27,9 @@ internal interface UserDao {
     @Delete
     suspend fun delete(user: UserEntity)
 
-    @Query("SELECT * FROM user LIMIT 1")
-    fun getAsFlow(): Flow<UserEntity?>
+    @Query("SELECT * FROM user WHERE id = :id")
+    fun getAsFlow(id: String): Flow<UserEntity?>
 
-    @Query("SELECT * FROM user LIMIT 1")
-    suspend fun get(): UserEntity?
+    @Query("SELECT * FROM user WHERE id = :id")
+    suspend fun get(id: String): UserEntity?
 }

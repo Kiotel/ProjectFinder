@@ -14,7 +14,7 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import local.secureStore.TokenStore
+import local.secureStore.AuthStore
 import remote.apis.dtos.requests.RequestLoginBodyDto
 import remote.apis.dtos.requests.RequestRefreshAuthTokenBodyDto
 import remote.apis.dtos.requests.RequestRegisterBodyDto
@@ -22,7 +22,7 @@ import utils.Consts
 
 
 internal class AuthApi(
-    private val tokenStore: TokenStore
+    private val authStore: AuthStore
 ) {
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {

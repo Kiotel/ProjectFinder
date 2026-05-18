@@ -18,13 +18,13 @@ import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import local.secureStore.TokenStore
+import local.secureStore.AuthStore
 import remote.apis.dtos.responses.ResponseRefreshTokenDto
 import utils.Consts
 
 
 internal class BackendApi(
-    private val tokenStore: TokenStore, private val authApi: AuthApi
+    private val authStore: AuthStore, private val authApi: AuthApi
 ) {
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json {
@@ -35,7 +35,6 @@ internal class BackendApi(
     }
 
     private val client = HttpClient {
-
         install(ContentNegotiation) {
             json(json)
         }
@@ -46,19 +45,20 @@ internal class BackendApi(
         install(Auth) {
             bearer {
                 loadTokens {
-
-                    BearerTokens(tokenStore.accessToken, tokenStore.refreshToken)
+                    BearerTokens(authStore.accessToken, authStore.refreshToken)
                 }
                 refreshTokens {
-                    val newInfo = authApi.refreshAuthToken(tokenStore.refreshToken)
+                    val newInfo = authApi.refreshAuthToken(authStore.refreshToken)
                         .body<ResponseRefreshTokenDto>()
 
 
-                    tokenStore.setTokens(
-                        accessToken = newInfo.accessToken ?: "no access token", refreshToken = newInfo.refreshToken ?: "no refresh token"
+                    authStore.setAuthData(
+                        userId = newInfo.userDto?.id ?: "no user id",
+                        accessToken = newInfo.accessToken ?: "no access token",
+                        refreshToken = newInfo.refreshToken ?: "no refresh token",
                     )
 
-                    BearerTokens(tokenStore.accessToken, tokenStore.refreshToken)
+                    BearerTokens(authStore.accessToken, authStore.refreshToken)
                 }
             }
 
@@ -68,14 +68,25 @@ internal class BackendApi(
     suspend fun getProjects(page: Int, limit: Int) =
         client.get("${Consts.BASE_URL}/projects/") {
             contentType(ContentType.Application.Json)
+            // TODO: сделать фильтрацию и сортировку
             url {
                 parameters.append("page", page.toString())
                 parameters.append("limit", limit.toString())
             }
         }
 
+    suspend fun getProject(projectId: String) =
+        client.get("${Consts.BASE_URL}/projects/$projectId") {
+            contentType(ContentType.Application.Json)
+        }
+
     suspend fun likeProject(projectId: String) =
         client.post("${Consts.BASE_URL}/projects/$projectId/like") {
+            contentType(ContentType.Application.Json)
+        }
+
+    suspend fun getUserById(userId: String) =
+        client.get("${Consts.BASE_URL}/users/$userId") {
             contentType(ContentType.Application.Json)
         }
 }
