@@ -7,7 +7,7 @@ import androidx.room.RoomDatabaseConstructor
 import local.database.entities.UserDao
 import local.database.entities.UserEntity
 
-@Database(entities = [UserEntity::class], version = 5)
+@Database(entities = [UserEntity::class], version = 6)
 @ConstructedBy(UserDataBaseConstructor::class)
 internal abstract class UserDataBase : RoomDatabase() {
     abstract fun userDao(): UserDao

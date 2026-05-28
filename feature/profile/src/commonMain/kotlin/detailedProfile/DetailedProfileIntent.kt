@@ -7,4 +7,5 @@ internal sealed interface DetailedProfileIntent {
     data class SetPasswordCopy(val newPasswordCopy: String) : DetailedProfileIntent
     data class SetConsent(val newConsent: Boolean) : DetailedProfileIntent
     object OnRegister : DetailedProfileIntent
+    object DeleteAccount : DetailedProfileIntent
 }

@@ -15,6 +15,8 @@ internal data class UserEntity(
     @ColumnInfo(name = "user_name") val userName: String,
     @ColumnInfo(name = "email") val email: String,
     @ColumnInfo(name = "full_name") val fullName: String?,
+    @ColumnInfo(name = "first_name") val firstName: String?,
+    @ColumnInfo(name = "university") val university: String?,
     @ColumnInfo(name = "avatar_url") val avatarUrl: String?,
     @ColumnInfo(name = "last_updated") val lastUpdated: Long
 )

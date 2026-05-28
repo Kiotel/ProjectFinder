@@ -15,32 +15,36 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ProfileNavigation(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLogout: () -> Unit,
+    onDeleteAccount: () -> Unit,
 ) {
     val profileBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
             serializersModule = SerializersModule {
                 polymorphic(NavKey::class) {
-                    subclass(
-                        Route.Profile.Detailed::class, Route.Profile.Detailed.serializer()
-                    )
+                    subclass(Route.Profile.Detailed::class, Route.Profile.Detailed.serializer())
                 }
             }
-        }, Route.Profile.Detailed
+        },
+        Route.Profile.Detailed,
     )
-    val profileViewModel: ProfileViewModel = koinViewModel()
     NavDisplay(
-        modifier = modifier, backStack = profileBackStack, entryDecorators = listOf(
+        modifier = modifier,
+        backStack = profileBackStack,
+        entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator(),
-        ), entryProvider = entryProvider {
+        ),
+        entryProvider = entryProvider {
             entry<Route.Profile.Detailed> {
-                val detailedProfileViewModel: DetailedProfileViewModel = koinViewModel()
+                val vm: DetailedProfileViewModel = koinViewModel()
                 DetailedProfileScreen(
-                    vm = detailedProfileViewModel,
-                    svm = profileViewModel,
+                    vm = vm,
+                    onLogout = onLogout,
+                    onDeleteAccount = onDeleteAccount,
                 )
             }
-        }
+        },
     )
 }

@@ -1,14 +1,21 @@
 package useCases
 
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import models.User
-import repositories.AuthRepository
+import models.UserProfile
+import repositories.UsersRepository
 
 class GetUserInfoUseCase(
-    private val authRepository: AuthRepository
+    private val usersRepository: UsersRepository,
 ) {
     suspend operator fun invoke(): Result<User> =
-        authRepository.getUserInfo(
-            cacheTtl = 1000 * 60 * 60 * 24 // 24 часа
-        )
+        usersRepository.getCurrentUserProfile().first().map { it.toUser() }
 }
+
+private fun UserProfile.toUser() = User(
+    id = id,
+    userName = username,
+    email = email,
+    fullName = displayName.takeIf { it.isNotBlank() },
+    avatarUrl = avatarUrl,
+)

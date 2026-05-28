@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class SkillDto(
-    @SerialName("name") val name: String,
-    @SerialName("level") val level: String
+    @SerialName("name") val name: String? = null,
+    @SerialName("level") val level: String? = null,
 )

@@ -2,20 +2,25 @@ package description.models
 
 
 internal data class InternalDescriptionState(
-    // Учебное заведение
-    val region: String = "",
+    // Кто вы?
+    val firstName: String = "",
+    val lastName: String = "",
+    val age: String = "",
+    val city: String = "",
     val university: String = "",
     val department: String = "",
     val programme: String = "",
     val studyType: String = "",
 
-    // Личная информация
+    // Опыт и Навыки
     val about: String = "",
     val qualities: String = "",
-    val skills: String = "",
+    val interests: String = "",
+    val portfolioUrl: String = "",
+    val selectedSkills: List<String> = emptyList(),
+    val skillSearchQuery: String = "",
 
-    // Контакты
+    // Связь
     val workingHours: String = "",
-    val wishes: String = "",
     val waysToContact: String = "",
 )

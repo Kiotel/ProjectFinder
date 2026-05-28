@@ -1,0 +1,1229 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ts API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://80.72.20.99:8080"
+    }
+  ],
+  "paths": {
+    "/responses/project/7": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "x-yaak-request-id": "rq_FmZoa63qRU",
+        "x-yaak-body-type": null,
+        "tags": [
+          "отклики"
+        ]
+      }
+    },
+    "/notifications": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "HTTP 200",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_ZomGuCAXpH",
+        "x-yaak-body-type": null,
+        "tags": [
+          "notifications"
+        ]
+      }
+    },
+    "/users/1/bookmark": {
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "x-yaak-request-id": "rq_WYrw9ZF55V",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "bookmark"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {}
+            }
+          }
+        }
+      }
+    },
+    "/users/1": {
+      "put": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTTP 200",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_JHWzxUpZ9R",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "Заполнение анкеты"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": "{\n  \"firstName\": \"Jack\",\n  \"lastName\": \"Sparrow\",\n  \"age\": 30,\n  \"city\": \"Tortuga\",\n  \"university\": \"Black Pearl Academy\",\n  \"faculty\": \"Navigation & Piracy\",\n  \"programCode\": \"01.01.01\",\n  \"studyMode\": \"On-deck\",\n  \"schedule\": \"Flexible, mostly nights\",\n  \"contacts\": [\n    { \"type\": \"Telegram\", \"value\": \"@captain_jack\" },\n    { \"type\": \"Bird\", \"value\": \"Parrot Messaging\" },\n    { \"type\": \"Email\", \"value\": \"jack@blackpearl.com\" }\n  ],\n  \"goals\": \"Find the Fountain of Youth and reclaim the Black Pearl. Looking for a crew that doesn't fear the Kraken.\",\n  \"qualities\": [\n    \"Leadership\",\n    \"Brave\",\n    \"Cunning\",\n    \"Unpredictable\"\n  ],\n  \"skills\": [\n    { \"name\": \"Sailing\", \"level\": \"Expert\" },\n    { \"name\": \"Sword Fighting\", \"level\": \"Expert\" },\n    { \"name\": \"Negotiation\", \"level\": \"Advanced\" }\n  ],\n  \"interests\": [\n    \"Rum\",\n    \"Treasures\",\n    \"Freedom\",\n    \"Ancient Maps\"\n  ]\n}"
+            }
+          }
+        }
+      },
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "1433"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": 1,
+                      "username": "artem",
+                      "email": "mail@gmail.com",
+                      "firstName": "artem",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-13T16:52:08.696093"
+                    },
+                    {
+                      "id": 5,
+                      "username": "worker_john2",
+                      "email": "worker@test2.com",
+                      "firstName": "worker_john2",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T07:43:25.167514"
+                    },
+                    {
+                      "id": 4,
+                      "username": "testtest",
+                      "email": "test@test.test",
+                      "firstName": "testtest",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T07:42:45.906578"
+                    },
+                    {
+                      "id": 2,
+                      "username": "Yazmin.Schmitt75",
+                      "email": "Alden.Mayer@hotmail.com",
+                      "firstName": "Yazmin.Schmitt75",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T06:58:42.707761"
+                    },
+                    {
+                      "id": 3,
+                      "username": "worker_john",
+                      "email": "worker@test.com",
+                      "firstName": "worker_john",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T07:00:57.057886"
+                    },
+                    {
+                      "id": 6,
+                      "username": "Maxie.Quigley23",
+                      "email": "Moses.Lynch-Anderson76@hotmail.com",
+                      "firstName": "Maxie.Quigley23",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T10:30:04.714488"
+                    }
+                  ],
+                  "pagination": {
+                    "currentPage": 1,
+                    "pageSize": 20,
+                    "totalItems": 6,
+                    "totalPages": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_5KBnZwsUH4",
+        "x-yaak-body-type": null,
+        "tags": [
+          "пользователи и поиск / просмотр профиля"
+        ]
+      }
+    },
+    "/static/bc23fcb0-43c6-4a4f-8f4d-6753554680d3.docx": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "17505"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              }
+            },
+            "content": {
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_bW9Jzzoge5",
+        "x-yaak-body-type": null,
+        "tags": [
+          "загрузка файлов"
+        ]
+      }
+    },
+    "/projects/search": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "46"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "error": "Неверный ID проекта"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_buekcprfVj",
+        "x-yaak-body-type": null,
+        "tags": [
+          "tag_search"
+        ]
+      }
+    },
+    "/projects/2/comments": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "www-authenticate": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Bearer realm=\"Ktor Server\""
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "0"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_Uv3pRGAcuH",
+        "x-yaak-body-type": null,
+        "tags": [
+          "comments"
+        ]
+      }
+    },
+    "/projects/4/comments": {
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "www-authenticate": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Bearer realm=\"Ktor Server\""
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "0"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_7x3fbnhRDX",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "comments"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": "{\"content\": \"Тoooookoko\"}"
+            }
+          }
+        }
+      }
+    },
+    "/projects/1/like": {
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "14"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "liked": true
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_mLqKxGNpxp",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "like"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {}
+            }
+          }
+        }
+      }
+    },
+    "/responses": {
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        },
+        "x-yaak-request-id": "rq_VtpHTiQV2N",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "отклики"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": "{\n  \"projectId\": 7, \n  \"message\": \"I am the best navigator in Tortuga! Take me in.\"\n}"
+            }
+          }
+        }
+      }
+    },
+    "/uploads": {
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "multipart/form-data"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "98"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "File uploaded successfully",
+                  "url": "/static/bc23fcb0-43c6-4a4f-8f4d-6753554680d3.docx"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_KGrVj2N47c",
+        "x-yaak-body-type": "multipart/form-data",
+        "tags": [
+          "загрузка файлов"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "string"
+              },
+              "example": {
+                "form": [
+                  {
+                    "enabled": true,
+                    "file": "C:\\Users\\Admin\\Downloads\\Занятие7.pdf",
+                    "id": "GTtuVbJUqm",
+                    "name": "f"
+                  },
+                  {
+                    "enabled": true,
+                    "id": "3i0WkWfwYm",
+                    "name": "",
+                    "value": ""
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/search": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "1433"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": 1,
+                      "username": "artem",
+                      "email": "mail@gmail.com",
+                      "firstName": "artem",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-13T16:52:08.696093"
+                    },
+                    {
+                      "id": 5,
+                      "username": "worker_john2",
+                      "email": "worker@test2.com",
+                      "firstName": "worker_john2",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T07:43:25.167514"
+                    },
+                    {
+                      "id": 4,
+                      "username": "testtest",
+                      "email": "test@test.test",
+                      "firstName": "testtest",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T07:42:45.906578"
+                    },
+                    {
+                      "id": 2,
+                      "username": "Yazmin.Schmitt75",
+                      "email": "Alden.Mayer@hotmail.com",
+                      "firstName": "Yazmin.Schmitt75",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T06:58:42.707761"
+                    },
+                    {
+                      "id": 6,
+                      "username": "Maxie.Quigley23",
+                      "email": "Moses.Lynch-Anderson76@hotmail.com",
+                      "firstName": "Maxie.Quigley23",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T10:30:04.714488"
+                    },
+                    {
+                      "id": 3,
+                      "username": "worker_john",
+                      "email": "worker@test.com",
+                      "firstName": "worker_john",
+                      "lastName": null,
+                      "avatarUrl": null,
+                      "skills": [],
+                      "interests": [],
+                      "goals": null,
+                      "portfolioUrl": null,
+                      "createdAt": "2026-05-14T07:00:57.057886"
+                    }
+                  ],
+                  "pagination": {
+                    "currentPage": 1,
+                    "pageSize": 20,
+                    "totalItems": 6,
+                    "totalPages": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_sFbVxwNXst",
+        "x-yaak-body-type": null,
+        "tags": [
+          "пользователи и поиск / поиск пользователя"
+        ]
+      }
+    },
+    "/projects/": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "1504"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                },
+                "example": [
+                  {
+                    "id": 9,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:07:51.290184",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 8,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:07:21.926048",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 7,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:07:00.815469",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 6,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:06:29.721705",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 5,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:06:06.882410",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 4,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:05:51.976413",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 3,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:05:43.014448",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 2,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:02:22.074700",
+                    "authorName": null,
+                    "roles": []
+                  },
+                  {
+                    "id": 1,
+                    "authorId": 3,
+                    "title": "Ocean Cleanup",
+                    "description": null,
+                    "status": "idea",
+                    "industry": null,
+                    "createdAt": "2026-05-14T07:01:21.005798",
+                    "authorName": null,
+                    "roles": []
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_MkcBkVu9nP",
+        "x-yaak-body-type": null,
+        "tags": [
+          "Работа с проектами / Просмотр ленты"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "226"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "id": 9,
+                  "authorId": 3,
+                  "title": "Ocean Cleanup",
+                  "description": null,
+                  "status": "idea",
+                  "deadline": null,
+                  "industry": null,
+                  "createdAt": "2026-05-14T07:07:51.290183854",
+                  "isActive": true,
+                  "roles": [],
+                  "tags": [],
+                  "authorName": null,
+                  "likesCount": 0
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_6D425J5WSX",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "Работа с проектами / Создание проекта"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": "{\n  \"authorId\": 0,\n  \"title\": \"Black Pearl Restoration\",\n  \"description\": \"Recruiting a crew to reclaim the fastest ship in the Caribbean.\",\n  \"status\": \"idea\",\n  \"industry\": \"Piracy\",\n  \"roles\": [\n    { \"roleName\": \"Navigator\", \"spotsTotal\": 1 },\n    { \"roleName\": \"Gunner\", \"spotsTotal\": 4 }\n  ]\n}"
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "connection": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "close"
+              },
+              "proxy-connection": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "close"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "0"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_phTwJTP3KG",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "Авторизция / Вход"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": "{\n \n    \"email\":\"jack@pearl.com\",\n  \"password\": \"Password123\"\n}"
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "vary": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "Origin"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "610"
+              },
+              "content-type": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "application/json"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZWFtZmluZGVyIiwic3ViIjoiNSIsImVtYWlsIjoid29ya2VyQHRlc3QyLmNvbSIsInVzZXJuYW1lIjoid29ya2VyX2pvaG4yIiwicm9sZSI6IlVTRVIiLCJleHAiOjE3Nzg3NDgyMDUsImlhdCI6MTc3ODc0NDYwNX0.Wr1D5WBLkcKuJ6MdLMD-ljUyVjB_GPopdlXGRGa2frI",
+                  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZWFtZmluZGVyIiwic3ViIjoiNSIsInR5cGUiOiJyZWZyZXNoIiwiZXhwIjoxNzgxMzM2NjA1LCJpYXQiOjE3Nzg3NDQ2MDV9.ib002D9ut-0xhWYGCfD9Ol410I-ryWD8059HT7MXkZM",
+                  "user": {
+                    "id": 5,
+                    "username": "worker_john2",
+                    "email": "worker@test2.com",
+                    "firstName": "worker_john2",
+                    "lastName": null,
+                    "avatarUrl": null
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_GZGSj8gcRp",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "Авторизция / Регистрация"
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": "{\"username\": \"sailor_bob\", \"email\": \"bob@sea.com\", \"password\": \"Password123\"}"
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "HTTP Request",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "application/json"
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable",
+            "headers": {
+              "connection": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "close"
+              },
+              "proxy-connection": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "close"
+              },
+              "content-length": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "0"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "x-yaak-request-id": "rq_HbkS3gJLEX",
+        "x-yaak-body-type": "application/json",
+        "tags": [
+          "работоспособность"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "bookmark"
+    },
+    {
+      "name": "comments"
+    },
+    {
+      "name": "like"
+    },
+    {
+      "name": "notifications"
+    },
+    {
+      "name": "tag_search"
+    },
+    {
+      "name": "Авторизция / Вход"
+    },
+    {
+      "name": "Авторизция / Регистрация"
+    },
+    {
+      "name": "Заполнение анкеты"
+    },
+    {
+      "name": "Работа с проектами / Просмотр ленты"
+    },
+    {
+      "name": "Работа с проектами / Создание проекта"
+    },
+    {
+      "name": "загрузка файлов"
+    },
+    {
+      "name": "отклики"
+    },
+    {
+      "name": "пользователи и поиск / поиск пользователя"
+    },
+    {
+      "name": "пользователи и поиск / просмотр профиля"
+    },
+    {
+      "name": "работоспособность"
+    }
+  ],
+  "x-yaak-export": {
+    "requestCount": 18,
+    "responseBackedOperationCount": 15,
+    "generatedAt": "2026-05-26T11:42:21.028Z",
+    "duplicatePathMethodCount": 0
+  }
+}

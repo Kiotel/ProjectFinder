@@ -37,6 +37,20 @@ internal class AuthRepositoryImpl(
         )
     }
 
+    override suspend fun deleteAccount(): Result<Unit> {
+        return try {
+            val response = authApi.deleteAccount()
+            if (response.status.value in 200..299) {
+                logOut()
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception("Ошибка удаления аккаунта: ${response.status.value}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
     override fun register(username: String, email: String, password: String): Flow<Result<Unit>> =
         flow {
@@ -52,7 +66,7 @@ internal class AuthRepositoryImpl(
             if (response.status.value in 200..299) {
                 val result = response.body<ResponseRegisterDto>()
 
-                val userId = result.userDto.id.takeUnless { it.isNullOrBlank() }
+                val userId = result.userDto.id?.toString()
                     ?: error("User id is empty in response")
                 val accessToken = result.accessToken.takeUnless { it.isBlank() }
                     ?: error("Access token is empty in response")
@@ -71,13 +85,10 @@ internal class AuthRepositoryImpl(
                 )
 
                 emit(Result.success(Unit))
-            }
-            if (response.status.value in 400..499) {
-                logger.w(
-                    "AuthRepositoryImpl/register", "Client error"
-                )
-
-                emit(Result.failure(Throwable("АШИБКА")))
+            } else {
+                val errorMsg = "Ошибка регистрации (HTTP ${response.status.value})"
+                logger.e("AuthRepositoryImpl/register", errorMsg)
+                emit(Result.failure(Throwable(errorMsg)))
             }
         }.catch { e ->
             logger.e("AuthRepositoryImpl/register", "Exception: $e")
@@ -103,16 +114,14 @@ internal class AuthRepositoryImpl(
             if (response.status.value in 200..299) {
                 val result = response.body<ResponseRefreshTokenDto>()
 
-                val userId = result.userDto?.id.takeUnless { it.isNullOrBlank() }
-                    ?: error("User id is empty in response")
-                val accessToken = result.accessToken.takeUnless { it.isNullOrBlank() }
+                val user = result.userDto ?: error("User data is missing in response")
+                val userId = user.id?.toString() ?: error("User id is missing in response")
+                val accessToken = result.accessToken?.takeUnless { it.isBlank() }
                     ?: error("Access token is empty in response")
-                val refreshToken = result.refreshToken.takeUnless { it.isNullOrBlank() }
+                val refreshToken = result.refreshToken?.takeUnless { it.isBlank() }
                     ?: error("Refresh token is empty in response")
 
-                if (result.userDto != null) {
-                    userDataBase.userDao().upsert(result.userDto.toEntity())
-                }
+                userDataBase.userDao().upsert(user.toEntity())
 
                 authStore.setAuthData(
                     userId = userId,
@@ -126,13 +135,10 @@ internal class AuthRepositoryImpl(
                 )
 
                 emit(Result.success(Unit))
-            }
-            if (response.status.value in 400..499) {
-                logger.w(
-                    "AuthRepositoryImpl/isAuthed", "Client error"
-                )
-
-                emit(Result.failure(Throwable("Not authorized")))
+            } else {
+                val errorMsg = "Not authorized (HTTP ${response.status.value})"
+                logger.w("AuthRepositoryImpl/isAuthed", errorMsg)
+                emit(Result.failure(Throwable(errorMsg)))
             }
         }.catch { e ->
             logger.e("AuthRepositoryImpl/isAuthed", "Exception: $e")
@@ -153,16 +159,14 @@ internal class AuthRepositoryImpl(
         if (response.status.value in 200..299) {
             val result = response.body<ResponseLoginDto>()
 
-            val userId = result.userDto?.id.takeUnless { it.isNullOrBlank() }
-                ?: error("User id is empty in response")
-            val accessToken = result.accessToken.takeUnless { it.isNullOrBlank() }
+            val user = result.userDto ?: error("User data is missing in response")
+            val userId = user.id?.toString() ?: error("User id is missing in response")
+            val accessToken = result.accessToken?.takeUnless { it.isNullOrBlank() }
                 ?: error("Access token is empty in response")
-            val refreshToken = result.refreshToken.takeUnless { it.isNullOrBlank() }
+            val refreshToken = result.refreshToken?.takeUnless { it.isNullOrBlank() }
                 ?: error("Refresh token is empty in response")
 
-            if (result.userDto != null) {
-                userDataBase.userDao().upsert(result.userDto.toEntity())
-            }
+            userDataBase.userDao().upsert(user.toEntity())
             authStore.setAuthData(
                 userId = userId,
                 accessToken = accessToken,
@@ -175,13 +179,10 @@ internal class AuthRepositoryImpl(
             )
 
             emit(Result.success(Unit))
-        }
-        if (response.status.value in 400..499) {
-            logger.w(
-                "AuthRepositoryImpl/login", "Client error"
-            )
-
-            emit(Result.failure(Throwable("АШИБКА ЮЗЕРА")))
+        } else {
+            val errorMsg = "Ошибка входа (HTTP ${response.status.value})"
+            logger.e("AuthRepositoryImpl/login", errorMsg)
+            emit(Result.failure(Throwable(errorMsg)))
         }
     }.catch { e ->
         logger.e("AuthRepositoryImpl/login", "Exception: $e")

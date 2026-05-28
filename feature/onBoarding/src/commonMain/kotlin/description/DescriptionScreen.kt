@@ -1,23 +1,38 @@
 package description
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -29,11 +44,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import components.ScreenLayout
 import description.models.DescriptionState
@@ -43,20 +59,20 @@ import utils.SnackBarManager
 enum class Steps(val stepNumber: Int, val stepInfo: StepInfo) {
     STEP1(
         stepNumber = 1, stepInfo = StepInfo(
-            title = "Заполните форму",
-            description = "Для правильной работы алгоритмов поиска заполните информацию честно — это поможет найти команду быстрее."
+            title = "Кто вы?",
+            description = "Укажите основные данные. Имя необходимо для того, чтобы приложение считало ваш профиль заполненным."
         )
     ),
     STEP2(
         stepNumber = 2, stepInfo = StepInfo(
-            title = "Обратная связь",
-            description = "Укажите как с вами можно связаться и когда вы готовы к работе в команде."
+            title = "Опыт и Навыки",
+            description = "Расскажите о своих компетенциях и прикрепите ссылку на работы."
         )
     ),
     STEP3(
         stepNumber = 3, stepInfo = StepInfo(
-            title = "Данные успешно обновлены",
-            description = "Теперь вам доступны все возможности приложения."
+            title = "Связь",
+            description = "Как с вами связаться и когда вы готовы работать?"
         )
     )
 }
@@ -72,9 +88,11 @@ internal fun DescriptionScreen(
     uiState: DescriptionState,
     handleIntent: (intent: DescriptionIntent) -> Unit,
     snackBarManager: SnackBarManager,
+    onSubmit: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     var currentStep by rememberSaveable { mutableStateOf(1) }
+    
     ScreenLayout(
         modifier = modifier, snackBarManager = snackBarManager
     ) { innerPadding ->
@@ -93,28 +111,35 @@ internal fun DescriptionScreen(
                 when (currentStep) {
                     1 -> Step1(uiState, handleIntent)
                     2 -> Step2(uiState, handleIntent)
-                    else -> Text("Success")
+                    3 -> Step3(uiState, handleIntent)
                 }
-                Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)) {
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 24.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Button(
-                        colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = MaterialTheme.colorScheme.secondary
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                         ),
-                        modifier = Modifier.align(Alignment.CenterStart),
                         enabled = currentStep > 1,
-                        onClick = {
-                            currentStep -= 1
-                        },
+                        onClick = { currentStep -= 1 },
                     ) {
-                        Text(text = "<-")
+                        Text(text = "Назад")
                     }
+                    
                     Button(
-                        modifier = Modifier.align(Alignment.Center),
                         onClick = {
-                            currentStep += 1
+                            if (currentStep >= 3) {
+                                onSubmit()
+                            } else {
+                                currentStep += 1
+                            }
                         },
+                        enabled = uiState.firstName.isNotBlank()
                     ) {
-                        Text(text = "Далее ->")
+                        Text(text = if (currentStep >= 3) "Готово" else "Далее")
                     }
                 }
             }
@@ -127,66 +152,60 @@ private fun Step1(
     uiState: DescriptionState,
     handleIntent: (intent: DescriptionIntent) -> Unit
 ) {
-    DescriptionPart(title = "Учебное заведение") {
+    DescriptionPart(title = "Личные данные") {
         DescriptionPartTextField(
-            value = uiState.region,
-            onValueChange = { handleIntent(DescriptionIntent.SetRegion(it)) },
-            labelText = "РЕГИОН"
+            value = uiState.firstName,
+            onValueChange = { handleIntent(DescriptionIntent.SetFirstName(it)) },
+            labelText = "ИМЯ (обязательно)*"
         )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
+        DescriptionPartTextField(
+            value = uiState.lastName,
+            onValueChange = { handleIntent(DescriptionIntent.SetLastName(it)) },
+            labelText = "ФАМИЛИЯ"
         )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
+        Row(modifier = Modifier.fillMaxWidth()) {
+            DescriptionPartTextField(
+                value = uiState.age,
+                onValueChange = { if (it.all { c -> c.isDigit() }) handleIntent(DescriptionIntent.SetAge(it)) },
+                labelText = "ВОЗРАСТ",
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            Spacer(Modifier.width(8.dp))
+            DescriptionPartTextField(
+                value = uiState.city,
+                onValueChange = { handleIntent(DescriptionIntent.SetCity(it)) },
+                labelText = "ГОРОД",
+                modifier = Modifier.weight(2f)
+            )
+        }
+    }
+    
+    DescriptionPart(title = "Учеба") {
         DescriptionPartTextField(
             value = uiState.university,
             onValueChange = { handleIntent(DescriptionIntent.SetUniversity(it)) },
             labelText = "ВУЗ"
         )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
-        )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
         DescriptionPartTextField(
             value = uiState.department,
             onValueChange = { handleIntent(DescriptionIntent.SetDepartment(it)) },
-            labelText = "КАФЕДРА"
+            labelText = "ФАКУЛЬТЕТ / КАФЕДРА"
         )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
-        )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
         DescriptionPartTextField(
             value = uiState.programme,
             onValueChange = { handleIntent(DescriptionIntent.SetProgramme(it)) },
-            labelText = "ПРОГРАММА"
+            labelText = "ПРОГРАММА (Напр. 09.03.04)"
         )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
-        )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
         DescriptionPartTextField(
             value = uiState.studyType,
             onValueChange = { handleIntent(DescriptionIntent.SetStudyType(it)) },
-            labelText = "ФОРМА"
-        )
-    }
-    DescriptionPart(title = "Личная информация") {
-        DescriptionPartTextField(
-            value = uiState.about,
-            onValueChange = { handleIntent(DescriptionIntent.SetAbout(it)) },
-            labelText = "О СЕБЕ"
-        )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
-        )
-        DescriptionPartTextField(
-            value = uiState.qualities,
-            onValueChange = { handleIntent(DescriptionIntent.SetQualities(it)) },
-            labelText = "КАЧЕСТВА"
-        )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
-        )
-        DescriptionPartTextField(
-            value = uiState.skills,
-            onValueChange = { handleIntent(DescriptionIntent.SetSkills(it)) },
-            labelText = "НАВЫКИ"
+            labelText = "ФОРМА (Очная/Заочная)"
         )
     }
 }
@@ -196,28 +215,168 @@ private fun Step2(
     uiState: DescriptionState,
     handleIntent: (intent: DescriptionIntent) -> Unit
 ) {
-    DescriptionPart(title = "Контакты") {
+    DescriptionPart(title = "Опыт и Ссылки") {
+        DescriptionPartTextField(
+            value = uiState.about,
+            onValueChange = { handleIntent(DescriptionIntent.SetAbout(it)) },
+            labelText = "О СЕБЕ / ЦЕЛИ",
+            minLines = 3
+        )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
+        DescriptionPartTextField(
+            value = uiState.portfolioUrl,
+            onValueChange = { handleIntent(DescriptionIntent.SetPortfolio(it)) },
+            labelText = "ПОРТФОЛИО / GITHUB (URL)",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri)
+        )
+    }
+
+    DescriptionPart(title = "Навыки и Качества") {
+        SkillsSelection(
+            selectedSkills = uiState.selectedSkills,
+            searchQuery = uiState.skillSearchQuery,
+            availableSkills = uiState.availableSkills,
+            onSearchQueryChange = { handleIntent(DescriptionIntent.SetSkillSearch(it)) },
+            onSkillAdd = { handleIntent(DescriptionIntent.AddSkill(it)) },
+            onSkillRemove = { handleIntent(DescriptionIntent.RemoveSkill(it)) }
+        )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
+        DescriptionPartTextField(
+            value = uiState.qualities,
+            onValueChange = { handleIntent(DescriptionIntent.SetQualities(it)) },
+            labelText = "ЛИЧНЫЕ КАЧЕСТВА"
+        )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
+        DescriptionPartTextField(
+            value = uiState.interests,
+            onValueChange = { handleIntent(DescriptionIntent.SetInterests(it)) },
+            labelText = "ИНТЕРЕСЫ"
+        )
+    }
+}
+
+@Composable
+private fun Step3(
+    uiState: DescriptionState,
+    handleIntent: (intent: DescriptionIntent) -> Unit
+) {
+    DescriptionPart(title = "Доступность и Связь") {
         DescriptionPartTextField(
             value = uiState.workingHours,
-            onValueChange = { handleIntent(DescriptionIntent.SetAbout(it)) },
-            labelText = "ГРАФИК РАБОТЫ"
+            onValueChange = { handleIntent(DescriptionIntent.SetWorkingHours(it)) },
+            labelText = "ГРАФИК (Напр. 20ч/нед, будни)"
         )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
-        )
-        DescriptionPartTextField(
-            value = uiState.wishes,
-            onValueChange = { handleIntent(DescriptionIntent.SetQualities(it)) },
-            labelText = "ПОЖЕЛАНИЯ"
-        )
-        HorizontalDivider(
-            color = Transparent, modifier = Modifier.cheapGlassEffect()
-        )
+        HorizontalDivider(color = Transparent, modifier = Modifier.cheapGlassEffect())
         DescriptionPartTextField(
             value = uiState.waysToContact,
-            onValueChange = { handleIntent(DescriptionIntent.SetSkills(it)) },
-            labelText = "СПОСОБЫ СВЯЗИ"
+            onValueChange = { handleIntent(DescriptionIntent.SetWaysToContact(it)) },
+            labelText = "КОНТАКТЫ (TG: @name, Email: ...)",
+            minLines = 2
         )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun SkillsSelection(
+    selectedSkills: List<String>,
+    searchQuery: String,
+    availableSkills: List<String>,
+    onSearchQueryChange: (String) -> Unit,
+    onSkillAdd: (String) -> Unit,
+    onSkillRemove: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val filteredSkills = remember(searchQuery, availableSkills, selectedSkills) {
+        availableSkills
+            .filter { it !in selectedSkills }
+            .filter { it.contains(searchQuery, ignoreCase = true) }
+    }
+
+    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+        Text(
+            text = "НАВЫКИ",
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(bottom = 4.dp)
+        )
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            selectedSkills.forEach { skill ->
+                SkillChip(name = skill, onRemove = { onSkillRemove(skill) })
+            }
+        }
+
+        Box(modifier = Modifier.fillMaxWidth()) {
+            TextField(
+                value = searchQuery,
+                onValueChange = { 
+                    onSearchQueryChange(it)
+                    expanded = true
+                },
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = { Text("Выберите навыки...") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (searchQuery.isNotEmpty()) {
+                        IconButton(onClick = { onSearchQueryChange(""); expanded = false }) {
+                            Icon(Icons.Default.Close, contentDescription = null)
+                        }
+                    }
+                },
+                colors = TextFieldDefaults.colors().copy(
+                    unfocusedContainerColor = Transparent,
+                    focusedContainerColor = Transparent,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                ),
+            )
+
+            DropdownMenu(
+                expanded = expanded && filteredSkills.isNotEmpty(),
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.fillMaxWidth(0.8f).cheapGlassEffect(),
+                properties = androidx.compose.ui.window.PopupProperties(focusable = false)
+            ) {
+                filteredSkills.forEach { skill ->
+                    DropdownMenuItem(
+                        text = { Text(skill) },
+                        onClick = {
+                            onSkillAdd(skill)
+                            onSearchQueryChange("")
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SkillChip(name: String, onRemove: () -> Unit) {
+    Surface(
+        modifier = Modifier.clip(CircleShape),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 12.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(text = name, style = MaterialTheme.typography.bodySmall)
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Удалить",
+                modifier = Modifier.size(16.dp).clickable { onRemove() }
+            )
+        }
     }
 }
 
@@ -308,12 +467,16 @@ private fun DescriptionPartTextField(
     modifier: Modifier = Modifier,
     labelText: String,
     value: String,
-    onValueChange: (newValue: String) -> Unit
+    onValueChange: (newValue: String) -> Unit,
+    minLines: Int = 1,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     TextField(
-        modifier = modifier.heightIn(68.dp, Dp.Unspecified).padding(vertical = 4.dp),
+        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
         value = value,
         onValueChange = onValueChange,
+        minLines = minLines,
+        keyboardOptions = keyboardOptions,
         label = {
             Text(
                 text = labelText,

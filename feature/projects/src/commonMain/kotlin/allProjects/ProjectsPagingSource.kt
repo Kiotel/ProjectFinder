@@ -8,7 +8,7 @@ import useCases.GetProjectsUseCase
 
 internal class ProjectsPagingSource(
     private val getProjectsUseCase: GetProjectsUseCase,
-    val query: String
+    val query: String,
 ) : PagingSource<Int, Project>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Project> {
@@ -17,18 +17,25 @@ internal class ProjectsPagingSource(
 
             val response = getProjectsUseCase(
                 page = currentPageNumber,
-                limit = params.loadSize
+                limit = params.loadSize,
             ).first()
 
-            val result = response.fold(
-                onSuccess = { it },
-                onFailure = { throw it }
+            val pageItems = response.fold(
+                onSuccess = { projects ->
+                    if (query.isBlank()) projects
+                    else projects.filter { 
+                        it.title.contains(query, ignoreCase = true) || 
+                        it.description.contains(query, ignoreCase = true) ||
+                        it.authorName?.contains(query, ignoreCase = true) == true
+                    }
+                },
+                onFailure = { throw it },
             )
 
             LoadResult.Page(
-                data = result,
+                data = pageItems,
                 prevKey = if (currentPageNumber == 1) null else currentPageNumber - 1,
-                nextKey = if (result.isEmpty()) null else currentPageNumber + 1
+                nextKey = if (pageItems.size < params.loadSize) null else currentPageNumber + 1,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

@@ -7,4 +7,5 @@ interface AuthRepository {
     fun login(email: String, password: String): Flow<Result<Unit>>
     fun isAuthed(): Flow<Result<Unit>>
     suspend fun logOut()
+    suspend fun deleteAccount(): Result<Unit>
 }

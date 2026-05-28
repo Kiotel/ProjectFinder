@@ -28,6 +28,15 @@ sealed interface Route : NavKey {
     }
 
     @Serializable
+    data object Search : Route
+
+    @Serializable
+    data class Participant(val userId: String) : Route
+
+    @Serializable
+    data object Notifications : Route
+
+    @Serializable
     data object Profile : Route {
         @Serializable
         data object Detailed : Route
@@ -37,6 +46,9 @@ sealed interface Route : NavKey {
     data object Projects : Route {
         @Serializable
         data object AllProjects : Route
+
+        @Serializable
+        data object Create : Route
 
         @Serializable
         data class DetailedProject(val project: Project) : Route

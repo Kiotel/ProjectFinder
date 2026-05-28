@@ -1,4 +1,5 @@
 import local.secureStore.AuthStore
+import local.secureStore.FormDataStore
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import remote.apis.AuthApi
@@ -6,8 +7,12 @@ import remote.apis.BackendApi
 import remote.apis.TestApi
 import repositories.AuthRepository
 import repositories.AuthRepositoryImpl
+import repositories.NotificationsRepository
+import repositories.NotificationsRepositoryImpl
 import repositories.ProjectsRepository
 import repositories.ProjectsRepositoryImpl
+import repositories.UsersRepository
+import repositories.UsersRepositoryImpl
 import utils.Logger
 
 val dataModule = module {
@@ -16,11 +21,14 @@ val dataModule = module {
     single<BackendApi> { BackendApi(get(), get()) }
 
     single<AuthStore> { AuthStore(get()) }
+    single<FormDataStore> { FormDataStore(get()) }
 
     single<Logger> { Logger }
 
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get()) }
-    single<ProjectsRepository> { ProjectsRepositoryImpl(get(), get()) }
+    single<ProjectsRepository> { ProjectsRepositoryImpl(get(), get(), get()) }
+    single<UsersRepository> { UsersRepositoryImpl(get(), get(), get()) }
+    single<NotificationsRepository> { NotificationsRepositoryImpl(get(), get()) }
 
     includes(platformModule)
 }

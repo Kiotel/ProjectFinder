@@ -21,6 +21,7 @@ data class Project(
     val tags: List<String>,
     val neededRoles: List<String>,
     val authorName: String,
+    val industry: String? = null,
 )
 
 enum class ProjectStage {
@@ -32,7 +33,14 @@ enum class ProjectStage {
 
     companion object {
         fun fromString(value: String?): ProjectStage {
-            return ProjectStage.entries.firstOrNull { it.name == value } ?: UNKNOWN
+            val normalized = value?.trim()?.lowercase() ?: return UNKNOWN
+            return when (normalized) {
+                "idea" -> IDEA
+                "development", "dev" -> DEVELOPMENT
+                "testing", "test" -> TESTING
+                "completed", "done" -> COMPLETED
+                else -> entries.firstOrNull { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
+            }
         }
     }
 }
@@ -45,7 +53,13 @@ enum class ProjectStatus {
 
     companion object {
         fun fromString(value: String?): ProjectStatus {
-            return ProjectStatus.entries.firstOrNull { it.name == value } ?: UNKNOWN
+            val normalized = value?.trim()?.lowercase() ?: return UNKNOWN
+            return when (normalized) {
+                "active", "idea" -> ACTIVE
+                "archived" -> ARCHIVED
+                "blocked" -> BLOCKED
+                else -> entries.firstOrNull { it.name.equals(value, ignoreCase = true) } ?: UNKNOWN
+            }
         }
     }
 }

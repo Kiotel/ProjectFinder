@@ -2,10 +2,14 @@ package models
 
 internal data class NavigationState(
     val isAuthed: Boolean,
-    val isLoading: Boolean
+    val userProfile: UserProfile? = null,
+    val isLoading: Boolean,
+    val isInitialCheckFinished: Boolean
 ) {
     internal constructor(internalRegistrationState: InternalNavigationState) : this(
         isAuthed = internalRegistrationState.isAuthed,
-        isLoading = internalRegistrationState.isLoading
+        userProfile = internalRegistrationState.userProfile,
+        isLoading = internalRegistrationState.isLoading,
+        isInitialCheckFinished = internalRegistrationState.isInitialCheckFinished
     )
 }

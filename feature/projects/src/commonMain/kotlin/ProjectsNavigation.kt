@@ -1,6 +1,7 @@
 import allProjects.AllProjectsScreen
 import allProjects.AllProjectsViewModel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -11,6 +12,8 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
+import createProject.CreateProjectScreen
+import createProject.CreateProjectViewModel
 import detailedProject.DetailedProjectScreen
 import detailedProject.DetailedProjectViewModel
 import kotlinx.serialization.modules.SerializersModule
@@ -27,6 +30,9 @@ fun ProjectsNavigation(
                 polymorphic(NavKey::class) {
                     subclass(
                         Route.Projects.AllProjects::class, Route.Projects.AllProjects.serializer()
+                    )
+                    subclass(
+                        Route.Projects.Create::class, Route.Projects.Create.serializer()
                     )
                     subclass(
                         Route.Projects.DetailedProject::class,
@@ -55,6 +61,20 @@ fun ProjectsNavigation(
                     goToProject = {
                         authBackStack.add(Route.Projects.DetailedProject(it))
                     },
+                    goToCreate = {
+                        authBackStack.add(Route.Projects.Create)
+                    }
+                )
+            }
+            entry<Route.Projects.Create> {
+                val createProjectViewModel: CreateProjectViewModel = koinViewModel()
+                val uiState by createProjectViewModel.uiState.collectAsStateWithLifecycle()
+
+                CreateProjectScreen(
+                    uiState = uiState,
+                    handleIntent = createProjectViewModel::handleIntent,
+                    snackBarManager = createProjectViewModel.snackBarManager,
+                    onBack = { authBackStack.removeLastOrNull() }
                 )
             }
             entry<Route.Projects.DetailedProject> {
@@ -62,7 +82,9 @@ fun ProjectsNavigation(
                 val uiState by detailedProjectViewModel.uiState.collectAsStateWithLifecycle()
 
                 val projectFromNavigation = it.project
-                detailedProjectViewModel.setProject(projectFromNavigation)
+                LaunchedEffect(projectFromNavigation.id) {
+                    detailedProjectViewModel.setProject(projectFromNavigation)
+                }
 
                 DetailedProjectScreen(
                     uiState = uiState,

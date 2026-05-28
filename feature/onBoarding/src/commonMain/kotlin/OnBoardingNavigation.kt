@@ -17,7 +17,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun OnBoardingNavigation(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFinished: () -> Unit = {},
 ) {
     val onBoardingBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -47,7 +48,8 @@ fun OnBoardingNavigation(
                 DescriptionScreen(
                     uiState = uiState,
                     handleIntent = descriptionViewModel::handleIntent,
-                    snackBarManager = descriptionViewModel.snackBarManager
+                    snackBarManager = descriptionViewModel.snackBarManager,
+                    onSubmit = { descriptionViewModel.submit(onFinished) },
                 )
             }
         }
