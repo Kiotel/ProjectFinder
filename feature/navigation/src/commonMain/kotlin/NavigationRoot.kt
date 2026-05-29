@@ -91,7 +91,7 @@ internal fun NavigationRoot(
         println("NavigationRoot: state changed. isInitialCheckFinished=${uiState.isInitialCheckFinished}, isAuthed=${uiState.isAuthed}, currentRoute=$currentRoute, profileFilled=${uiState.userProfile?.isProfileFilled}")
         if (uiState.isInitialCheckFinished) {
             if (uiState.isAuthed) {
-                val isProfileFilled = uiState.isProfileFilledLocally || uiState.userProfile?.isProfileFilled == true
+                val isProfileFilled = uiState.isProfileFilledLocally
                 println("NavigationRoot: deciding where to navigate. isProfileFilled=$isProfileFilled (local=${uiState.isProfileFilledLocally}, server=${uiState.userProfile?.isProfileFilled})")
                 
                 if (currentRoute is Route.Auth) {

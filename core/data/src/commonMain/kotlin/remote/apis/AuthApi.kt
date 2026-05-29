@@ -6,6 +6,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.delete
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -81,7 +82,7 @@ internal class AuthApi(
         }
 
     suspend fun deleteAccount(): HttpResponse =
-        client.post("${Consts.BASE_URL}/auth/delete") {
+        client.delete("${Consts.BASE_URL}/users/${authStore.userId}") {
             header(HttpHeaders.Authorization, "Bearer ${authStore.accessToken}")
         }
 }

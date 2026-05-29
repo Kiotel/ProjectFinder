@@ -65,8 +65,10 @@ internal class DescriptionViewModel(
             // Then prefill from server profile (if user has saved profile)
             getUserProfileUseCase.current().first().onSuccess { profile -> 
                 prefill(profile)
-                // Если профиль уже заполнен (firstName извлечён из fullName) — пропускаем форму
-                if (profile.isProfileFilled) {
+                // Пропускаем форму, только если пользователь уже заполнял её в предыдущей сессии
+                // (сервер по умолчанию ставит firstName = username при регистрации, поэтому
+                // проверка profile.isProfileFilled не подходит — она всегда true)
+                if (profileFillStore.isProfileFilled()) {
                     _autoNavigateEvent.trySend(Unit)
                 }
             }

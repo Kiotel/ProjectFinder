@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import models.InternalNavigationState
 import models.NavigationState
-import useCases.DeleteAccountUseCase
 import useCases.GetIsAuthedUseCase
 import useCases.GetUserProfileUseCase
 import useCases.LogoutUseCase
@@ -19,7 +18,6 @@ internal class NavigationViewModel(
     private val getIsAuthedUseCase: GetIsAuthedUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val logoutUseCase: LogoutUseCase,
-    private val deleteAccountUseCase: DeleteAccountUseCase,
     private val profileFillManager: ProfileFillManager,
 ) : ViewModel() {
 
@@ -108,18 +106,19 @@ internal class NavigationViewModel(
         }
     }
 
+    /**
+     * После успешного удаления аккаунта на сервере (выполняется в DetailedProfileViewModel)
+     * NavigationViewModel получает сигнал DeleteAccount и просто чистит локальное состояние.
+     * Повторный вызов deleteAccountUseCase() не нужен — токены уже сброшены.
+     */
     private fun deleteAccount() {
         authJob?.cancel()
         profileJob?.cancel()
         authJob = null
         profileJob = null
         viewModelScope.launch {
-            deleteAccountUseCase().onSuccess {
-                profileFillManager.clear()
-                updateState { InternalNavigationState(isAuthed = false, isLoading = false, isInitialCheckFinished = true) }
-            }.onFailure { error ->
-                println("NavigationViewModel/deleteAccount: FAILURE. error=${error.message}")
-            }
+            profileFillManager.clear()
+            updateState { InternalNavigationState(isAuthed = false, isLoading = false, isInitialCheckFinished = true) }
         }
     }
 
