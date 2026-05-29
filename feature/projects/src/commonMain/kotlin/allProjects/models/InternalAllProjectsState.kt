@@ -7,4 +7,5 @@ internal data class InternalAllProjectsState(
     val searchQuery: String = "",
     val filter: ProjectFilter = ProjectFilter.ALL,
     val currentUserId: String = "",
+    val participationProjectIds: List<Int> = emptyList(),
 )

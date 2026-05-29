@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -122,8 +124,8 @@ internal fun NavigationRoot(
                     )
                 }
             },
-        ) {
-            Box {
+        ) { innerPadding ->
+            Box(modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())) {
                 Background(enabled = true, useCirclesBackground = true, painter = null) {
                     if (!isUserDetermined) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -149,13 +151,16 @@ internal fun NavigationRoot(
                                 entry<Route.OnBoarding> {
                                     OnBoardingNavigation(
                                         onFinished = { navigateTo(Route.Projects) },
+                                        onLogout = { handleIntent(NavigationIntent.Logout) },
                                     )
                                 }
                                 entry<Route.Profile> {
-                                    ProfileNavigation(
-                                        onLogout = { handleIntent(NavigationIntent.Logout) },
-                                        onDeleteAccount = { handleIntent(NavigationIntent.DeleteAccount) },
-                                    )
+                                    key(uiState.isAuthed) {
+                                        ProfileNavigation(
+                                            onLogout = { handleIntent(NavigationIntent.Logout) },
+                                            onDeleteAccount = { handleIntent(NavigationIntent.DeleteAccount) },
+                                        )
+                                    }
                                 }
                                 entry<Route.Projects> {
                                     ProjectsNavigation()

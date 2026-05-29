@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -51,6 +52,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -78,6 +80,7 @@ internal fun DescriptionScreen(
     handleIntent: (intent: DescriptionIntent) -> Unit,
     snackBarManager: SnackBarManager,
     onSubmit: () -> Unit = {},
+    onCancel: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     var currentStep by rememberSaveable { mutableStateOf(1) }
@@ -147,8 +150,13 @@ internal fun DescriptionScreen(
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                             ),
-                            enabled = currentStep > 1,
-                            onClick = { currentStep -= 1 },
+                            onClick = {
+                                if (currentStep > 1) {
+                                    currentStep -= 1
+                                } else {
+                                    onCancel()
+                                }
+                            },
                         ) {
                             Text(text = "Назад")
                         }
@@ -445,21 +453,57 @@ private fun SkillsSelection(
             .filter { it !in selectedSkills }
             .filter { it.contains(searchQuery, ignoreCase = true) }
     }
+    val displaySkills = if (searchQuery.isEmpty()) {
+        availableSkills.filter { it !in selectedSkills }
+    } else {
+        filteredSkills
+    }
 
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
-        Text(
-            text = "Навыки",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-            modifier = Modifier.padding(bottom = 4.dp, start = 4.dp),
-        )
+    Column(modifier = Modifier.fillMaxWidth()) {
+        // Label with count
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = "Выбранные навыки",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.SemiBold,
+            )
+            if (selectedSkills.isNotEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .cheapGlassEffect(
+                            shape = CircleShape,
+                            fillAlpha = 0.3f,
+                            borderAlpha = 0.2f,
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = selectedSkills.size.toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+        }
 
         // Selected skill chips
         if (selectedSkills.isNotEmpty()) {
             FlowRow(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 selectedSkills.forEach { skill ->
                     SkillChip(name = skill, onRemove = { onSkillRemove(skill) })
@@ -467,58 +511,100 @@ private fun SkillsSelection(
             }
         }
 
-        // Search field
+        // Dropdown button
         Box(modifier = Modifier.fillMaxWidth()) {
-            TextField(
-                value = searchQuery,
-                onValueChange = {
-                    onSearchQueryChange(it)
-                    expanded = true
-                },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Поиск навыков...") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                trailingIcon = {
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { onSearchQueryChange(""); expanded = false }) {
-                            Icon(Icons.Default.Close, contentDescription = null)
-                        }
-                    }
-                },
-                textStyle = MaterialTheme.typography.bodyMedium,
-                colors = TextFieldDefaults.colors().copy(
-                    unfocusedContainerColor = Transparent,
-                    focusedContainerColor = Transparent,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+            Button(
+                onClick = { expanded = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
                 ),
-            )
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(20.dp),
+                    )
+                    Text(
+                        text = "Добавить навык",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
 
             DropdownMenu(
-                expanded = expanded && filteredSkills.isNotEmpty(),
+                expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .fillMaxWidth()
                     .cheapGlassEffect(
-                        fillAlpha = 0.2f,
-                        borderAlpha = 0.15f,
+                        fillAlpha = 0.25f,
+                        borderAlpha = 0.2f,
                     ),
-                properties = PopupProperties(focusable = false),
+                properties = PopupProperties(focusable = true),
             ) {
-                filteredSkills.forEach { skill ->
-                    DropdownMenuItem(
-                        text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 300.dp)
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    displaySkills.forEach { skill ->
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(8.dp)
+                                            .cheapGlassEffect(
+                                                shape = CircleShape,
+                                                fillAlpha = 0.4f,
+                                                borderAlpha = 0f,
+                                                tint = MaterialTheme.colorScheme.primary,
+                                            ),
+                                    )
+                                    Text(
+                                        text = skill,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                    )
+                                }
+                            },
+                            onClick = {
+                                onSkillAdd(skill)
+                                expanded = false
+                            },
+                            modifier = Modifier.padding(vertical = 6.dp, horizontal = 4.dp),
+                        )
+                    }
+                    if (displaySkills.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
                             Text(
-                                text = skill,
-                                style = MaterialTheme.typography.bodyMedium,
+                                text = "Все навыки добавлены",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                             )
-                        },
-                        onClick = {
-                            onSkillAdd(skill)
-                            onSearchQueryChange("")
-                            expanded = false
-                        },
-                    )
+                        }
+                    }
                 }
             }
         }
@@ -527,34 +613,45 @@ private fun SkillsSelection(
 
 @Composable
 private fun SkillChip(name: String, onRemove: () -> Unit) {
+    var hovered by remember { mutableStateOf(false) }
+    
     Box(
         modifier = Modifier
             .cheapGlassEffect(
-                shape = RoundedCornerShape(20.dp),
-                fillAlpha = 0.2f,
-                borderAlpha = 0.15f,
-                borderWidth = 0.5.dp,
-            ),
+                shape = RoundedCornerShape(24.dp),
+                fillAlpha = if (hovered) 0.35f else 0.25f,
+                borderAlpha = if (hovered) 0.25f else 0.15f,
+                tint = MaterialTheme.colorScheme.primary,
+            )
+            .clickable(enabled = false) {},
     ) {
         Row(
-            modifier = Modifier.padding(start = 12.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 8.dp, top = 10.dp, bottom = 10.dp)
+                .fillMaxWidth(0.8f),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = name,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f),
             )
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = "Удалить",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            IconButton(
+                onClick = { onRemove() },
                 modifier = Modifier
-                    .size(16.dp)
-                    .clickable { onRemove() },
-            )
+                    .size(28.dp)
+                    .onFocusChanged { hovered = it.isFocused },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Удалить",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(16.dp),
+                )
+            }
         }
     }
 }

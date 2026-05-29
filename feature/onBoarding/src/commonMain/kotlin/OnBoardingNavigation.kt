@@ -20,6 +20,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun OnBoardingNavigation(
     modifier: Modifier = Modifier,
     onFinished: () -> Unit = {},
+    onLogout: () -> Unit = {},
 ) {
     val onBoardingBackStack = rememberNavBackStack(
         configuration = SavedStateConfiguration {
@@ -58,6 +59,7 @@ fun OnBoardingNavigation(
                     handleIntent = descriptionViewModel::handleIntent,
                     snackBarManager = descriptionViewModel.snackBarManager,
                     onSubmit = { descriptionViewModel.submit(onFinished) },
+                    onCancel = onLogout,
                 )
             }
         }

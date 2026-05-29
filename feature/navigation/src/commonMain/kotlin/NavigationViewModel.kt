@@ -99,10 +99,13 @@ internal class NavigationViewModel(
         profileJob?.cancel()
         authJob = null
         profileJob = null
+        
+        // Сначала переключаем состояние UI, чтобы навигация сработала мгновенно
+        updateState { InternalNavigationState(isAuthed = false, isLoading = false, isInitialCheckFinished = true) }
+        
         viewModelScope.launch {
             logoutUseCase()
             profileFillManager.clear()
-            updateState { InternalNavigationState(isAuthed = false, isLoading = false, isInitialCheckFinished = true) }
         }
     }
 

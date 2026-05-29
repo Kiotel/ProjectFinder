@@ -14,8 +14,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import models.Project
+import useCases.DeleteProjectUseCase
 import useCases.GetApplicantsUseCase
 import useCases.GetCommentsUseCase
+import useCases.GetProjectMembersUseCase
 import useCases.GetUserProfileUseCase
 import useCases.LikeProjectUseCase
 import useCases.PostCommentUseCase
@@ -31,6 +33,8 @@ internal class DetailedProjectViewModel(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getApplicantsUseCase: GetApplicantsUseCase,
     private val updateApplicantStatusUseCase: UpdateApplicantStatusUseCase,
+    private val getProjectMembersUseCase: GetProjectMembersUseCase,
+    private val deleteProjectUseCase: DeleteProjectUseCase,
     val snackBarManager: SnackBarManager,
 ) : ViewModel() {
 
@@ -53,6 +57,7 @@ internal class DetailedProjectViewModel(
     fun setProject(project: Project) {
         updateState { it.copy(project = project) }
         loadComments(project.id)
+        loadMembers(project.id)
         // Load applicants only if current user is the author
         viewModelScope.launch {
             val userId = _internalState.value.currentUserId
@@ -80,11 +85,24 @@ internal class DetailedProjectViewModel(
         }
     }
 
+    private fun loadMembers(projectId: String) {
+        viewModelScope.launch {
+            updateState { it.copy(isLoadingMembers = true) }
+            getProjectMembersUseCase(projectId).fold(
+                onSuccess = { members -> updateState { it.copy(isLoadingMembers = false, members = members) } },
+                onFailure = { updateState { it.copy(isLoadingMembers = false) } },
+            )
+        }
+    }
+
     private fun updateApplicantStatus(responseId: String, status: String) {
         val projectId = _internalState.value.project?.id ?: return
         viewModelScope.launch {
             updateApplicantStatusUseCase(responseId, status).fold(
-                onSuccess = { loadApplicants(projectId) },
+                onSuccess = {
+                    loadApplicants(projectId)
+                    loadMembers(projectId)
+                },
                 onFailure = { snackBarManager.showMessage("Ошибка: ${it.message}", SnackbarDuration.Short) },
             )
         }
@@ -140,6 +158,23 @@ internal class DetailedProjectViewModel(
         }
     }
 
+    private fun deleteProject() {
+        val projectId = uiState.value.project?.id ?: return
+        viewModelScope.launch {
+            updateState { it.copy(isSubmitting = true) }
+            deleteProjectUseCase(projectId).fold(
+                onSuccess = {
+                    updateState { it.copy(isSubmitting = false, isDeleted = true) }
+                    snackBarManager.showMessage("Проект удалён")
+                },
+                onFailure = {
+                    updateState { it.copy(isSubmitting = false) }
+                    snackBarManager.showMessage("Ошибка при удалении: ${it.message}")
+                }
+            )
+        }
+    }
+
     private fun updateState(mutation: (InternalDetailedProjectState) -> InternalDetailedProjectState) {
         _internalState.update(mutation)
     }
@@ -152,8 +187,10 @@ internal class DetailedProjectViewModel(
             DetailedProjectIntent.SubmitResponse -> submitResponse()
             DetailedProjectIntent.SubmitComment -> submitComment()
             DetailedProjectIntent.ReloadComments -> uiState.value.project?.id?.let { loadComments(it) }
-            is DetailedProjectIntent.AcceptApplicant -> updateApplicantStatus(intent.responseId, "принят")
+            is DetailedProjectIntent.AcceptApplicant -> updateApplicantStatus(intent.responseId, "принято")
             is DetailedProjectIntent.RejectApplicant -> updateApplicantStatus(intent.responseId, "отклонён")
+            DetailedProjectIntent.DeleteProject -> deleteProject()
+            DetailedProjectIntent.Refresh -> uiState.value.project?.let { setProject(it) }
         }
     }
 }

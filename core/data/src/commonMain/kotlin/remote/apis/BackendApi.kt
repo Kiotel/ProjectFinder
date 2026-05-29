@@ -10,6 +10,7 @@ import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.delete
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
@@ -91,6 +92,17 @@ internal class BackendApi(
             setBody(body)
         }
 
+    suspend fun updateProject(projectId: String, body: RequestCreateProjectBodyDto) =
+        client.put("${Consts.BASE_URL}/projects/$projectId") {
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }
+
+    suspend fun deleteProject(projectId: String) =
+        client.delete("${Consts.BASE_URL}/projects/$projectId") {
+            contentType(ContentType.Application.Json)
+        }
+
     suspend fun likeProject(projectId: String) =
         client.post("${Consts.BASE_URL}/projects/$projectId/like") {
             contentType(ContentType.Application.Json)
@@ -116,6 +128,16 @@ internal class BackendApi(
 
     suspend fun getApplicants(projectId: String) =
         client.get("${Consts.BASE_URL}/responses/project/$projectId") {
+            contentType(ContentType.Application.Json)
+        }
+
+    suspend fun getProjectMembers(projectId: String) =
+        client.get("${Consts.BASE_URL}/responses/project/$projectId/members") {
+            contentType(ContentType.Application.Json)
+        }
+
+    suspend fun getMyParticipationProjects() =
+        client.get("${Consts.BASE_URL}/responses/my-projects") {
             contentType(ContentType.Application.Json)
         }
 

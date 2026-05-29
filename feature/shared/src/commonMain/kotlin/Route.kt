@@ -48,7 +48,7 @@ sealed interface Route : NavKey {
         data object AllProjects : Route
 
         @Serializable
-        data object Create : Route
+        data class Create(val project: Project? = null) : Route
 
         @Serializable
         data class DetailedProject(val project: Project) : Route

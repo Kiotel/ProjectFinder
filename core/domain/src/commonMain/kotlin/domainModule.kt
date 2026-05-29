@@ -2,10 +2,13 @@ import org.koin.dsl.module
 import useCases.BookmarkUserUseCase
 import useCases.CreateProjectUseCase
 import useCases.DeleteAccountUseCase
+import useCases.DeleteProjectUseCase
 import useCases.GetApplicantsUseCase
 import useCases.GetCommentsUseCase
 import useCases.GetIsAuthedUseCase
+import useCases.GetMyParticipationProjectsUseCase
 import useCases.GetNotificationsUseCase
+import useCases.GetProjectMembersUseCase
 import useCases.GetProjectsUseCase
 import useCases.GetUserInfoUseCase
 import useCases.GetUserProfileUseCase
@@ -17,6 +20,7 @@ import useCases.PostProjectResponseUseCase
 import useCases.RegisterUseCase
 import useCases.SearchUsersUseCase
 import useCases.UpdateApplicantStatusUseCase
+import useCases.UpdateProjectUseCase
 import useCases.UpdateUserProfileUseCase
 
 val domainModule = module {
@@ -37,8 +41,12 @@ val domainModule = module {
     factory<PostCommentUseCase> { PostCommentUseCase(get()) }
     factory<PostProjectResponseUseCase> { PostProjectResponseUseCase(get()) }
     factory<CreateProjectUseCase> { CreateProjectUseCase(get()) }
+    factory<UpdateProjectUseCase> { UpdateProjectUseCase(get()) }
+    factory<DeleteProjectUseCase> { DeleteProjectUseCase(get()) }
     factory<LogoutUseCase> { LogoutUseCase(get()) }
     factory<DeleteAccountUseCase> { DeleteAccountUseCase(get()) }
     factory<GetApplicantsUseCase> { GetApplicantsUseCase(get()) }
     factory<UpdateApplicantStatusUseCase> { UpdateApplicantStatusUseCase(get()) }
+    factory<GetMyParticipationProjectsUseCase> { GetMyParticipationProjectsUseCase(get()) }
+    factory<GetProjectMembersUseCase> { GetProjectMembersUseCase(get()) }
 }

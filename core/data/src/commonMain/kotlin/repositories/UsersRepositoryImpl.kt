@@ -1,13 +1,11 @@
 package repositories
 
-import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.serialization.json.Json
 import local.secureStore.AuthStore
 import mapppers.toDomain
 import mapppers.toUpdateRequest
@@ -79,13 +77,16 @@ internal class UsersRepositoryImpl(
         if (authStore.accessToken.isBlank()) {
             error(httpErrorMessage(401, ""))
         }
-        val userId = authStore.userId.takeIf { it.isNotBlank() }
+        val userId = authStore.userId.takeIf { it.isNotBlank() && it != "0" }
             ?: profile.id.takeIf { it.isNotBlank() && it != "0" }
-            ?: error(httpErrorMessage(401, ""))
+            ?: error("Не удалось определить ID пользователя для обновления")
+
+        logger.i("UsersRepositoryImpl/updateProfile", "Updating profile for userId: $userId")
         val response = backendApi.updateUser(userId, profile.toUpdateRequest())
         if (!response.status.isSuccess()) {
-            val bodyText = try { response.body<String>() } catch (_: Exception) { "" }
+            val bodyText = try { response.bodyAsText() } catch (_: Exception) { "" }
             val errorMsg = when (response.status.value) {
+                403 -> "Нет доступа (403): убедитесь, что вы авторизованы под правильным пользователем. ID=$userId"
                 500 -> "Сервер не смог сохранить анкету (ошибка 500). Попробуйте позже."
                 else -> httpErrorMessage(response.status.value, " при сохранении профиля: $bodyText")
             }

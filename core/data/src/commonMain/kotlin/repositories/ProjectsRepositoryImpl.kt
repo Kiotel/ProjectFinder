@@ -1,7 +1,6 @@
 package repositories
 
 import io.ktor.client.call.body
-import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import io.ktor.utils.io.CancellationException
@@ -13,6 +12,8 @@ import mapppers.toDomain
 import models.Project
 import models.ProjectApplicant
 import models.ProjectComment
+import models.ProjectMember
+import models.ProjectRole
 import remote.apis.BackendApi
 import remote.apis.dtos.common.ProjectRoleDto
 import remote.apis.dtos.common.ResponseProjectDto
@@ -177,13 +178,14 @@ internal class ProjectsRepositoryImpl(
         title: String,
         description: String?,
         industry: String?,
-        roles: List<Pair<String, Int>>,
+        roles: List<ProjectRole>,
     ): Result<Project> = runCatching {
         if (authStore.accessToken.isBlank()) {
             error(httpErrorMessage(401, ""))
         }
         val authorId = authStore.userId.toIntOrNull()
             ?: error("Не удалось определить id автора")
+        val json = Json { encodeDefaults = false }
         val response = backendApi.createProject(
             RequestCreateProjectBodyDto(
                 authorId = authorId,
@@ -191,8 +193,12 @@ internal class ProjectsRepositoryImpl(
                 description = description,
                 industry = industry,
                 status = "idea",
-                roles = roles.map { (name, spots) ->
-                    ProjectRoleDto(roleName = name, spotsTotal = spots)
+                roles = roles.map { role ->
+                    ProjectRoleDto(
+                        roleName = role.name,
+                        spotsTotal = role.spots,
+                        requiredSkills = if (role.skills.isNotEmpty()) json.encodeToString(role.skills) else null,
+                    )
                 },
             ),
         )
@@ -204,6 +210,54 @@ internal class ProjectsRepositoryImpl(
         response.body<ResponseProjectDto>().toDomain()
     }
 
+    override suspend fun updateProject(
+        projectId: String,
+        title: String,
+        description: String?,
+        industry: String?,
+        roles: List<ProjectRole>,
+    ): Result<Unit> = runCatching {
+        if (authStore.accessToken.isBlank()) {
+            error(httpErrorMessage(401, ""))
+        }
+        val authorId = authStore.userId.toIntOrNull()
+            ?: error("Не удалось определить id автора")
+        val json = Json { encodeDefaults = false }
+        val response = backendApi.updateProject(
+            projectId,
+            RequestCreateProjectBodyDto(
+                authorId = authorId,
+                title = title,
+                description = description,
+                industry = industry,
+                roles = roles.map { role ->
+                    ProjectRoleDto(
+                        roleName = role.name,
+                        spotsTotal = role.spots,
+                        requiredSkills = if (role.skills.isNotEmpty()) json.encodeToString(role.skills) else "[]",
+                    )
+                },
+            ),
+        )
+        if (!response.status.isSuccess()) {
+            val errorMsg = httpErrorMessage(response.status.value, " при обновлении проекта")
+            logger.e("ProjectsRepositoryImpl/updateProject", "HTTP ${response.status.value}: $errorMsg")
+            error(errorMsg)
+        }
+    }
+
+    override suspend fun deleteProject(projectId: String): Result<Unit> = runCatching {
+        if (authStore.accessToken.isBlank()) {
+            error(httpErrorMessage(401, ""))
+        }
+        val response = backendApi.deleteProject(projectId)
+        if (!response.status.isSuccess()) {
+            val errorMsg = httpErrorMessage(response.status.value, " при удалении проекта")
+            logger.e("ProjectsRepositoryImpl/deleteProject", "HTTP ${response.status.value}: $errorMsg")
+            error(errorMsg)
+        }
+    }
+
     private fun ResponseCommentDto.toDomain() = ProjectComment(
         id = id?.toString() ?: "0",
         projectId = projectId?.toString() ?: "0",
@@ -212,4 +266,29 @@ internal class ProjectsRepositoryImpl(
         content = content.orEmpty(),
         createdAt = createdAt,
     )
+
+    override suspend fun getMyParticipationProjects(): Result<List<Int>> = runCatching {
+        if (authStore.accessToken.isBlank()) {
+            error(httpErrorMessage(401, ""))
+        }
+        val response = backendApi.getMyParticipationProjects()
+        if (!response.status.isSuccess()) {
+            val errorMsg = httpErrorMessage(response.status.value, " при загрузке проектов участия")
+            logger.e("ProjectsRepositoryImpl/getMyParticipationProjects", "HTTP ${response.status.value}: $errorMsg")
+            error(errorMsg)
+        }
+        val text = response.bodyAsText()
+        val map = backendApi.json.decodeFromString<Map<String, List<Int>>>(text)
+        map["projectIds"] ?: emptyList()
+    }
+
+    override suspend fun getProjectMembers(projectId: String): Result<List<ProjectMember>> = runCatching {
+        val response = backendApi.getProjectMembers(projectId)
+        if (!response.status.isSuccess()) {
+            val errorMsg = httpErrorMessage(response.status.value, " при загрузке участников")
+            logger.e("ProjectsRepositoryImpl/getProjectMembers", "HTTP ${response.status.value}: $errorMsg")
+            error(errorMsg)
+        }
+        response.body<List<ProjectMember>>()
+    }
 }

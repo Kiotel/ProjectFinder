@@ -20,6 +20,7 @@ data class Project(
     val likesCount: Int,
     val tags: List<String>,
     val neededRoles: List<String>,
+    val roles: List<ProjectRole> = emptyList(),
     val authorName: String,
     val industry: String? = null,
 )

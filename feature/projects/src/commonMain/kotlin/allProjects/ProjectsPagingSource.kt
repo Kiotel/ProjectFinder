@@ -1,5 +1,6 @@
 package allProjects
 
+import allProjects.models.ProjectFilter
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import kotlinx.coroutines.flow.first
@@ -8,7 +9,10 @@ import useCases.GetProjectsUseCase
 
 internal class ProjectsPagingSource(
     private val getProjectsUseCase: GetProjectsUseCase,
-    val query: String,
+    private val query: String,
+    private val filter: ProjectFilter = ProjectFilter.ALL,
+    private val currentUserId: String = "",
+    private val participationProjectIds: List<Int> = emptyList(),
 ) : PagingSource<Int, Project>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Project> {
@@ -22,11 +26,19 @@ internal class ProjectsPagingSource(
 
             val pageItems = response.fold(
                 onSuccess = { projects ->
-                    if (query.isBlank()) projects
-                    else projects.filter { 
-                        it.title.contains(query, ignoreCase = true) || 
-                        it.description.contains(query, ignoreCase = true) ||
-                        it.authorName?.contains(query, ignoreCase = true) == true
+                    projects.filter { project ->
+                        val matchesQuery = query.isBlank() || 
+                            project.title.contains(query, ignoreCase = true) || 
+                            project.description.contains(query, ignoreCase = true) ||
+                            project.authorName.contains(query, ignoreCase = true)
+                        
+                        val matchesFilter = when (filter) {
+                            ProjectFilter.ALL -> true
+                            ProjectFilter.MINE -> project.authorId == currentUserId
+                            ProjectFilter.JOINED -> project.id.toIntOrNull() in participationProjectIds
+                        }
+                        
+                        matchesQuery && matchesFilter
                     }
                 },
                 onFailure = { throw it },

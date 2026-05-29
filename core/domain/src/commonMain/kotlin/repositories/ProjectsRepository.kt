@@ -4,6 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import models.Project
 import models.ProjectApplicant
 import models.ProjectComment
+import models.ProjectMember
+import models.ProjectRole
 import kotlin.time.Duration
 
 interface ProjectsRepository {
@@ -18,6 +20,16 @@ interface ProjectsRepository {
         title: String,
         description: String?,
         industry: String?,
-        roles: List<Pair<String, Int>>,
+        roles: List<ProjectRole>,
     ): Result<Project>
+    suspend fun updateProject(
+        projectId: String,
+        title: String,
+        description: String?,
+        industry: String?,
+        roles: List<ProjectRole>,
+    ): Result<Unit>
+    suspend fun deleteProject(projectId: String): Result<Unit>
+    suspend fun getMyParticipationProjects(): Result<List<Int>>
+    suspend fun getProjectMembers(projectId: String): Result<List<ProjectMember>>
 }

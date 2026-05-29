@@ -1,6 +1,7 @@
 package useCases
 
 import models.Project
+import models.ProjectRole
 import repositories.ProjectsRepository
 
 class CreateProjectUseCase(
@@ -10,6 +11,6 @@ class CreateProjectUseCase(
         title: String,
         description: String?,
         industry: String? = null,
-        roles: List<Pair<String, Int>> = emptyList(),
+        roles: List<ProjectRole> = emptyList(),
     ): Result<Project> = projectsRepository.createProject(title, description, industry, roles)
 }

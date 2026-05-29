@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import local.database.UserDataBase
 import local.secureStore.AuthStore
+import local.secureStore.FormDataStore
+import local.secureStore.ProfileFillStore
 import mapppers.toEntity
 import remote.apis.AuthApi
 import remote.apis.dtos.responses.ResponseLoginDto
@@ -18,6 +20,8 @@ internal class AuthRepositoryImpl(
     private val authApi: AuthApi,
     private val logger: Logger,
     private val userDataBase: UserDataBase,
+    private val profileFillStore: ProfileFillStore,
+    private val formDataStore: FormDataStore,
 ) : AuthRepository {
     override suspend fun logOut() {
         logger.i(
@@ -25,6 +29,8 @@ internal class AuthRepositoryImpl(
         )
         try {
             authStore.setAuthData("", "", "")
+            userDataBase.userDao().deleteAll()
+            formDataStore.clear()
         } catch (e: Exception) {
             logger.e(
                 "AuthRepositoryImpl/logOut",
@@ -78,6 +84,10 @@ internal class AuthRepositoryImpl(
                     accessToken = accessToken,
                     refreshToken = refreshToken
                 )
+
+                // Очищаем флаг заполнения профиля для нового пользователя,
+                // чтобы он увидел форму заполнения после регистрации
+                profileFillStore.clear()
 
                 logger.i(
                     "AuthRepositoryImpl/register",

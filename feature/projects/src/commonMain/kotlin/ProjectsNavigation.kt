@@ -62,13 +62,20 @@ fun ProjectsNavigation(
                         authBackStack.add(Route.Projects.DetailedProject(it))
                     },
                     goToCreate = {
-                        authBackStack.add(Route.Projects.Create)
+                        authBackStack.add(Route.Projects.Create())
                     }
                 )
             }
             entry<Route.Projects.Create> {
                 val createProjectViewModel: CreateProjectViewModel = koinViewModel()
                 val uiState by createProjectViewModel.uiState.collectAsStateWithLifecycle()
+
+                val projectToEdit = it.project
+                LaunchedEffect(projectToEdit) {
+                    if (projectToEdit != null) {
+                        createProjectViewModel.setProjectToEdit(projectToEdit)
+                    }
+                }
 
                 CreateProjectScreen(
                     uiState = uiState,
@@ -90,6 +97,10 @@ fun ProjectsNavigation(
                     uiState = uiState,
                     handleIntent = detailedProjectViewModel::handleIntent,
                     snackBarManager = detailedProjectViewModel.snackBarManager,
+                    onEdit = { project ->
+                        authBackStack.add(Route.Projects.Create(project))
+                    },
+                    onBack = { authBackStack.removeLastOrNull() }
                 )
             }
         }

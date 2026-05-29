@@ -9,4 +9,6 @@ internal sealed interface DetailedProjectIntent {
     data object ReloadComments : DetailedProjectIntent
     data class AcceptApplicant(val responseId: String) : DetailedProjectIntent
     data class RejectApplicant(val responseId: String) : DetailedProjectIntent
+    data object DeleteProject : DetailedProjectIntent
+    data object Refresh : DetailedProjectIntent
 }

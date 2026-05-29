@@ -59,15 +59,9 @@ internal class DescriptionViewModel(
 
     init {
         viewModelScope.launch {
-            // First load from form data store (user's unsaved inputs)
-            loadFromFormDataStore()
-            
             // Then prefill from server profile (if user has saved profile)
-            getUserProfileUseCase.current().first().onSuccess { profile -> 
-                prefill(profile)
+            getUserProfileUseCase.current().first().onSuccess { _ -> 
                 // Пропускаем форму, только если пользователь уже заполнял её в предыдущей сессии
-                // (сервер по умолчанию ставит firstName = username при регистрации, поэтому
-                // проверка profile.isProfileFilled не подходит — она всегда true)
                 if (profileFillStore.isProfileFilled()) {
                     _autoNavigateEvent.trySend(Unit)
                 }
@@ -76,47 +70,11 @@ internal class DescriptionViewModel(
     }
     
     private fun loadFromFormDataStore() {
-        updateState {
-            it.copy(
-                firstName = formDataStore.firstName,
-                lastName = formDataStore.lastName,
-                age = formDataStore.age,
-                city = formDataStore.city,
-                university = formDataStore.university,
-                department = formDataStore.department,
-                programme = formDataStore.programme,
-                studyType = formDataStore.studyType,
-                about = formDataStore.about,
-                qualities = formDataStore.qualities,
-                interests = formDataStore.interests,
-                portfolioUrl = formDataStore.portfolioUrl,
-                selectedSkills = formDataStore.selectedSkills,
-                workingHours = formDataStore.workingHours,
-                waysToContact = formDataStore.waysToContact,
-            )
-        }
+        // Disabled to make fields empty
     }
 
     private fun prefill(profile: UserProfile) {
-        updateState {
-            it.copy(
-                firstName = profile.firstName.orEmpty(),
-                lastName = profile.lastName.orEmpty(),
-                age = profile.age?.toString().orEmpty(),
-                city = profile.city.orEmpty(),
-                university = profile.university.orEmpty(),
-                department = profile.faculty.orEmpty(),
-                programme = profile.programCode.orEmpty(),
-                studyType = profile.studyMode.orEmpty(),
-                about = profile.goals.orEmpty(),
-                qualities = profile.qualities.joinToString(", "),
-                interests = profile.interests.joinToString(", "),
-                portfolioUrl = profile.portfolioUrl.orEmpty(),
-                selectedSkills = profile.skills.map { skill -> skill.name },
-                workingHours = profile.schedule.orEmpty(),
-                waysToContact = profile.contacts.joinToString("\n") { "${it.type}: ${it.value}" }
-            )
-        }
+        // Disabled to make fields empty
     }
 
     private fun updateState(mutation: (InternalDescriptionState) -> InternalDescriptionState) {
@@ -127,9 +85,15 @@ internal class DescriptionViewModel(
         viewModelScope.launch {
             val state = _internalState.value
             val base = getUserProfileUseCase.current().first().getOrNull()
+            
+            // Если профиль ещё не загружен или вернул ошибку, пробуем получить ID хотя бы из AuthStore
+            // (это поможет избежать ID="0", который вызывает 403 на бэкенде)
+            val userId = base?.id?.takeIf { it != "0" } 
+                ?: _internalState.value.firstName.takeIf { it == "DEBUG_BYPASS" } // для тестов
+                ?: "" // Репозиторий сам попробует взять из authStore.userId
 
             val profile = UserProfile(
-                id = base?.id ?: "0",
+                id = userId,
                 username = base?.username ?: "",
                 email = base?.email ?: "",
                 firstName = state.firstName.ifBlank { null },

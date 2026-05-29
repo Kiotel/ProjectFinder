@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -39,11 +38,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -75,7 +76,7 @@ import models.ProjectStage
 import modifiers.cheapGlassEffect
 import utils.SnackBarManager
 
-@OptIn(ExperimentalHazeApi::class)
+@OptIn(ExperimentalHazeApi::class, ExperimentalMaterial3Api::class)
 @Composable
 internal fun AllProjectsScreen(
     modifier: Modifier = Modifier,
@@ -90,9 +91,17 @@ internal fun AllProjectsScreen(
     val hazeState = rememberHazeState()
 
     ScreenLayout(modifier = modifier, snackBarManager = snackBarManager) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            // Animated background
-            MovingCirclesBackground(isDarkTheme = isSystemInDarkTheme())
+        PullToRefreshBox(
+            isRefreshing = lazyPagingItems.loadState.refresh is LoadState.Loading,
+            onRefresh = { 
+                lazyPagingItems.refresh() 
+                handleIntent(AllProjectsIntent.Refresh)
+            },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                // Animated background
+                MovingCirclesBackground(isDarkTheme = isSystemInDarkTheme())
 
             // Haze source
             Box(
@@ -204,40 +213,15 @@ internal fun AllProjectsScreen(
                         start = 12.dp, end = 12.dp, top = 4.dp, bottom = 88.dp
                     ),
                 ) {
-                    val filtered = (0 until lazyPagingItems.itemCount)
-                        .mapNotNull { lazyPagingItems.peek(it) }
-                        .let { all ->
-                            when (uiState.filter) {
-                                ProjectFilter.ALL -> null
-                                ProjectFilter.MINE -> all.filter { it.authorId == uiState.currentUserId }
-                                ProjectFilter.JOINED -> all.filter {
-                                    it.authorId != uiState.currentUserId
-                                }
-                            }
-                        }
-
-                    if (filtered != null) {
-                        items(count = filtered.size) { index ->
-                            val project = filtered[index]
+                    items(count = lazyPagingItems.itemCount) { index ->
+                        val project = lazyPagingItems[index]
+                        if (project != null) {
                             StaggeredCard(index = index) {
                                 ProjectCard(
                                     project = project,
                                     currentUserId = uiState.currentUserId,
                                     modifier = Modifier.clickable { goToProject(project) },
                                 )
-                            }
-                        }
-                    } else {
-                        items(count = lazyPagingItems.itemCount) { index ->
-                            val project = lazyPagingItems[index]
-                            if (project != null) {
-                                StaggeredCard(index = index) {
-                                    ProjectCard(
-                                        project = project,
-                                        currentUserId = uiState.currentUserId,
-                                        modifier = Modifier.clickable { goToProject(project) },
-                                    )
-                                }
                             }
                         }
                     }
@@ -301,6 +285,7 @@ internal fun AllProjectsScreen(
             }
         }
     }
+}
 }
 
 // ─── Staggered entrance ─────────────────────────────────────────────────────

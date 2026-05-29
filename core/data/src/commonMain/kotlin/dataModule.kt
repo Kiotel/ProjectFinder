@@ -32,7 +32,7 @@ val dataModule = module {
 
     single<Logger> { Logger }
 
-    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get(), get(), get(), get()) }
     single<ProjectsRepository> { ProjectsRepositoryImpl(get(), get(), get()) }
     single<UsersRepository> { UsersRepositoryImpl(get(), get(), get()) }
     single<NotificationsRepository> { NotificationsRepositoryImpl(get(), get()) }

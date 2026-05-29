@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ProjectFinder</string>
+    <string name="app_name">ProjectUp</string>
 
     <!-- REGISTRATION SCREEN-->
     <string name="error_email_length">Минимальная длина почты 3.</string>

@@ -12,18 +12,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,7 +38,16 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,27 +56,82 @@ import androidx.compose.ui.unit.dp
 import components.ScreenLayout
 import detailedProject.models.DetailedProjectState
 import models.ProjectApplicant
+import models.ProjectMember
 import models.ProjectStage
 import utils.SnackBarManager
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun DetailedProjectScreen(
     modifier: Modifier = Modifier,
     uiState: DetailedProjectState,
     handleIntent: (intent: DetailedProjectIntent) -> Unit,
     snackBarManager: SnackBarManager,
+    onEdit: (models.Project) -> Unit,
+    onBack: () -> Unit,
 ) {
     val project = uiState.project ?: return
 
-    ScreenLayout(modifier = modifier, snackBarManager = snackBarManager) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+    LaunchedEffect(uiState.isDeleted) {
+        if (uiState.isDeleted) {
+            onBack()
+        }
+    }
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Удалить проект?") },
+            text = { Text("Это действие нельзя отменить.") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        handleIntent(DetailedProjectIntent.DeleteProject)
+                        showDeleteDialog = false
+                    },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text("Удалить")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Отмена")
+                }
+            }
+        )
+    }
+
+    ScreenLayout(
+        modifier = modifier,
+        snackBarManager = snackBarManager,
+        topBar = {
+            TopAppBar(
+                title = { Text("Проект") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+            )
+        }
+    ) { innerPadding ->
+        PullToRefreshBox(
+            isRefreshing = uiState.isLoadingComments || uiState.isLoadingApplicants || uiState.isLoadingMembers,
+            onRefresh = { handleIntent(DetailedProjectIntent.Refresh) },
+            modifier = Modifier.fillMaxSize()
         ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
             // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -106,6 +176,33 @@ internal fun DetailedProjectScreen(
                 }
             }
 
+            if (uiState.isAuthor) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = { onEdit(project) },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text("Редактировать")
+                    }
+                    OutlinedButton(
+                        onClick = { showDeleteDialog = true },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text("Удалить")
+                    }
+                }
+            }
+
             HorizontalDivider()
 
             // Description
@@ -128,6 +225,13 @@ internal fun DetailedProjectScreen(
                     RolesRow(project.tags)
                 }
             }
+
+            // Members
+            MembersSection(
+                members = uiState.members,
+                isLoading = uiState.isLoadingMembers,
+                onMemberClick = { /* Navigate to member profile */ },
+            )
 
             // Applicants (author only) or Response form (others)
             if (uiState.isAuthor) {
@@ -202,6 +306,7 @@ internal fun DetailedProjectScreen(
             }
         }
     }
+}
 }
 
 @Composable
@@ -316,6 +421,55 @@ private fun ApplicantItem(
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error),
                     ) {
                         Text("Отклонить")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MembersSection(
+    members: List<ProjectMember>,
+    isLoading: Boolean,
+    onMemberClick: (String) -> Unit,
+) {
+    SectionCard(title = "Участники (${members.size})") {
+        if (isLoading) {
+            Box(Modifier.fillMaxWidth(), Alignment.Center) { CircularProgressIndicator(modifier = Modifier.padding(8.dp)) }
+        } else if (members.isEmpty()) {
+            Text("Нет участников", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        } else {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                members.forEach { member ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Icon(Icons.Outlined.Person, contentDescription = null, modifier = Modifier.size(20.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = member.username,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                                if (!member.firstName.isBlank()) {
+                                    Text(
+                                        text = member.firstName,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
