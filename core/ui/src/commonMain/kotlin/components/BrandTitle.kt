@@ -15,13 +15,13 @@ import androidx.compose.ui.tooling.preview.Preview
 fun BrandTitle(modifier: Modifier = Modifier) {
     Row(modifier = modifier) {
         Text(
-            text = "Team",
+            text = "Project",
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.displayMediumEmphasized,
             fontWeight = FontWeight.ExtraBold
         )
         Text(
-            text = "Service",
+            text = "Up",
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.displayMediumEmphasized,
             fontWeight = FontWeight.ExtraBold
