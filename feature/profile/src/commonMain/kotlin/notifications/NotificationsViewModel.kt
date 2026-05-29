@@ -8,7 +8,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import models.Notification
 import useCases.GetNotificationsUseCase
+
+data class NotificationsState(
+    val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
+    val notifications: List<Notification> = emptyList(),
+    val unreadCount: Int = 0,
+    val error: String? = null,
+)
 
 class NotificationsViewModel(
     private val getNotificationsUseCase: GetNotificationsUseCase,
@@ -22,31 +31,44 @@ class NotificationsViewModel(
     )
 
     init {
-        refresh()
+        load()
     }
 
     fun refresh() {
+        if (_state.value.isRefreshing || _state.value.isLoading) return
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
-            getNotificationsUseCase().fold(
-                onSuccess = { text ->
-                    _state.update { it.copy(isLoading = false, content = text) }
-                },
-                onFailure = { error ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            error = error.message ?: "Не удалось загрузить уведомления",
-                        )
-                    }
-                },
-            )
+            _state.update { it.copy(isRefreshing = true, error = null) }
+            fetchNotifications()
+            _state.update { it.copy(isRefreshing = false) }
         }
     }
-}
 
-data class NotificationsState(
-    val isLoading: Boolean = true,
-    val content: String = "",
-    val error: String? = null,
-)
+    private fun load() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            fetchNotifications()
+            _state.update { it.copy(isLoading = false) }
+        }
+    }
+
+    private suspend fun fetchNotifications() {
+        getNotificationsUseCase().fold(
+            onSuccess = { list ->
+                _state.update {
+                    it.copy(
+                        notifications = list,
+                        unreadCount = list.count { n -> !n.isRead },
+                        error = null,
+                    )
+                }
+            },
+            onFailure = { error ->
+                _state.update {
+                    it.copy(
+                        error = error.message ?: "Не удалось загрузить уведомления",
+                    )
+                }
+            },
+        )
+    }
+}

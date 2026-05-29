@@ -2,10 +2,12 @@ package repositories
 
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.json.Json
 import local.secureStore.AuthStore
 import mapppers.toDomain
 import mapppers.toUpdateRequest
@@ -129,20 +131,29 @@ internal class UsersRepositoryImpl(
     }
 
     private suspend fun parseUserResponse(response: HttpResponse): UserProfile {
+        val text = response.bodyAsText()
         return try {
-            response.body<ResponseUserDto>().toDomain()
+            backendApi.json.decodeFromString<ResponseUserDto>(text).toDomain()
         } catch (_: Exception) {
-            parseUsersPageResponse(response).data.firstOrNull()?.toDomain()
-                ?: error("Пустой ответ профиля")
+            try {
+                val page = backendApi.json.decodeFromString<ResponseUsersPageDto>(text)
+                page.data.firstOrNull()?.toDomain()
+                    ?: error("Пустой ответ профиля")
+            } catch (e: Exception) {
+                logger.e("UsersRepositoryImpl/parseUserResponse", "Failed to parse user: ${e.message}")
+                throw e
+            }
         }
     }
 
     private suspend fun parseUsersPageResponse(response: HttpResponse): ResponseUsersPageDto {
+        // Читаем body один раз, чтобы избежать ошибки «Body is consumed»
+        val text = response.bodyAsText()
         return try {
-            response.body<ResponseUsersPageDto>()
+            backendApi.json.decodeFromString<ResponseUsersPageDto>(text)
         } catch (_: Exception) {
             try {
-                val list = response.body<List<ResponseUserDto>>()
+                val list = backendApi.json.decodeFromString<List<ResponseUserDto>>(text)
                 ResponseUsersPageDto(data = list)
             } catch (e: Exception) {
                 logger.e("UsersRepositoryImpl/parseUsersPageResponse", "Failed to parse users: ${e.message}")

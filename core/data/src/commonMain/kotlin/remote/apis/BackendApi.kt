@@ -37,7 +37,7 @@ internal class BackendApi(
     private val authApi: AuthApi,
 ) {
     @OptIn(ExperimentalSerializationApi::class)
-    private val json = Json {
+    internal val json = Json {
         allowTrailingComma = true
         explicitNulls = false
         ignoreUnknownKeys = true

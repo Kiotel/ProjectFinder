@@ -1,6 +1,8 @@
 package repositories
 
+import models.Notification
+
 interface NotificationsRepository {
-    suspend fun getNotificationsText(): Result<String>
+    suspend fun getNotifications(): Result<List<Notification>>
     suspend fun checkHealth(): Result<String>
 }

@@ -1,10 +1,13 @@
 package repositories
 
 import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.json.Json
 import local.secureStore.AuthStore
 import mapppers.toDomain
 import models.Project
@@ -20,6 +23,7 @@ import remote.apis.dtos.requests.RequestUpdateApplicantStatusDto
 import remote.apis.dtos.responses.ResponseApplicantDto
 import remote.apis.dtos.responses.ResponseCommentDto
 import remote.apis.dtos.responses.ResponseProjectLikeDto
+import remote.apis.dtos.responses.ResponseProjectsDto
 import utils.Logger
 import utils.httpErrorMessage
 import kotlin.time.Duration
@@ -40,12 +44,12 @@ internal class ProjectsRepositoryImpl(
                     emit(Result.failure(Exception(errorMsg)))
                     return@flow
                 }
+                val text = response.bodyAsText()
                 val all = try {
-                    response.body<List<ResponseProjectDto>>().map { it.toDomain() }
+                    backendApi.json.decodeFromString<List<ResponseProjectDto>>(text).map { it.toDomain() }
                 } catch (e: Exception) {
-                    // Fallback to { projects: [...] }
                     try {
-                        val body = response.body<remote.apis.dtos.responses.ResponseProjectsDto>()
+                        val body = backendApi.json.decodeFromString<ResponseProjectsDto>(text)
                         body.projects?.map { it.toDomain() } ?: emptyList()
                     } catch (e2: Exception) {
                         logger.e("ProjectsRepositoryImpl/getProjects", "Failed to parse: ${e2.message}")
