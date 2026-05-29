@@ -1,4 +1,5 @@
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,6 +45,13 @@ fun OnBoardingNavigation(
             entry<Route.OnBoarding.Description> {
                 val descriptionViewModel: DescriptionViewModel = koinViewModel()
                 val uiState by descriptionViewModel.uiState.collectAsStateWithLifecycle()
+
+                // Auto-skip: если профиль уже заполнен на сервере, пропускаем форму
+                LaunchedEffect(Unit) {
+                    descriptionViewModel.autoNavigateEvent.collect {
+                        onFinished()
+                    }
+                }
 
                 DescriptionScreen(
                     uiState = uiState,

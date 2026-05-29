@@ -22,6 +22,7 @@ internal class NavigationViewModel(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val profileFillManager: ProfileFillManager,
 ) : ViewModel() {
 
     private val _internalState = MutableStateFlow(InternalNavigationState())
@@ -29,6 +30,7 @@ internal class NavigationViewModel(
     private var profileJob: Job? = null
 
     init {
+        updateState { it.copy(isProfileFilledLocally = profileFillManager.isFilled) }
         checkIsAuthed()
     }
 
@@ -37,7 +39,8 @@ internal class NavigationViewModel(
             isAuthed = internalState.isAuthed,
             userProfile = internalState.userProfile,
             isLoading = internalState.isLoading,
-            isInitialCheckFinished = internalState.isInitialCheckFinished
+            isInitialCheckFinished = internalState.isInitialCheckFinished,
+            isProfileFilledLocally = internalState.isProfileFilledLocally
         )
     }.stateIn(
         scope = viewModelScope,
@@ -71,12 +74,25 @@ internal class NavigationViewModel(
         profileJob = viewModelScope.launch {
             getUserProfileUseCase.current().collect { result ->
                 result.onSuccess { profile ->
-                    println("NavigationViewModel/fetchUserProfile: SUCCESS. profile=$profile, isFilled=${profile.isProfileFilled}")
-                    updateState { it.copy(userProfile = profile, isLoading = false, isInitialCheckFinished = true) }
+                    println("NavigationViewModel/fetchUserProfile: SUCCESS. profile=$profile, isFilled=${profile.isProfileFilled}, localFilled=${profileFillManager.isFilled}")
+                    updateState {
+                        it.copy(
+                            userProfile = profile,
+                            isLoading = false,
+                            isInitialCheckFinished = true,
+                            isProfileFilledLocally = profileFillManager.isFilled
+                        )
+                    }
                 }
                 result.onFailure { error ->
                     println("NavigationViewModel/fetchUserProfile: FAILURE. error=${error.message}")
-                    updateState { it.copy(isLoading = false, isInitialCheckFinished = true) }
+                    updateState {
+                        it.copy(
+                            isLoading = false,
+                            isInitialCheckFinished = true,
+                            isProfileFilledLocally = profileFillManager.isFilled
+                        )
+                    }
                 }
             }
         }
@@ -89,6 +105,7 @@ internal class NavigationViewModel(
         profileJob = null
         viewModelScope.launch {
             logoutUseCase()
+            profileFillManager.clear()
             updateState { InternalNavigationState(isAuthed = false, isLoading = false, isInitialCheckFinished = true) }
         }
     }
@@ -100,6 +117,7 @@ internal class NavigationViewModel(
         profileJob = null
         viewModelScope.launch {
             deleteAccountUseCase().onSuccess {
+                profileFillManager.clear()
                 updateState { InternalNavigationState(isAuthed = false, isLoading = false, isInitialCheckFinished = true) }
             }.onFailure { error ->
                 println("NavigationViewModel/deleteAccount: FAILURE. error=${error.message}")

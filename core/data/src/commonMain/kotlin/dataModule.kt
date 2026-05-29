@@ -1,5 +1,6 @@
 import local.secureStore.AuthStore
 import local.secureStore.FormDataStore
+import local.secureStore.ProfileFillStore
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import remote.apis.AuthApi
@@ -22,6 +23,12 @@ val dataModule = module {
 
     single<AuthStore> { AuthStore(get()) }
     single<FormDataStore> { FormDataStore(get()) }
+    single<ProfileFillStore> {
+        ProfileFillStore(get()).also { store ->
+            // При создании ProfileFillStore синхронизируем персистентный флаг в domain-слой
+            get<ProfileFillManager>().restore(store.isProfileFilled())
+        }
+    }
 
     single<Logger> { Logger }
 

@@ -92,8 +92,8 @@ internal fun NavigationRoot(
         println("NavigationRoot: state changed. isInitialCheckFinished=${uiState.isInitialCheckFinished}, isAuthed=${uiState.isAuthed}, currentRoute=$currentRoute, profileFilled=${uiState.userProfile?.isProfileFilled}")
         if (uiState.isInitialCheckFinished) {
             if (uiState.isAuthed) {
-                val isProfileFilled = uiState.userProfile?.isProfileFilled == true
-                println("NavigationRoot: deciding where to navigate. isProfileFilled=$isProfileFilled")
+                val isProfileFilled = uiState.isProfileFilledLocally || uiState.userProfile?.isProfileFilled == true
+                println("NavigationRoot: deciding where to navigate. isProfileFilled=$isProfileFilled (local=${uiState.isProfileFilledLocally}, server=${uiState.userProfile?.isProfileFilled})")
                 
                 if (currentRoute is Route.Auth) {
                     rootBackStack.clear()
@@ -143,12 +143,7 @@ internal fun NavigationRoot(
                                     AuthNavigation(
                                         onAuth = {
                                             rootBackStack.clear()
-                                            val isProfileFilled = uiState.userProfile?.isProfileFilled == true
-                                            if (isProfileFilled) {
-                                                navigateTo(Route.Projects)
-                                            } else {
-                                                navigateTo(Route.OnBoarding)
-                                            }
+                                            navigateTo(Route.OnBoarding)
                                         },
                                     )
                                 }

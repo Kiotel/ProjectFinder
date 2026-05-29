@@ -1,19 +1,23 @@
 package description
 
+import ProfileFillManager
 import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import description.models.DescriptionState
 import description.models.InternalDescriptionState
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import local.secureStore.FormDataStore
+import local.secureStore.ProfileFillStore
 import models.Contact
 import models.Skill
 import models.UserProfile
@@ -25,8 +29,17 @@ internal class DescriptionViewModel(
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val formDataStore: FormDataStore,
+    private val profileFillStore: ProfileFillStore,
+    private val profileFillManager: ProfileFillManager,
     val snackBarManager: SnackBarManager,
 ) : ViewModel() {
+
+    /**
+     * One-shot event: когда профиль уже заполнен на сервере (после очистки данных приложения),
+     * DescriptionViewModel детектит это и отправляет сигнал навигации, чтобы пропустить форму.
+     */
+    private val _autoNavigateEvent = Channel<Unit>(Channel.BUFFERED)
+    val autoNavigateEvent = _autoNavigateEvent.receiveAsFlow()
     val availableSkills = listOf(
         "Kotlin", "Android", "iOS", "Swift", "Java",
         "Python", "Go", "JavaScript", "TypeScript",
@@ -52,6 +65,10 @@ internal class DescriptionViewModel(
             // Then prefill from server profile (if user has saved profile)
             getUserProfileUseCase.current().first().onSuccess { profile -> 
                 prefill(profile)
+                // Если профиль уже заполнен (firstName извлечён из fullName) — пропускаем форму
+                if (profile.isProfileFilled) {
+                    _autoNavigateEvent.trySend(Unit)
+                }
             }
         }
     }
@@ -134,6 +151,8 @@ internal class DescriptionViewModel(
 
             updateUserProfileUseCase(profile).fold(
                 onSuccess = {
+                    profileFillStore.markAsFilled()
+                    profileFillManager.markAsFilled()
                     snackBarManager.showMessage("Профиль сохранён", SnackbarDuration.Short)
                     onSuccess()
                 },
@@ -144,6 +163,8 @@ internal class DescriptionViewModel(
                     )
                     // PUT /users/{id} на сервере часто отдаёт 500 — пропускаем в приложение
                     if (error.message?.contains("500") == true) {
+                        profileFillStore.markAsFilled()
+                        profileFillManager.markAsFilled()
                         onSuccess()
                     }
                 },

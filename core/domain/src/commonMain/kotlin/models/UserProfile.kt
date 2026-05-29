@@ -24,7 +24,7 @@ data class UserProfile(
     val createdAt: String? = null,
 ) {
     val isProfileFilled: Boolean
-        get() = !firstName.isNullOrBlank() || !university.isNullOrBlank()
+        get() = !firstName.isNullOrBlank()
 }
 
 data class Contact(

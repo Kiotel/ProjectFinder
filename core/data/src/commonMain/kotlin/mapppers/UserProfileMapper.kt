@@ -14,7 +14,7 @@ internal fun ResponseUserDto.toDomain(): UserProfile = UserProfile(
     id = id?.toString() ?: "0",
     username = username.orEmpty(),
     email = email.orEmpty(),
-    firstName = firstName,
+    firstName = firstName ?: extractFirstNameFromFullName(fullName),
     lastName = lastName,
     displayName = fullName ?: listOfNotNull(firstName, lastName).joinToString(" ")
         .ifBlank { username.orEmpty() },
@@ -51,6 +51,17 @@ private fun ContactDto.toDomain() = Contact(type = type, value = value)
 private fun SkillDto.toDomain(): Skill? {
     val skillName = name?.takeIf { it.isNotBlank() } ?: return null
     return Skill(name = skillName, level = level)
+}
+
+/**
+ * Сервер не возвращает firstName в GET /users/{id}, но собирает fullName = "Фамилия Имя username".
+ * Парсим второй токен как firstName.
+ */
+private fun extractFirstNameFromFullName(fullName: String?): String? {
+    val name = fullName?.takeIf { it.isNotBlank() } ?: return null
+    val parts = name.split(" ", limit = 3)
+    // fullName = "{lastName} {firstName} {username}" — берём второй токен
+    return parts.getOrNull(1)?.takeIf { it.isNotBlank() }
 }
 
 /** Тело PUT /users/{id} — только непустые поля. */

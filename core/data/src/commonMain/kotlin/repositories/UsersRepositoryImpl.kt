@@ -77,8 +77,8 @@ internal class UsersRepositoryImpl(
         if (authStore.accessToken.isBlank()) {
             error(httpErrorMessage(401, ""))
         }
-        val userId = profile.id.takeIf { it.isNotBlank() && it != "0" }
-            ?: authStore.userId.takeIf { it.isNotBlank() }
+        val userId = authStore.userId.takeIf { it.isNotBlank() }
+            ?: profile.id.takeIf { it.isNotBlank() && it != "0" }
             ?: error(httpErrorMessage(401, ""))
         val response = backendApi.updateUser(userId, profile.toUpdateRequest())
         if (!response.status.isSuccess()) {

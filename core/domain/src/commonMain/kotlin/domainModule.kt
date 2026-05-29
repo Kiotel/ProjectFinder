@@ -20,6 +20,8 @@ import useCases.UpdateApplicantStatusUseCase
 import useCases.UpdateUserProfileUseCase
 
 val domainModule = module {
+    single { ProfileFillManager() }
+
     factory<GetIsAuthedUseCase> { GetIsAuthedUseCase(get()) }
     factory<RegisterUseCase> { RegisterUseCase(get()) }
     factory<LoginUseCase> { LoginUseCase(get()) }
@@ -40,4 +42,3 @@ val domainModule = module {
     factory<GetApplicantsUseCase> { GetApplicantsUseCase(get()) }
     factory<UpdateApplicantStatusUseCase> { UpdateApplicantStatusUseCase(get()) }
 }
-
