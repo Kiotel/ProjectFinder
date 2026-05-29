@@ -1,6 +1,6 @@
 TEAM_ID=
 
-PRODUCT_NAME=ProjectFinder
+PRODUCT_NAME=ProjectUp
 PRODUCT_BUNDLE_IDENTIFIER=valera.app.projectfinder.ProjectFinder$(TEAM_ID)
 
 CURRENT_PROJECT_VERSION=1
